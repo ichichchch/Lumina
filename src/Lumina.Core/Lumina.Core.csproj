@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsAotCompatible>true</IsAotCompatible>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Lumina.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lumina.Native\Lumina.Native.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <!-- WireGuardNT Driver Files (embedded as resources) -->
+  <!-- Place wireguard.sys and wireguard.dll in Resources/Driver/ -->
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Driver\wireguard.sys" Condition="Exists('Resources\Driver\wireguard.sys')" />
+    <EmbeddedResource Include="Resources\Driver\wireguard.dll" Condition="Exists('Resources\Driver\wireguard.dll')" />
+  </ItemGroup>
+
+</Project>

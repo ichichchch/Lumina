@@ -1,0 +1,135 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Lumina.App.ViewModels"
+             x:Class="Lumina.App.Views.HomePage"
+             x:DataType="vm:MainViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="32" Margin="40">
+
+            <!-- Header -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Welcome to Lumina" Classes="Display" />
+                <TextBlock Text="Secure, fast, and private VPN connection" Classes="Body" />
+            </StackPanel>
+
+            <!-- Connection Section -->
+            <Grid ColumnDefinitions="*,Auto,*" Margin="0,20">
+                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Spacing="24">
+                    
+                    <!-- Big Connect Button -->
+                    <Button Classes="ConnectButton"
+                            Classes.Connected="{Binding IsConnected}"
+                            Command="{Binding ConnectCommand}"
+                            HorizontalAlignment="Center">
+                        <Panel>
+                            <!-- Power Icon -->
+                            <PathIcon Data="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"
+                                      Width="48" Height="48"
+                                      Foreground="{StaticResource TextPrimary}" />
+                        </Panel>
+                    </Button>
+
+                    <!-- Status Text -->
+                    <TextBlock Text="{Binding StatusText}"
+                               Classes="Title"
+                               HorizontalAlignment="Center" />
+
+                </StackPanel>
+            </Grid>
+
+            <!-- Server Card -->
+            <Border Classes="Card" MaxWidth="500" HorizontalAlignment="Center">
+                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
+                    
+                    <!-- Server Icon -->
+                    <Border Grid.Column="0" Grid.RowSpan="2"
+                            Width="48" Height="48"
+                            CornerRadius="24"
+                            Background="{StaticResource BackgroundTertiary}"
+                            Margin="0,0,16,0">
+                        <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                                  Width="24" Height="24"
+                                  Foreground="{StaticResource TextMuted}" />
+                    </Border>
+
+                    <!-- Server Name -->
+                    <TextBlock Grid.Column="1" Grid.Row="0"
+                               Text="{Binding SelectedConfiguration.Name, FallbackValue='No server selected'}"
+                               Classes="BodyStrong" />
+
+                    <!-- Server Location -->
+                    <TextBlock Grid.Column="1" Grid.Row="1"
+                               Text="{Binding SelectedConfiguration.Location, FallbackValue='Select a server to connect'}"
+                               Classes="Caption" />
+
+                    <!-- Change Button -->
+                    <Button Grid.Column="2" Grid.RowSpan="2"
+                            Classes="Ghost"
+                            Command="{Binding NavigateToCommand}"
+                            CommandParameter="Servers"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="Change" />
+                    </Button>
+                    
+                </Grid>
+            </Border>
+
+            <!-- Traffic Stats -->
+            <Grid ColumnDefinitions="*,*" MaxWidth="500" HorizontalAlignment="Center">
+                
+                <!-- Upload -->
+                <Border Grid.Column="0" Classes="Card" Margin="0,0,8,0">
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
+                                      Width="16" Height="16"
+                                      Foreground="{StaticResource AccentBrush}" />
+                            <TextBlock Text="UPLOAD" Classes="StatLabel" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding UploadSpeed}" Classes="Stat" />
+                        <TextBlock Text="{Binding TotalUpload, StringFormat='Total: {0}'}" Classes="Caption" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Download -->
+                <Border Grid.Column="1" Classes="Card" Margin="8,0,0,0">
+                    <StackPanel Spacing="8" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <PathIcon Data="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
+                                      Width="16" Height="16"
+                                      Foreground="{StaticResource SuccessBrush}" />
+                            <TextBlock Text="DOWNLOAD" Classes="StatLabel" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding DownloadSpeed}" Classes="Stat" />
+                        <TextBlock Text="{Binding TotalDownload, StringFormat='Total: {0}'}" Classes="Caption" />
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+
+            <!-- Driver Status Warning -->
+            <Border Classes="Card" 
+                    MaxWidth="500" 
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding !IsDriverInstalled}"
+                    Background="#331E293B"
+                    BorderBrush="{StaticResource WarningBrush}">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                                  Width="20" Height="20"
+                                  Foreground="{StaticResource WarningBrush}" />
+                        <TextBlock Text="WireGuard Driver Not Found" Classes="BodyStrong" />
+                    </StackPanel>
+                    <TextBlock Text="Please install WireGuard for Windows to use Lumina."
+                               Classes="Body"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

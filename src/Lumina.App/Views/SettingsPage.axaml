@@ -1,0 +1,167 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Lumina.App.ViewModels"
+             x:Class="Lumina.App.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="32" Margin="40">
+
+            <!-- Header -->
+            <StackPanel Spacing="8">
+                <TextBlock Text="Settings" Classes="Display" />
+                <TextBlock Text="Configure your VPN experience" Classes="Body" />
+            </StackPanel>
+
+            <!-- General Settings -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="GENERAL" Classes="StatLabel" />
+                <Border Classes="Card">
+                    <StackPanel Spacing="16">
+                        
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Text="Auto-connect on startup" Classes="BodyStrong" />
+                                <TextBlock Text="Automatically connect when Lumina starts" Classes="Caption" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" 
+                                          IsChecked="{Binding AutoConnect}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Text="Start with Windows" Classes="BodyStrong" />
+                                <TextBlock Text="Launch Lumina when you sign in" Classes="Caption" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" 
+                                          IsChecked="{Binding StartOnBoot}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Text="Start minimized" Classes="BodyStrong" />
+                                <TextBlock Text="Start in system tray" Classes="Caption" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" 
+                                          IsChecked="{Binding StartMinimized}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Security Settings -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="SECURITY" Classes="StatLabel" />
+                <Border Classes="Card">
+                    <StackPanel Spacing="16">
+                        
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel>
+                                <TextBlock Text="Kill Switch" Classes="BodyStrong" />
+                                <TextBlock Text="Block all internet if VPN disconnects unexpectedly" 
+                                           Classes="Caption"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" 
+                                          IsChecked="{Binding KillSwitch}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Appearance Settings -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="APPEARANCE" Classes="StatLabel" />
+                <Border Classes="Card">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel>
+                            <TextBlock Text="Theme" Classes="BodyStrong" />
+                            <TextBlock Text="Choose your preferred color scheme" Classes="Caption" />
+                        </StackPanel>
+                        <ComboBox Grid.Column="1"
+                                  ItemsSource="{Binding ThemeOptions}"
+                                  SelectedIndex="{Binding SelectedThemeIndex}"
+                                  MinWidth="120"
+                                  VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </StackPanel>
+
+            <!-- Advanced Settings -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="ADVANCED" Classes="StatLabel" />
+                <Border Classes="Card">
+                    <StackPanel Spacing="16">
+                        
+                        <Button Classes="Secondary" HorizontalAlignment="Left"
+                                Command="{Binding ExportLogsCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"
+                                          Width="16" Height="16" />
+                                <TextBlock Text="Export Logs" />
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- About Section -->
+            <StackPanel Spacing="12">
+                <TextBlock Text="ABOUT" Classes="StatLabel" />
+                <Border Classes="Card">
+                    <StackPanel Spacing="16">
+                        
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Lumina Version" Classes="BodyStrong" />
+                            <TextBlock Grid.Column="1" 
+                                       Text="{Binding AppVersion}" 
+                                       Classes="Body" />
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="WireGuard Driver" Classes="BodyStrong" />
+                            <TextBlock Grid.Column="1" 
+                                       Text="{Binding DriverVersion, FallbackValue='Not installed'}" 
+                                       Classes="Body" />
+                        </Grid>
+
+                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+
+                        <Button Classes="Secondary" HorizontalAlignment="Left"
+                                Command="{Binding CheckForUpdatesCommand}">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PathIcon Data="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.47 12.65 0L21 3v7.12z"
+                                          Width="16" Height="16" />
+                                <TextBlock Text="Check for Updates" />
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Save Button -->
+            <Button Classes="Primary" 
+                    HorizontalAlignment="Right"
+                    Command="{Binding SaveSettingsCommand}">
+                <TextBlock Text="Save Changes" />
+            </Button>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

@@ -1,0 +1,89 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Typography - Segoe UI Variable inspired -->
+
+    <!-- Font Sizes -->
+    <Style>
+        <Style.Resources>
+            <x:Double x:Key="FontSizeCaption">12</x:Double>
+            <x:Double x:Key="FontSizeBody">14</x:Double>
+            <x:Double x:Key="FontSizeBodyLarge">16</x:Double>
+            <x:Double x:Key="FontSizeTitle">20</x:Double>
+            <x:Double x:Key="FontSizeHeading">24</x:Double>
+            <x:Double x:Key="FontSizeDisplay">32</x:Double>
+            <x:Double x:Key="FontSizeHero">48</x:Double>
+
+            <!-- Font Weights -->
+            <FontWeight x:Key="FontWeightLight">Light</FontWeight>
+            <FontWeight x:Key="FontWeightRegular">Regular</FontWeight>
+            <FontWeight x:Key="FontWeightMedium">Medium</FontWeight>
+            <FontWeight x:Key="FontWeightSemiBold">SemiBold</FontWeight>
+            <FontWeight x:Key="FontWeightBold">Bold</FontWeight>
+        </Style.Resources>
+    </Style>
+
+    <!-- Text Block Styles -->
+    <Style Selector="TextBlock.Caption">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
+        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+    </Style>
+
+    <Style Selector="TextBlock.Body">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+    </Style>
+
+    <Style Selector="TextBlock.BodyStrong">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.BodyLarge">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeBodyLarge}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+    </Style>
+
+    <Style Selector="TextBlock.Title">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightSemiBold}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.Heading">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.Display">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeDisplay}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="TextBlock.Hero">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHero}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <!-- Numeric/Stats Typography -->
+    <Style Selector="TextBlock.Stat">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="FontFamily" Value="Inter, Segoe UI Variable, Segoe UI" />
+    </Style>
+
+    <Style Selector="TextBlock.StatLabel">
+        <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
+        <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
+        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+    </Style>
+
+</Styles>

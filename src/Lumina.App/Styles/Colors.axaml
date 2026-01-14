@@ -1,0 +1,96 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Premium Magazine Aesthetic - Black/White/Gray Gradients -->
+
+    <!-- Primary Dark Scale -->
+    <Color x:Key="Gray950">#0A0A0B</Color>
+    <Color x:Key="Gray900">#0F172A</Color>
+    <Color x:Key="Gray850">#151B2B</Color>
+    <Color x:Key="Gray800">#1E293B</Color>
+    <Color x:Key="Gray700">#334155</Color>
+    <Color x:Key="Gray600">#475569</Color>
+    <Color x:Key="Gray500">#64748B</Color>
+    <Color x:Key="Gray400">#94A3B8</Color>
+    <Color x:Key="Gray300">#CBD5E1</Color>
+    <Color x:Key="Gray200">#E2E8F0</Color>
+    <Color x:Key="Gray100">#F1F5F9</Color>
+    <Color x:Key="Gray50">#F8FAFC</Color>
+    <Color x:Key="White">#FFFFFF</Color>
+
+    <!-- Accent Colors -->
+    <Color x:Key="AccentPrimary">#3B82F6</Color>
+    <Color x:Key="AccentPrimaryHover">#2563EB</Color>
+    <Color x:Key="AccentSuccess">#22C55E</Color>
+    <Color x:Key="AccentSuccessHover">#16A34A</Color>
+    <Color x:Key="AccentWarning">#EAB308</Color>
+    <Color x:Key="AccentError">#EF4444</Color>
+
+    <!-- Connection State Colors -->
+    <Color x:Key="StateDisconnected">#64748B</Color>
+    <Color x:Key="StateConnecting">#EAB308</Color>
+    <Color x:Key="StateConnected">#22C55E</Color>
+    <Color x:Key="StateError">#EF4444</Color>
+
+    <!-- Brushes - Dark Theme -->
+    <SolidColorBrush x:Key="BackgroundPrimary" Color="{StaticResource Gray950}" />
+    <SolidColorBrush x:Key="BackgroundSecondary" Color="{StaticResource Gray900}" />
+    <SolidColorBrush x:Key="BackgroundTertiary" Color="{StaticResource Gray850}" />
+    <SolidColorBrush x:Key="BackgroundCard" Color="{StaticResource Gray800}" />
+    <SolidColorBrush x:Key="BackgroundCardHover" Color="{StaticResource Gray700}" />
+
+    <SolidColorBrush x:Key="TextPrimary" Color="{StaticResource White}" />
+    <SolidColorBrush x:Key="TextSecondary" Color="{StaticResource Gray300}" />
+    <SolidColorBrush x:Key="TextMuted" Color="{StaticResource Gray500}" />
+    <SolidColorBrush x:Key="TextDisabled" Color="{StaticResource Gray600}" />
+
+    <SolidColorBrush x:Key="BorderDefault" Color="{StaticResource Gray700}" />
+    <SolidColorBrush x:Key="BorderHover" Color="{StaticResource Gray600}" />
+    <SolidColorBrush x:Key="BorderFocus" Color="{StaticResource AccentPrimary}" />
+
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentPrimary}" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource AccentPrimaryHover}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource AccentSuccess}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource AccentWarning}" />
+    <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource AccentError}" />
+
+    <!-- Gradient Brushes -->
+    <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="{StaticResource Gray950}" Offset="0" />
+        <GradientStop Color="{StaticResource Gray900}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="CardGradient" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#1A1F2E" Offset="0" />
+        <GradientStop Color="{StaticResource Gray800}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="AccentGradient" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#3B82F6" Offset="0" />
+        <GradientStop Color="#8B5CF6" Offset="1" />
+    </LinearGradientBrush>
+
+    <!-- Glass Effect (Acrylic simulation) -->
+    <SolidColorBrush x:Key="GlassBackground" Color="#1A1E293B" />
+    <SolidColorBrush x:Key="GlassBorder" Color="#33FFFFFF" />
+
+    <!-- Shadows -->
+    <BoxShadows x:Key="ShadowSmall">0 2 4 #20000000</BoxShadows>
+    <BoxShadows x:Key="ShadowMedium">0 4 12 #30000000</BoxShadows>
+    <BoxShadows x:Key="ShadowLarge">0 8 24 #40000000</BoxShadows>
+
+    <!-- Corner Radius -->
+    <CornerRadius x:Key="RadiusSmall">4</CornerRadius>
+    <CornerRadius x:Key="RadiusMedium">8</CornerRadius>
+    <CornerRadius x:Key="RadiusLarge">12</CornerRadius>
+    <CornerRadius x:Key="RadiusXLarge">16</CornerRadius>
+    <CornerRadius x:Key="RadiusRound">9999</CornerRadius>
+
+    <!-- Spacing -->
+    <Thickness x:Key="SpacingXSmall">4</Thickness>
+    <Thickness x:Key="SpacingSmall">8</Thickness>
+    <Thickness x:Key="SpacingMedium">16</Thickness>
+    <Thickness x:Key="SpacingLarge">24</Thickness>
+    <Thickness x:Key="SpacingXLarge">32</Thickness>
+
+</ResourceDictionary>
