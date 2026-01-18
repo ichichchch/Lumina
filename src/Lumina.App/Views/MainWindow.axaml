@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Lumina.App.ViewModels"
         xmlns:views="using:Lumina.App.Views"
+        xmlns:converters="using:Lumina.App.Converters"
         x:Class="Lumina.App.Views.MainWindow"
         x:DataType="vm:MainViewModel"
         Title="Lumina"
@@ -11,10 +12,35 @@
         MinHeight="600"
         Background="{StaticResource BackgroundPrimary}"
         ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="40"
         SystemDecorations="Full">
 
-    <Grid ColumnDefinitions="220,*">
+    <Grid RowDefinitions="40,*">
+        
+        <!-- Custom Title Bar -->
+        <Grid Grid.Row="0" ColumnDefinitions="220,*,Auto">
+            <!-- Drag regions are handled in code-behind via OnPointerPressed -->
+            
+            <!-- Window Controls (must be clickable) -->
+            <StackPanel Grid.Column="2" 
+                        Orientation="Horizontal" 
+                        Spacing="0"
+                        Margin="0,0,0,0"
+                        VerticalAlignment="Top">
+                <Button Classes="WindowControlButton" Click="MinimizeButton_Click">
+                    <PathIcon Data="M20 14H4v-2h16" Width="12" Height="12" />
+                </Button>
+                <Button Classes="WindowControlButton" Click="MaximizeButton_Click">
+                    <PathIcon Data="M4 4h16v16H4V4zm2 2v12h12V6H6z" Width="12" Height="12" />
+                </Button>
+                <Button Classes="WindowControlButton CloseButton" Click="CloseButton_Click">
+                    <PathIcon Data="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" Width="12" Height="12" />
+                </Button>
+            </StackPanel>
+        </Grid>
+        
+        <Grid Grid.Row="1" ColumnDefinitions="220,*">
         
         <!-- Sidebar Navigation -->
         <Border Grid.Column="0"
@@ -36,7 +62,7 @@
                 <!-- Navigation Items -->
                 <StackPanel Spacing="4" Margin="12,0">
                     <Button Classes="NavItem"
-                            Classes.Active="{Binding CurrentPage, Converter={x:Static StringConverters.IsNotNullOrEmpty}, ConverterParameter=Home}"
+                            Classes.Active="{Binding CurrentPage, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Home}"
                             Command="{Binding NavigateToCommand}"
                             CommandParameter="Home">
                         <StackPanel Orientation="Horizontal" Spacing="12">
@@ -47,6 +73,7 @@
                     </Button>
 
                     <Button Classes="NavItem"
+                            Classes.Active="{Binding CurrentPage, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Servers}"
                             Command="{Binding NavigateToCommand}"
                             CommandParameter="Servers">
                         <StackPanel Orientation="Horizontal" Spacing="12">
@@ -57,6 +84,7 @@
                     </Button>
 
                     <Button Classes="NavItem"
+                            Classes.Active="{Binding CurrentPage, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Settings}"
                             Command="{Binding NavigateToCommand}"
                             CommandParameter="Settings">
                         <StackPanel Orientation="Horizontal" Spacing="12">
@@ -90,15 +118,15 @@
 
         <!-- Main Content Area -->
         <Border Grid.Column="1" Background="{StaticResource BackgroundPrimary}">
-            <ContentControl Content="{Binding CurrentPage}">
-                <ContentControl.ContentTemplate>
-                    <DataTemplate>
-                        <views:HomePage />
-                    </DataTemplate>
-                </ContentControl.ContentTemplate>
-            </ContentControl>
+            <Panel>
+                <views:HomePage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Home}" />
+                <views:ServersPage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Servers}" />
+                <views:AddServerPage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=AddServer}" />
+                <views:SettingsPage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Settings}" />
+            </Panel>
         </Border>
 
+        </Grid>
     </Grid>
 
 </Window>

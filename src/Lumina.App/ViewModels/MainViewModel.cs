@@ -6,6 +6,7 @@ using Lumina.App.Services;
 using Lumina.Core.Configuration;
 using Lumina.Core.Models;
 using Lumina.Core.Services;
+using Lumina.Core.WireGuard;
 
 namespace Lumina.App.ViewModels;
 
@@ -17,6 +18,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     private readonly IVpnService _vpnService;
     private readonly IConfigurationStore _configStore;
     private readonly INavigationService _navigationService;
+    private readonly IDriverManager _driverManager;
     private readonly IDisposable _stateSubscription;
     private readonly IDisposable _statsSubscription;
 
@@ -39,19 +41,28 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     private string _currentPage = "Home";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanConnect))]
     private bool _isDriverInstalled;
 
     [ObservableProperty]
     private string? _driverVersion;
 
+    [ObservableProperty]
+    private bool _isInitializingDriver;
+
+    [ObservableProperty]
+    private string? _driverError;
+
     public MainViewModel(
         IVpnService vpnService,
         IConfigurationStore configStore,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        IDriverManager driverManager)
     {
         _vpnService = vpnService;
         _configStore = configStore;
         _navigationService = navigationService;
+        _driverManager = driverManager;
 
         // Subscribe to connection state changes
         _stateSubscription = _vpnService.ConnectionStateStream
@@ -65,13 +76,50 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         // Subscribe to navigation
         _navigationService.Navigated += (_, page) => CurrentPage = page;
 
-        // Check driver status
-        IsDriverInstalled = _vpnService.IsDriverInstalled();
-        var version = _vpnService.GetDriverVersion();
-        DriverVersion = version?.ToString();
+        // Initialize driver and load configurations
+        _ = InitializeAsync();
+    }
 
+    private async Task InitializeAsync()
+    {
+        // Initialize driver
+        await EnsureDriverReadyAsync();
+        
         // Load configurations
-        _ = LoadConfigurationsAsync();
+        await LoadConfigurationsAsync();
+    }
+
+    [RelayCommand]
+    private async Task EnsureDriverReadyAsync()
+    {
+        IsInitializingDriver = true;
+        DriverError = null;
+
+        try
+        {
+            var result = await _driverManager.EnsureDriverReadyAsync();
+            
+            if (result.Success)
+            {
+                IsDriverInstalled = true;
+                var version = _driverManager.GetInstalledDriverVersion();
+                DriverVersion = version?.ToString() ?? "Installed";
+            }
+            else
+            {
+                IsDriverInstalled = false;
+                DriverError = result.ErrorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            IsDriverInstalled = false;
+            DriverError = ex.Message;
+        }
+        finally
+        {
+            IsInitializingDriver = false;
+        }
     }
 
     /// <summary>
@@ -95,7 +143,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     /// <summary>
     /// Whether connect action is available.
     /// </summary>
-    public bool CanConnect => ConnectionState == ConnectionState.Disconnected && SelectedConfiguration is not null;
+    public bool CanConnect => ConnectionState == ConnectionState.Disconnected && SelectedConfiguration is not null && IsDriverInstalled;
 
     /// <summary>
     /// Formatted upload speed.

@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Lumina.App.Services;
 using Lumina.Core.Configuration;
 using Lumina.Core.Models;
 using Lumina.Core.Services;
@@ -14,6 +15,7 @@ public partial class ServersViewModel : ViewModelBase
 {
     private readonly IConfigurationStore _configStore;
     private readonly IVpnService _vpnService;
+    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     private ObservableCollection<ServerItemViewModel> _servers = [];
@@ -27,10 +29,14 @@ public partial class ServersViewModel : ViewModelBase
     [ObservableProperty]
     private ServerItemViewModel? _selectedServer;
 
-    public ServersViewModel(IConfigurationStore configStore, IVpnService vpnService)
+    public ServersViewModel(
+        IConfigurationStore configStore, 
+        IVpnService vpnService,
+        INavigationService navigationService)
     {
         _configStore = configStore;
         _vpnService = vpnService;
+        _navigationService = navigationService;
 
         _ = LoadServersAsync();
     }
@@ -79,6 +85,12 @@ public partial class ServersViewModel : ViewModelBase
     {
         await _configStore.DeleteConfigurationAsync(server.Configuration.Id);
         await LoadServersAsync();
+    }
+
+    [RelayCommand]
+    private void AddServer()
+    {
+        _navigationService.NavigateTo("AddServer");
     }
 
     private void FilterServers()

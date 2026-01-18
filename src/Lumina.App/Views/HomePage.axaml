@@ -109,23 +109,49 @@
 
             </Grid>
 
-            <!-- Driver Status Warning -->
+            <!-- Driver Initializing -->
             <Border Classes="Card" 
                     MaxWidth="500" 
                     HorizontalAlignment="Center"
-                    IsVisible="{Binding !IsDriverInstalled}"
+                    IsVisible="{Binding IsInitializingDriver}"
                     Background="#331E293B"
-                    BorderBrush="{StaticResource WarningBrush}">
+                    BorderBrush="{StaticResource AccentBrush}">
                 <StackPanel Spacing="8">
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <PathIcon Data="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+                        <PathIcon Data="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"
                                   Width="20" Height="20"
-                                  Foreground="{StaticResource WarningBrush}" />
-                        <TextBlock Text="WireGuard Driver Not Found" Classes="BodyStrong" />
+                                  Foreground="{StaticResource AccentBrush}" />
+                        <TextBlock Text="Initializing Driver..." Classes="BodyStrong" />
                     </StackPanel>
-                    <TextBlock Text="Please install WireGuard for Windows to use Lumina."
+                    <TextBlock Text="Setting up WireGuard driver, please wait."
                                Classes="Body"
                                TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Driver Error -->
+            <Border Classes="Card" 
+                    MaxWidth="500" 
+                    HorizontalAlignment="Center"
+                    IsVisible="{Binding DriverError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Background="#331E293B"
+                    BorderBrush="{StaticResource ErrorBrush}">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                                  Width="20" Height="20"
+                                  Foreground="{StaticResource ErrorBrush}" />
+                        <TextBlock Text="Driver Initialization Failed" Classes="BodyStrong" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding DriverError}"
+                               Classes="Body"
+                               TextWrapping="Wrap" />
+                    <Button Classes="Secondary" 
+                            HorizontalAlignment="Left"
+                            Margin="0,8,0,0"
+                            Command="{Binding EnsureDriverReadyCommand}">
+                        <TextBlock Text="Retry" />
+                    </Button>
                 </StackPanel>
             </Border>
 

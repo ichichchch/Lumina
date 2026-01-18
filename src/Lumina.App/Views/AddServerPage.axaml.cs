@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Lumina.App.Views;
 
-public partial class ServersPage : UserControl
+public partial class AddServerPage : UserControl
 {
-    public ServersPage()
+    public AddServerPage()
     {
         InitializeComponent();
-        DataContext = App.Services.GetRequiredService<ServersViewModel>();
+        DataContext = App.Services.GetRequiredService<AddServerViewModel>();
     }
 }

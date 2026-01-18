@@ -1,0 +1,163 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Lumina.App.ViewModels"
+             x:Class="Lumina.App.Views.AddServerPage"
+             x:DataType="vm:AddServerViewModel">
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <StackPanel Spacing="32" Margin="40">
+
+            <!-- Header -->
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0" 
+                        Classes="Ghost"
+                        Command="{Binding CancelCommand}"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                                  Width="16" Height="16" />
+                        <TextBlock Text="Back" />
+                    </StackPanel>
+                </Button>
+                
+                <StackPanel Grid.Column="1" Spacing="8" Margin="24,0">
+                    <TextBlock Text="Add Server" Classes="Display" />
+                    <TextBlock Text="Configure a new VPN server connection" Classes="Body" />
+                </StackPanel>
+
+                <Button Grid.Column="2" 
+                        Classes="Primary"
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding CanSave}"
+                        VerticalAlignment="Top">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
+                                  Width="16" Height="16" />
+                        <TextBlock Text="Save" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Validation Errors -->
+            <Border Classes="Card" 
+                    IsVisible="{Binding ValidationErrors.Count}"
+                    Background="#331E293B"
+                    BorderBrush="{StaticResource ErrorBrush}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Please fix the following errors:" Classes="BodyStrong" 
+                               Foreground="{StaticResource ErrorBrush}" />
+                    <ItemsControl ItemsSource="{Binding ValidationErrors}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Classes="Caption" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Basic Info -->
+            <Border Classes="Card">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Basic Information" Classes="Title" />
+                    
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Server Name *" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding Name}" 
+                                 Watermark="e.g., US West Server" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Location" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding Location}" 
+                                 Watermark="e.g., Los Angeles, USA" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Peer Configuration -->
+            <Border Classes="Card">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Peer Configuration" Classes="Title" />
+                    
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Endpoint *" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding Endpoint}" 
+                                 Watermark="e.g., vpn.example.com:51820" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Public Key *" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding PublicKey}" 
+                                 Watermark="Server's public key (Base64)" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Preshared Key (Optional)" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding PresharedKey}" 
+                                 Watermark="Optional preshared key (Base64)" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Allowed IPs" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding AllowedIPs}" 
+                                 Watermark="e.g., 0.0.0.0/0, ::/0" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Persistent Keepalive (seconds)" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding PersistentKeepalive}" 
+                                 Watermark="e.g., 25" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Interface Configuration -->
+            <Border Classes="Card">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Interface Configuration" Classes="Title" />
+                    
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Private Key" Classes="Caption" />
+                            <TextBox Classes="Lumina" 
+                                     Text="{Binding PrivateKey}" 
+                                     Watermark="Your private key (Base64)" />
+                        </StackPanel>
+                        <Button Grid.Column="1" 
+                                Classes="Secondary"
+                                Command="{Binding GenerateKeyPairCommand}"
+                                VerticalAlignment="Bottom"
+                                Margin="12,0,0,0">
+                            <TextBlock Text="Generate" />
+                        </Button>
+                    </Grid>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Interface Address" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding InterfaceAddress}" 
+                                 Watermark="e.g., 10.0.0.2/32" />
+                    </StackPanel>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="DNS Servers" Classes="Caption" />
+                        <TextBox Classes="Lumina" 
+                                 Text="{Binding DnsServers}" 
+                                 Watermark="e.g., 1.1.1.1, 1.0.0.1" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+
+</UserControl>

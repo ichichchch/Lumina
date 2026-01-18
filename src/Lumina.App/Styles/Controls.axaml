@@ -198,4 +198,33 @@
         <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
     </Style>
 
+    <!-- Window Control Button -->
+    <Style Selector="Button.WindowControlButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="30" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="CornerRadius" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Background" Duration="0:0:0.1" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Button.WindowControlButton:pointerover">
+        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.WindowControlButton.CloseButton:pointerover">
+        <Setter Property="Background" Value="#E81123" />
+        <Setter Property="Foreground" Value="White" />
+    </Style>
+
 </Styles>

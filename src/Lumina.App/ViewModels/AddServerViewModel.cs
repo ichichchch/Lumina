@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Lumina.App.Services;
 using Lumina.Core.Configuration;
 using Lumina.Core.Crypto;
 using Lumina.Core.Models;
@@ -14,6 +15,7 @@ public partial class AddServerViewModel : ViewModelBase
 {
     private readonly IConfigurationStore _configStore;
     private readonly IKeyGenerator _keyGenerator;
+    private readonly INavigationService _navigationService;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CanSave))]
@@ -59,10 +61,14 @@ public partial class AddServerViewModel : ViewModelBase
     /// </summary>
     public event EventHandler? SaveCompleted;
 
-    public AddServerViewModel(IConfigurationStore configStore, IKeyGenerator keyGenerator)
+    public AddServerViewModel(
+        IConfigurationStore configStore, 
+        IKeyGenerator keyGenerator,
+        INavigationService navigationService)
     {
         _configStore = configStore;
         _keyGenerator = keyGenerator;
+        _navigationService = navigationService;
     }
 
     public bool CanSave =>
@@ -101,6 +107,10 @@ public partial class AddServerViewModel : ViewModelBase
         {
             await _configStore.SaveConfigurationAsync(config, cancellationToken);
             SaveCompleted?.Invoke(this, EventArgs.Empty);
+            
+            // Reset form and navigate back
+            ResetForm();
+            _navigationService.NavigateTo("Servers");
         }
         finally
         {
@@ -108,11 +118,26 @@ public partial class AddServerViewModel : ViewModelBase
         }
     }
 
+    private void ResetForm()
+    {
+        Name = string.Empty;
+        Location = string.Empty;
+        Endpoint = string.Empty;
+        PublicKey = string.Empty;
+        PresharedKey = string.Empty;
+        AllowedIPs = "0.0.0.0/0, ::/0";
+        DnsServers = "1.1.1.1, 1.0.0.1";
+        InterfaceAddress = "10.0.0.2/32";
+        PersistentKeepalive = 25;
+        PrivateKey = string.Empty;
+        ValidationErrors.Clear();
+    }
+
     [RelayCommand]
     private void Cancel()
     {
-        // Clear and notify parent to close dialog
-        SaveCompleted?.Invoke(this, EventArgs.Empty);
+        // Navigate back to Servers page
+        _navigationService.NavigateTo("Servers");
     }
 
     private TunnelConfiguration BuildConfiguration()
