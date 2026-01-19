@@ -1,5 +1,3 @@
-using CommunityToolkit.Mvvm.ComponentModel;
-
 namespace Lumina.App.ViewModels;
 
 /// <summary>

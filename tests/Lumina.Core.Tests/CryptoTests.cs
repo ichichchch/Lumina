@@ -1,6 +1,3 @@
-using Lumina.Core.Crypto;
-using Xunit;
-
 namespace Lumina.Core.Tests;
 
 public class KeyGeneratorTests

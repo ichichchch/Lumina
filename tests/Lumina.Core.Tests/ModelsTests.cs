@@ -1,6 +1,3 @@
-using Lumina.Core.Models;
-using Xunit;
-
 namespace Lumina.Core.Tests;
 
 public class TunnelConfigurationTests

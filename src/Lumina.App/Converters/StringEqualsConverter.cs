@@ -1,6 +1,3 @@
-using System.Globalization;
-using Avalonia.Data.Converters;
-
 namespace Lumina.App.Converters;
 
 /// <summary>

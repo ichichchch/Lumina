@@ -1,6 +1,3 @@
-using System.Net;
-using System.Text.Json.Serialization;
-
 namespace Lumina.Core.Models;
 
 /// <summary>

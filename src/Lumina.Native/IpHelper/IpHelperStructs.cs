@@ -1,6 +1,3 @@
-using System.Runtime.InteropServices;
-using Lumina.Native.WireGuardNT;
-
 namespace Lumina.Native.IpHelper;
 
 /// <summary>

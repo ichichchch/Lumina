@@ -1,6 +1,3 @@
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-
 namespace Lumina.Native.WireGuardNT;
 
 /// <summary>

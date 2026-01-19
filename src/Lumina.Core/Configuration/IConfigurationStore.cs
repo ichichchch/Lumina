@@ -1,5 +1,3 @@
-using Lumina.Core.Models;
-
 namespace Lumina.Core.Configuration;
 
 /// <summary>

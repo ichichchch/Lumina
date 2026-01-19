@@ -1,16 +1,3 @@
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Markup.Xaml;
-using Lumina.App.Services;
-using Lumina.App.ViewModels;
-using Lumina.App.Views;
-using Lumina.Core.Configuration;
-using Lumina.Core.Crypto;
-using Lumina.Core.Network;
-using Lumina.Core.Services;
-using Lumina.Core.WireGuard;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Lumina.App;
 
 public partial class App : Application

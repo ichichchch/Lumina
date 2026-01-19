@@ -1,5 +1,3 @@
-using Avalonia;
-
 namespace Lumina.App;
 
 internal sealed class Program

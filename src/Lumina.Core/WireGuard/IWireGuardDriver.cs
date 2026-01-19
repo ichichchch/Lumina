@@ -1,6 +1,3 @@
-using Lumina.Core.Models;
-using Lumina.Native.WireGuardNT;
-
 namespace Lumina.Core.WireGuard;
 
 /// <summary>
