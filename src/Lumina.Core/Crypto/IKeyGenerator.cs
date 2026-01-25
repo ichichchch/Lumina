@@ -1,26 +1,26 @@
 namespace Lumina.Core.Crypto;
 
 /// <summary>
-/// Interface for WireGuard key generation.
+/// WireGuard 密钥生成接口。
 /// </summary>
 public interface IKeyGenerator
 {
     /// <summary>
-    /// Generates a new Curve25519 private key.
+    /// 生成新的 Curve25519 私钥。
     /// </summary>
-    /// <returns>32-byte private key.</returns>
+    /// <returns>长度为 32 字节的私钥。</returns>
     byte[] GeneratePrivateKey();
 
     /// <summary>
-    /// Derives the public key from a private key.
+    /// 根据私钥推导公钥。
     /// </summary>
-    /// <param name="privateKey">32-byte private key.</param>
-    /// <returns>32-byte public key.</returns>
+    /// <param name="privateKey">长度为 32 字节的私钥。</param>
+    /// <returns>长度为 32 字节的公钥。</returns>
     byte[] GetPublicKey(ReadOnlySpan<byte> privateKey);
 
     /// <summary>
-    /// Generates a new key pair.
+    /// 生成新的密钥对。
     /// </summary>
-    /// <returns>Tuple of (PrivateKey, PublicKey) as Base64 strings.</returns>
+    /// <returns>以 Base64 字符串表示的 (PrivateKey, PublicKey) 元组。</returns>
     (string PrivateKey, string PublicKey) GenerateKeyPair();
 }

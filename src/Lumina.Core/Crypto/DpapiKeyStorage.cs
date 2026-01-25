@@ -1,8 +1,8 @@
 namespace Lumina.Core.Crypto;
 
 /// <summary>
-/// DPAPI-based secure storage for private keys.
-/// Keys are encrypted using Windows Data Protection API.
+/// 基于 DPAPI 的私钥安全存储实现。
+/// 使用 Windows 数据保护 API 对密钥进行加密保护。
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class DpapiKeyStorage : IKeyStorage
@@ -10,10 +10,10 @@ public sealed class DpapiKeyStorage : IKeyStorage
     private readonly string _storageDirectory;
 
     /// <summary>
-    /// Creates a new DPAPI key storage instance.
+    /// 创建一个新的 DPAPI 私钥存储实例。
     /// </summary>
     /// <param name="storageDirectory">
-    /// Directory to store encrypted keys. Defaults to %LOCALAPPDATA%\Lumina\Keys.
+    /// 存放加密密钥文件的目录；默认为 %LOCALAPPDATA%\Lumina\Keys。
     /// </param>
     public DpapiKeyStorage(string? storageDirectory = null)
     {
@@ -39,7 +39,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
 
         var filePath = GetKeyFilePath(identifier);
 
-        // Encrypt using DPAPI with CurrentUser scope
+        // 使用 DPAPI（CurrentUser 作用域）加密
         var encryptedData = ProtectedData.Protect(
             privateKey,
             GetEntropy(identifier),
@@ -47,7 +47,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
 
         await File.WriteAllBytesAsync(filePath, encryptedData, cancellationToken);
 
-        // Secure the file - remove inheritance and set restricted permissions
+        // 加固文件（隐藏等最佳努力）
         SecureFile(filePath);
     }
 
@@ -74,7 +74,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
         }
         catch (CryptographicException)
         {
-            // Key is corrupted or was created by different user
+            // 密钥已损坏或由不同用户创建
             return null;
         }
     }
@@ -88,7 +88,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
 
         if (File.Exists(filePath))
         {
-            // Overwrite with random data before deletion for extra security
+            // 删除前用随机数据覆盖（最佳努力的额外保护）
             try
             {
                 var fileInfo = new FileInfo(filePath);
@@ -106,7 +106,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
             }
             catch (IOException)
             {
-                // Best effort deletion
+                // 最佳努力删除
                 File.Delete(filePath);
             }
         }
@@ -123,35 +123,51 @@ public sealed class DpapiKeyStorage : IKeyStorage
         return Task.FromResult(File.Exists(filePath));
     }
 
+    /// <summary>
+    /// 获取指定标识对应的密钥文件路径。
+    /// </summary>
+    /// <param name="identifier">密钥唯一标识。</param>
+    /// <returns>密钥文件完整路径。</returns>
     private string GetKeyFilePath(string identifier)
     {
-        // Sanitize identifier for file system
+        // 将标识转换为文件系统可用的文件名片段
         var sanitized = string.Join("_",
             identifier.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
 
         return Path.Combine(_storageDirectory, $"{sanitized}.key");
     }
 
+    /// <summary>
+    /// 确保存储目录存在；如果新建目录则设置为隐藏。
+    /// </summary>
     private void EnsureDirectoryExists()
     {
         if (!Directory.Exists(_storageDirectory))
         {
             var dirInfo = Directory.CreateDirectory(_storageDirectory);
 
-            // Set directory to hidden
+            // 将目录设置为隐藏
             dirInfo.Attributes |= FileAttributes.Hidden;
         }
     }
 
+    /// <summary>
+    /// 基于标识生成额外熵，用于增强 DPAPI 的保护强度。
+    /// </summary>
+    /// <param name="identifier">密钥唯一标识。</param>
+    /// <returns>额外熵字节数组。</returns>
     private static byte[] GetEntropy(string identifier)
     {
-        // Additional entropy based on identifier
-        // This provides extra protection against key theft
+        // 基于标识的额外熵（用于提供额外保护）
         using var sha = SHA256.Create();
         var identifierBytes = System.Text.Encoding.UTF8.GetBytes($"Lumina.KeyStorage.{identifier}");
         return sha.ComputeHash(identifierBytes);
     }
 
+    /// <summary>
+    /// 对密钥文件执行额外的文件系统层面加固（最佳努力）。
+    /// </summary>
+    /// <param name="filePath">密钥文件路径。</param>
     private static void SecureFile(string filePath)
     {
         try
@@ -159,12 +175,11 @@ public sealed class DpapiKeyStorage : IKeyStorage
             var fileInfo = new FileInfo(filePath);
             fileInfo.Attributes |= FileAttributes.Hidden;
 
-            // Additional security through file system ACLs could be added here
-            // For DPAPI, the encryption is the primary security mechanism
+            // 可在此处增加 ACL 等额外安全策略；DPAPI 加密仍是主要保护机制
         }
         catch
         {
-            // Best effort security hardening
+            // 最佳努力加固
         }
     }
 }

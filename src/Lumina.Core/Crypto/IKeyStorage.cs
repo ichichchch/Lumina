@@ -1,38 +1,38 @@
 namespace Lumina.Core.Crypto;
 
 /// <summary>
-/// Interface for secure storage of private keys.
+/// 私钥安全存储接口。
 /// </summary>
 public interface IKeyStorage
 {
     /// <summary>
-    /// Stores a private key securely.
+    /// 安全地存储私钥。
     /// </summary>
-    /// <param name="identifier">Unique identifier for the key.</param>
-    /// <param name="privateKey">The private key bytes to store.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="identifier">密钥的唯一标识。</param>
+    /// <param name="privateKey">要存储的私钥字节数组。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task StorePrivateKeyAsync(string identifier, byte[] privateKey, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Loads a private key from secure storage.
+    /// 从安全存储中加载私钥。
     /// </summary>
-    /// <param name="identifier">Unique identifier for the key.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The private key bytes, or null if not found.</returns>
+    /// <param name="identifier">密钥的唯一标识。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>如果找到则返回私钥字节数组；否则返回 null。</returns>
     Task<byte[]?> LoadPrivateKeyAsync(string identifier, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes a private key from storage.
+    /// 从存储中删除私钥。
     /// </summary>
-    /// <param name="identifier">Unique identifier for the key.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="identifier">密钥的唯一标识。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task DeletePrivateKeyAsync(string identifier, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if a key exists in storage.
+    /// 检查存储中是否存在指定密钥。
     /// </summary>
-    /// <param name="identifier">Unique identifier for the key.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>True if the key exists.</returns>
+    /// <param name="identifier">密钥的唯一标识。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>如果密钥存在则返回 true。</returns>
     Task<bool> KeyExistsAsync(string identifier, CancellationToken cancellationToken = default);
 }

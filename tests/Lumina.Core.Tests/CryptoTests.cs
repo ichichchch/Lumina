@@ -1,7 +1,9 @@
 namespace Lumina.Core.Tests;
 
+// 针对 Curve25519 密钥生成器的单元测试：关注长度、clamping 规则与确定性等核心行为。
 public class KeyGeneratorTests
 {
+    // 被测对象：Curve25519 私钥/公钥生成逻辑。
     private readonly IKeyGenerator _keyGenerator = new Curve25519KeyGenerator();
 
     [Fact]
@@ -17,10 +19,10 @@ public class KeyGeneratorTests
     {
         var key = _keyGenerator.GeneratePrivateKey();
 
-        // Check clamping: first byte has bits 0-2 cleared
+        // 校验 clamping：第 1 个字节的 bit0-bit2 必须清零
         Assert.Equal(0, key[0] & 0x07);
 
-        // Last byte has bit 7 cleared and bit 6 set
+        // 最后 1 个字节：bit7 必须清零，bit6 必须置 1
         Assert.Equal(0, key[31] & 0x80);
         Assert.NotEqual(0, key[31] & 0x40);
     }
@@ -67,11 +69,11 @@ public class KeyGeneratorTests
     {
         var (privateKey, publicKey) = _keyGenerator.GenerateKeyPair();
 
-        // Should be valid Base64 (44 characters for 32 bytes)
+        // Base64 编码后应为 44 个字符（32 字节 -> Base64）
         Assert.Equal(44, privateKey.Length);
         Assert.Equal(44, publicKey.Length);
 
-        // Should decode without exception
+        // 应能被正常解码，不抛出异常
         var privateBytes = Convert.FromBase64String(privateKey);
         var publicBytes = Convert.FromBase64String(publicKey);
 

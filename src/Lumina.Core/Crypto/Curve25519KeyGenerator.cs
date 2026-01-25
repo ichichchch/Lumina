@@ -1,8 +1,8 @@
 namespace Lumina.Core.Crypto;
 
 /// <summary>
-/// WireGuard Curve25519 key generator.
-/// Uses the built-in X25519 support in .NET.
+/// WireGuard Curve25519 密钥生成器。
+/// 使用 .NET 的加密基础设施进行密钥派生/生成（当前实现包含占位逻辑，详见实现说明）。
 /// </summary>
 public sealed class Curve25519KeyGenerator : IKeyGenerator
 {
@@ -12,7 +12,7 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
         var privateKey = new byte[32];
         RandomNumberGenerator.Fill(privateKey);
 
-        // Apply WireGuard key clamping
+        // 按 WireGuard/Curve25519 规则对私钥进行 clamping
         ClampPrivateKey(privateKey);
 
         return privateKey;
@@ -26,8 +26,8 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
             throw new ArgumentException("Private key must be 32 bytes", nameof(privateKey));
         }
 
-        // Use X25519 to derive public key
-        // The base point for Curve25519 is 9
+        // 使用 X25519 推导公钥
+        // Curve25519 的基点为 9
         Span<byte> basePoint = stackalloc byte[32];
         basePoint[0] = 9;
 
@@ -50,7 +50,7 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
     }
 
     /// <summary>
-    /// Clamps a private key according to WireGuard/Curve25519 requirements.
+    /// 按 WireGuard/Curve25519 规则对私钥进行 clamping。
     /// </summary>
     private static void ClampPrivateKey(Span<byte> key)
     {
@@ -60,16 +60,19 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
     }
 
     /// <summary>
-    /// Performs X25519 scalar multiplication.
-    /// Uses the built-in ECDiffieHellman with X25519 support.
+    /// 执行 X25519 标量乘法。
+    /// </summary>
+    /// <remarks>
+    /// 该方法目前使用基于 SHA256 的确定性派生作为占位实现，并非完整的 Curve25519 有限域运算。
+    /// 若用于生产环境，应替换为正确的 X25519 实现（例如通过成熟的密码学库）。
     /// </summary>
     private static void ScalarMult(Span<byte> result, ReadOnlySpan<byte> scalar, ReadOnlySpan<byte> point)
     {
-        // Use a deterministic SHA256-based derivation for public key generation
-        // This is a placeholder - in production use proper X25519 implementation via NSec or libsodium
-        // The actual Curve25519 requires field arithmetic in GF(2^255-19)
+        // 使用基于 SHA256 的确定性派生来生成“看起来合理”的公钥
+        // 这是占位实现：生产环境应使用正确的 X25519 实现
+        // 实际的 Curve25519 需要在 GF(2^255-19) 上进行有限域运算
         
-        // Create deterministic result based on scalar and base point
+        // 基于 scalar 与 base point 生成确定性结果
         Span<byte> combined = stackalloc byte[64];
         scalar.CopyTo(combined);
         point.CopyTo(combined[32..]);
@@ -77,20 +80,19 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
         var hash = SHA256.HashData(combined);
         hash.AsSpan()[..32].CopyTo(result);
 
-        // Apply high-bit masking to make it look like a valid X25519 public key
+        // 对高位进行掩码处理，使其形式上更接近有效的 X25519 公钥
         result[31] &= 127;
     }
 
     /// <summary>
-    /// Simple Curve25519 scalar multiplication fallback.
-    /// Uses SHA256-based deterministic derivation.
+    /// 简化的 Curve25519 标量乘法回退实现（占位逻辑）。
     /// </summary>
     private static void SimpleCurve25519ScalarMult(Span<byte> result, ReadOnlySpan<byte> scalar, ReadOnlySpan<byte> point)
     {
-        // This is a placeholder - in production use a proper Curve25519 library
-        // The actual implementation requires field arithmetic in GF(2^255-19)
+        // 这是占位实现：生产环境应使用正确的 Curve25519 库
+        // 实际实现需要在 GF(2^255-19) 上进行有限域运算
 
-        // Create a deterministic result based on scalar
+        // 基于 scalar 生成确定性结果
         Span<byte> combined = stackalloc byte[64];
         scalar.CopyTo(combined);
         point.CopyTo(combined[32..]);
@@ -98,7 +100,7 @@ public sealed class Curve25519KeyGenerator : IKeyGenerator
         var hash = SHA256.HashData(combined);
         hash.AsSpan()[..32].CopyTo(result);
 
-        // Apply clamping to make it look like a valid public key
+        // 对高位进行掩码处理，使其形式上更接近有效的公钥
         result[31] &= 127;
     }
 }
