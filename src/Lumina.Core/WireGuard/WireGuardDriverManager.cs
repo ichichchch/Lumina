@@ -115,18 +115,40 @@ public sealed class WireGuardDriverManager : IDriverManager
     /// <inheritdoc />
     public async Task<DriverInstallResult> EnsureDriverReadyAsync(CancellationToken cancellationToken = default)
     {
-        _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(GetWireGuardDllPath());
-
         var state = GetDriverState();
 
         switch (state)
         {
             case DriverInstallState.Running:
-                return DriverInstallResult.Succeeded(DriverInstallState.Running);
+                {
+                    var dllPath = GetWireGuardDllPath();
+                    if (!File.Exists(dllPath))
+                    {
+                        return DriverInstallResult.Failed($"Driver library not found: {dllPath}");
+                    }
+
+                    _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllPath);
+                    return DriverInstallResult.Succeeded(DriverInstallState.Running);
+                }
 
             case DriverInstallState.Stopped:
                 // 尝试启动服务
-                return await Task.Run(() => StartDriverService(), cancellationToken);
+                {
+                    var startResult = await Task.Run(() => StartDriverService(), cancellationToken);
+                    if (!startResult.Success)
+                    {
+                        return startResult;
+                    }
+
+                    var dllPath = GetWireGuardDllPath();
+                    if (!File.Exists(dllPath))
+                    {
+                        return DriverInstallResult.Failed($"Driver library not found: {dllPath}");
+                    }
+
+                    _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllPath);
+                    return startResult;
+                }
 
             case DriverInstallState.NotInstalled:
                 // 安装并启动
@@ -211,7 +233,9 @@ public sealed class WireGuardDriverManager : IDriverManager
         var dllTarget = Path.Combine(_driverDirectory, DllFileName);
 
         // 若文件已存在则跳过
-        if (File.Exists(sysTarget) && File.Exists(dllTarget))
+        var sysExists = File.Exists(sysTarget);
+        var dllExists = File.Exists(dllTarget);
+        if (sysExists && dllExists)
         {
             return;
         }
@@ -222,12 +246,16 @@ public sealed class WireGuardDriverManager : IDriverManager
             var externalSys = Path.Combine(_externalDriverPath, DriverFileName);
             var externalDll = Path.Combine(_externalDriverPath, DllFileName);
 
-            if (File.Exists(externalSys) && File.Exists(externalDll))
+            if (!sysExists && File.Exists(externalSys))
             {
-                File.Copy(externalSys, sysTarget, overwrite: true);
-                File.Copy(externalDll, dllTarget, overwrite: true);
-                _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllTarget);
-                return;
+                File.Copy(externalSys, sysTarget, overwrite: false);
+                sysExists = true;
+            }
+
+            if (!dllExists && File.Exists(externalDll))
+            {
+                File.Copy(externalDll, dllTarget, overwrite: false);
+                dllExists = true;
             }
         }
 
@@ -235,15 +263,26 @@ public sealed class WireGuardDriverManager : IDriverManager
         var assembly = Assembly.GetExecutingAssembly();
         var resourcePrefix = "Lumina.Core.Resources.Driver.";
 
-        var sysExtracted = TryExtractResource(assembly, $"{resourcePrefix}{DriverFileName}", sysTarget);
-        var dllExtracted = TryExtractResource(assembly, $"{resourcePrefix}{DllFileName}", dllTarget);
+        var sysExtracted = sysExists || TryExtractResource(assembly, $"{resourcePrefix}{DriverFileName}", sysTarget);
+        var dllExtracted = dllExists || TryExtractResource(assembly, $"{resourcePrefix}{DllFileName}", dllTarget);
 
         if (!sysExtracted || !dllExtracted)
         {
+            var missing = new List<string>(capacity: 2);
+            if (!sysExtracted)
+            {
+                missing.Add(DriverFileName);
+            }
+            if (!dllExtracted)
+            {
+                missing.Add(DllFileName);
+            }
+
             throw new FileNotFoundException(
                 "WireGuardNT driver files not found. " +
                 "Either embed wireguard.sys and wireguard.dll as resources in Lumina.Core/Resources/Driver/, " +
                 "or provide external driver path via configuration. " +
+                $"Missing: {string.Join(", ", missing)}. " +
                 $"Expected location: {_driverDirectory}");
         }
 
@@ -259,13 +298,18 @@ public sealed class WireGuardDriverManager : IDriverManager
     /// <returns>提取成功则返回 true。</returns>
     private static bool TryExtractResource(Assembly assembly, string resourceName, string targetPath)
     {
+        if (File.Exists(targetPath))
+        {
+            return true;
+        }
+
         using var stream = assembly.GetManifestResourceStream(resourceName);
         if (stream is null)
         {
             return false;
         }
 
-        using var fileStream = File.Create(targetPath);
+        using var fileStream = new FileStream(targetPath, FileMode.CreateNew, FileAccess.Write, FileShare.Read);
         stream.CopyTo(fileStream);
         return true;
     }
