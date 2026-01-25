@@ -20,42 +20,48 @@
             <StackPanel Spacing="12">
                 <TextBlock Text="{DynamicResource Settings_SectionGeneral}" Classes="StatLabel" />
                 <Border Classes="Card">
-                    <StackPanel Spacing="16">
+                    <StackPanel Spacing="16" HorizontalAlignment="Stretch">
                         
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_AutoConnectTitle}" Classes="BodyStrong" />
-                                <TextBlock Text="{DynamicResource Settings_AutoConnectDesc}" Classes="Caption" />
+                                <TextBlock Text="{DynamicResource Settings_AutoConnectTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_AutoConnectDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <ToggleSwitch Grid.Column="1" 
+                            <ToggleSwitch Grid.Column="2"
                                           Classes="Lumina"
                                           IsChecked="{Binding AutoConnect}"
+                                          AutomationProperties.Name="{DynamicResource Settings_AutoConnectTitle}"
+                                          HorizontalAlignment="Right"
                                           VerticalAlignment="Center" />
                         </Grid>
 
-                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+                        <Border Height="1" Background="{DynamicResource BorderDefault}" />
 
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_StartWithWindowsTitle}" Classes="BodyStrong" />
-                                <TextBlock Text="{DynamicResource Settings_StartWithWindowsDesc}" Classes="Caption" />
+                                <TextBlock Text="{DynamicResource Settings_StartWithWindowsTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_StartWithWindowsDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <ToggleSwitch Grid.Column="1" 
+                            <ToggleSwitch Grid.Column="2"
                                           Classes="Lumina"
                                           IsChecked="{Binding StartOnBoot}"
+                                          AutomationProperties.Name="{DynamicResource Settings_StartWithWindowsTitle}"
+                                          HorizontalAlignment="Right"
                                           VerticalAlignment="Center" />
                         </Grid>
 
-                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+                        <Border Height="1" Background="{DynamicResource BorderDefault}" />
 
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_StartMinimizedTitle}" Classes="BodyStrong" />
-                                <TextBlock Text="{DynamicResource Settings_StartMinimizedDesc}" Classes="Caption" />
+                                <TextBlock Text="{DynamicResource Settings_StartMinimizedTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_StartMinimizedDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <ToggleSwitch Grid.Column="1" 
+                            <ToggleSwitch Grid.Column="2"
                                           Classes="Lumina"
                                           IsChecked="{Binding StartMinimized}"
+                                          AutomationProperties.Name="{DynamicResource Settings_StartMinimizedTitle}"
+                                          HorizontalAlignment="Right"
                                           VerticalAlignment="Center" />
                         </Grid>
 
@@ -67,18 +73,22 @@
             <StackPanel Spacing="12">
                 <TextBlock Text="{DynamicResource Settings_SectionSecurity}" Classes="StatLabel" />
                 <Border Classes="Card">
-                    <StackPanel Spacing="16">
+                    <StackPanel Spacing="16" HorizontalAlignment="Stretch">
                         
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_KillSwitchTitle}" Classes="BodyStrong" />
+                                <TextBlock Text="{DynamicResource Settings_KillSwitchTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
                                 <TextBlock Text="{DynamicResource Settings_KillSwitchDesc}" 
                                            Classes="Caption"
-                                           TextWrapping="Wrap" />
+                                           TextWrapping="Wrap"
+                                           MaxLines="2"
+                                           TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            <ToggleSwitch Grid.Column="1" 
+                            <ToggleSwitch Grid.Column="2"
                                           Classes="Lumina"
                                           IsChecked="{Binding KillSwitch}"
+                                          AutomationProperties.Name="{DynamicResource Settings_KillSwitchTitle}"
+                                          HorizontalAlignment="Right"
                                           VerticalAlignment="Center" />
                         </Grid>
 
@@ -90,15 +100,18 @@
             <StackPanel Spacing="12">
                 <TextBlock Text="{DynamicResource Settings_SectionAppearance}" Classes="StatLabel" />
                 <Border Classes="Card">
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                         <StackPanel>
-                            <TextBlock Text="{DynamicResource Settings_ThemeTitle}" Classes="BodyStrong" />
-                            <TextBlock Text="{DynamicResource Settings_ThemeDesc}" Classes="Caption" />
+                            <TextBlock Text="{DynamicResource Settings_ThemeTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{DynamicResource Settings_ThemeDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
-                        <ComboBox Grid.Column="1"
+                        <ComboBox Grid.Column="2"
+                                  x:Name="ThemeComboBox"
                                   Classes="Lumina"
                                   SelectedIndex="{Binding SelectedThemeIndex}"
-                                  MinWidth="120"
+                                  MinWidth="160"
+                                  MaxWidth="240"
+                                  HorizontalAlignment="Right"
                                   VerticalAlignment="Center">
                             <ComboBoxItem Content="{DynamicResource Theme_Light}" />
                             <ComboBoxItem Content="{DynamicResource Theme_Dark}" />
@@ -112,15 +125,18 @@
             <StackPanel Spacing="12">
                 <TextBlock Text="{DynamicResource Settings_SectionLanguage}" Classes="StatLabel" />
                 <Border Classes="Card">
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                         <StackPanel>
-                            <TextBlock Text="{DynamicResource Settings_Language}" Classes="BodyStrong" />
-                            <TextBlock Text="{DynamicResource Settings_LanguageDesc}" Classes="Caption" />
+                            <TextBlock Text="{DynamicResource Settings_Language}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                            <TextBlock Text="{DynamicResource Settings_LanguageDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                         </StackPanel>
-                        <ComboBox Grid.Column="1"
+                        <ComboBox Grid.Column="2"
+                                  x:Name="LanguageComboBox"
                                   Classes="Lumina"
                                   SelectedIndex="{Binding SelectedLanguageIndex}"
                                   MinWidth="160"
+                                  MaxWidth="240"
+                                  HorizontalAlignment="Right"
                                   VerticalAlignment="Center">
                             <ComboBoxItem Content="{DynamicResource Settings_LanguageAuto}" />
                             <ComboBoxItem Content="{DynamicResource Language_English}" />
@@ -155,23 +171,25 @@
                 <Border Classes="Card">
                     <StackPanel Spacing="16">
                         
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="48">
                             <TextBlock Text="{DynamicResource Settings_LuminaVersion}" Classes="BodyStrong" />
-                            <TextBlock Grid.Column="1" 
+                            <TextBlock Grid.Column="2"
                                        Text="{Binding AppVersion}" 
-                                       Classes="Body" />
+                                       Classes="Body"
+                                       HorizontalAlignment="Right" />
                         </Grid>
 
-                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+                        <Border Height="1" Background="{DynamicResource BorderDefault}" />
 
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="48">
                             <TextBlock Text="{DynamicResource Settings_WireGuardDriver}" Classes="BodyStrong" />
-                            <TextBlock Grid.Column="1" 
+                            <TextBlock Grid.Column="2"
                                        Text="{Binding DriverVersionDisplay}" 
-                                       Classes="Body" />
+                                       Classes="Body"
+                                       HorizontalAlignment="Right" />
                         </Grid>
 
-                        <Border Height="1" Background="{StaticResource BorderDefault}" />
+                        <Border Height="1" Background="{DynamicResource BorderDefault}" />
 
                         <Button Classes="Secondary" HorizontalAlignment="Left"
                                 Command="{Binding CheckForUpdatesCommand}">

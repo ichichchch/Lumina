@@ -14,6 +14,8 @@
   <x:String x:Key="Status_Error">错误</x:String>
 
   <x:String x:Key="Home_HeroTitle">Lumina VPN</x:String>
+  <x:String x:Key="Home_HeroTitleLight">Lumina VPN</x:String>
+  <x:String x:Key="Home_HeroTitleDark">Lumina — 私密 VPN</x:String>
   <x:String x:Key="Home_HeroSubtitle">安全、快速、私密的连接体验</x:String>
   <x:String x:Key="Home_CurrentServer">当前服务器</x:String>
   <x:String x:Key="Home_ShortcutServers">服务器</x:String>
@@ -80,7 +82,7 @@
   <x:String x:Key="Language_ZhCn">简体中文</x:String>
   <x:String x:Key="Theme_Light">浅色</x:String>
   <x:String x:Key="Theme_Dark">深色</x:String>
-  <x:String x:Key="Theme_Auto">自动</x:String>
+  <x:String x:Key="Theme_Auto">跟随系统</x:String>
 
   <x:String x:Key="AddServer_Back">返回</x:String>
   <x:String x:Key="AddServer_Title">添加服务器</x:String>

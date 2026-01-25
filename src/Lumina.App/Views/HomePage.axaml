@@ -9,27 +9,28 @@
         <StackPanel Spacing="24" Margin="32" MaxWidth="760" HorizontalAlignment="Center">
 
             <!-- Header -->
-            <Border Classes="Card"
-                    Background="{StaticResource AccentGradient}"
-                    BorderBrush="{StaticResource GlassBorder}"
-                    BorderThickness="1"
-                    Padding="24">
-                <Grid ColumnDefinitions="*,Auto">
-                    <StackPanel Spacing="6">
-                        <TextBlock Text="{DynamicResource Home_HeroTitle}" Classes="Display" />
-                        <TextBlock Text="{DynamicResource Home_HeroSubtitle}" Classes="BodyLarge" />
-                    </StackPanel>
-                    <Border Grid.Column="1"
-                            Width="56" Height="56"
-                            CornerRadius="28"
-                            Background="#22FFFFFF"
-                            VerticalAlignment="Top">
-                        <PathIcon Data="M12 2l8 4v6c0 5-3.41 9.41-8 10-4.59-.59-8-5-8-10V6l8-4z"
-                                  Width="28" Height="28"
-                                  Foreground="{StaticResource TextPrimary}"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center" />
-                    </Border>
+            <Border Classes="HeroBanner">
+                <Grid>
+                    <Border Classes="HeroBannerShine"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding HeroTitle}" Classes="Display" Foreground="White" />
+                            <TextBlock Text="{DynamicResource Home_HeroSubtitle}" Classes="BodyLarge" Foreground="White" />
+                        </StackPanel>
+                        <Border Grid.Column="1"
+                                Classes="HeroBannerBadge"
+                                Width="56" Height="56"
+                                CornerRadius="28"
+                                VerticalAlignment="Top">
+                            <PathIcon Data="M12 2l8 4v6c0 5-3.41 9.41-8 10-4.59-.59-8-5-8-10V6l8-4z"
+                                      Width="28" Height="28"
+                                      Foreground="{StaticResource White}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
                 </Grid>
             </Border>
 
@@ -48,13 +49,13 @@
                             <Panel>
                                 <PathIcon Data="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"
                                           Width="48" Height="48"
-                                          Foreground="{StaticResource TextPrimary}" />
+                                          Foreground="{DynamicResource TextPrimary}" />
                             </Panel>
                         </Button>
                         <Border Padding="10,6"
                                 CornerRadius="999"
-                                Background="{StaticResource BackgroundTertiary}"
-                                BorderBrush="{StaticResource BorderDefault}"
+                                Background="{DynamicResource BackgroundTertiary}"
+                                BorderBrush="{DynamicResource BorderDefault}"
                                 BorderThickness="1">
                             <StackPanel Orientation="Horizontal" Spacing="8">
                                 <Ellipse Width="8" Height="8"
@@ -109,7 +110,7 @@
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <PathIcon Data="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
                                       Width="16" Height="16"
-                                      Foreground="{StaticResource AccentBrush}" />
+                                      Foreground="{DynamicResource AccentBrush}" />
                             <TextBlock Text="{DynamicResource Home_Upload}" Classes="StatLabel" />
                         </StackPanel>
                         <TextBlock Text="{Binding UploadSpeed}" Classes="Stat" />
@@ -137,12 +138,12 @@
             <Border Classes="Card" 
                     IsVisible="{Binding IsInitializingDriver}"
                     Background="#331E293B"
-                    BorderBrush="{StaticResource AccentBrush}">
+                    BorderBrush="{DynamicResource AccentBrush}">
                 <StackPanel Spacing="8">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <PathIcon Data="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"
                                   Width="20" Height="20"
-                                  Foreground="{StaticResource AccentBrush}" />
+                                  Foreground="{DynamicResource AccentBrush}" />
                         <TextBlock Text="{DynamicResource Home_InitializingDriverTitle}" Classes="BodyStrong" />
                     </StackPanel>
                     <TextBlock Text="{DynamicResource Home_InitializingDriverDesc}"

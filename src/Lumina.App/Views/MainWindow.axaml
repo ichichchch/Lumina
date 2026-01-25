@@ -10,7 +10,7 @@
         Height="680"
         MinWidth="800"
         MinHeight="600"
-        Background="{StaticResource BackgroundPrimary}"
+        Background="{DynamicResource BackgroundPrimary}"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaTitleBarHeightHint="40"
@@ -23,8 +23,8 @@
             <!-- Drag regions are handled in code-behind via OnPointerPressed -->
 
             <Border Grid.ColumnSpan="3"
-                    Background="{StaticResource BackgroundSecondary}"
-                    BorderBrush="{StaticResource BorderDefault}"
+                    Background="{DynamicResource BackgroundSecondary}"
+                    BorderBrush="{DynamicResource BorderDefault}"
                     BorderThickness="0,0,0,1" />
 
             <StackPanel Grid.Column="0"
@@ -37,7 +37,7 @@
                         Background="{StaticResource AccentGradient}">
                     <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
                               Width="16" Height="16"
-                              Foreground="{StaticResource TextPrimary}"
+                              Foreground="{StaticResource White}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center" />
                 </Border>
@@ -53,8 +53,8 @@
                     HorizontalAlignment="Center"
                     Padding="10,6"
                     CornerRadius="999"
-                    Background="{StaticResource BackgroundTertiary}"
-                    BorderBrush="{StaticResource BorderDefault}"
+                    Background="{DynamicResource BackgroundTertiary}"
+                    BorderBrush="{DynamicResource BorderDefault}"
                     BorderThickness="1">
                 <StackPanel Orientation="Horizontal" Spacing="8">
                     <Ellipse Width="8" Height="8"
@@ -88,8 +88,8 @@
         
         <!-- Sidebar Navigation -->
         <Border Grid.Column="0"
-                Background="{StaticResource BackgroundSecondary}"
-                BorderBrush="{StaticResource BorderDefault}"
+                Background="{DynamicResource BackgroundSecondary}"
+                BorderBrush="{DynamicResource BorderDefault}"
                 BorderThickness="0,0,1,0">
             <DockPanel LastChildFill="True">
                 
@@ -107,11 +107,11 @@
                 <Border DockPanel.Dock="Bottom"
                         Margin="12,0,12,20"
                         Padding="12"
-                        Background="{StaticResource CardGradient}"
-                        BorderBrush="{StaticResource BorderDefault}"
+                        Background="{DynamicResource CardGradient}"
+                        BorderBrush="{DynamicResource BorderDefault}"
                         BorderThickness="1"
                         CornerRadius="{StaticResource RadiusLarge}"
-                        BoxShadow="{StaticResource ShadowSmall}">
+                        BoxShadow="{DynamicResource ShadowSmall}">
                     <StackPanel Spacing="8">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <Ellipse Width="8" Height="8"
@@ -166,9 +166,9 @@
         </Border>
 
         <!-- Main Content Area -->
-        <Border Grid.Column="1" Background="{StaticResource BackgroundGradient}">
+        <Border Grid.Column="1" Background="{DynamicResource BackgroundGradient}">
             <Panel>
-                <Border Background="{StaticResource AccentGlow}" IsHitTestVisible="False" />
+                <Border Background="{DynamicResource AccentGlow}" IsHitTestVisible="False" />
                 <views:HomePage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Home}" />
                 <views:ServersPage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=Servers}" />
                 <views:AddServerPage IsVisible="{Binding DataContext.CurrentPage, RelativeSource={RelativeSource AncestorType=Window}, Converter={x:Static converters:StringEqualsConverter.Instance}, ConverterParameter=AddServer}" />

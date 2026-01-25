@@ -1,7 +1,9 @@
 namespace Lumina.App.ViewModels;
 
 using System.ComponentModel;
+using Avalonia.Styling;
 using Lumina.App.Localization;
+using Lumina.App.Services;
 
 /// <summary>
 /// 主窗口的 ViewModel：负责导航、驱动初始化、配置加载以及连接状态展示。
@@ -12,9 +14,11 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     private readonly IConfigurationStore _configStore;
     private readonly INavigationService _navigationService;
     private readonly IDriverManager _driverManager;
+    private readonly IThemeService _themeService;
     private readonly IDisposable _stateSubscription;
     private readonly IDisposable _statsSubscription;
     private readonly PropertyChangedEventHandler _localizationChangedHandler;
+    private readonly EventHandler<ThemeVariant> _themeChangedHandler;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(StatusText))]
@@ -66,12 +70,14 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         IVpnService vpnService,
         IConfigurationStore configStore,
         INavigationService navigationService,
-        IDriverManager driverManager)
+        IDriverManager driverManager,
+        IThemeService themeService)
     {
         _vpnService = vpnService;
         _configStore = configStore;
         _navigationService = navigationService;
         _driverManager = driverManager;
+        _themeService = themeService;
 
         // 订阅连接状态变化
         _stateSubscription = _vpnService.ConnectionStateStream
@@ -92,8 +98,12 @@ public partial class MainViewModel : ViewModelBase, IDisposable
             OnPropertyChanged(nameof(SelectedServerLocationText));
             OnPropertyChanged(nameof(TotalUploadText));
             OnPropertyChanged(nameof(TotalDownloadText));
+            OnPropertyChanged(nameof(HeroTitle));
         };
         LocalizationService.Instance.PropertyChanged += _localizationChangedHandler;
+
+        _themeChangedHandler = (_, __) => OnPropertyChanged(nameof(HeroTitle));
+        _themeService.ThemeChanged += _themeChangedHandler;
 
         // 初始化驱动并加载配置
         _ = InitializeAsync();
@@ -161,6 +171,11 @@ public partial class MainViewModel : ViewModelBase, IDisposable
         ConnectionState.Error => LocalizationService.Instance["Status_Error"],
         _ => LocalizationService.Instance["Common_Unknown"]
     };
+
+    public string HeroTitle =>
+        _themeService.CurrentTheme == ThemeVariant.Light
+            ? LocalizationService.Instance["Home_HeroTitleLight"]
+            : LocalizationService.Instance["Home_HeroTitleDark"];
 
     public string SelectedServerNameText =>
         SelectedConfiguration?.Name ?? LocalizationService.Instance["Home_NoServerSelected"];
@@ -305,6 +320,7 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     public void Dispose()
     {
         LocalizationService.Instance.PropertyChanged -= _localizationChangedHandler;
+        _themeService.ThemeChanged -= _themeChangedHandler;
         _stateSubscription.Dispose();
         _statsSubscription.Dispose();
         GC.SuppressFinalize(this);

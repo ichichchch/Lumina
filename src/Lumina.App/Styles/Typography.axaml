@@ -24,73 +24,77 @@
     </Style>
 
     <!-- Text Block Styles -->
+    <Style Selector="TextBlock">
+        <Setter Property="FontFamily" Value="Inter, Segoe UI Variable, Segoe UI, Microsoft YaHei UI" />
+    </Style>
+
     <Style Selector="TextBlock.Caption">
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
-        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
         <Setter Property="LineHeight" Value="18" />
     </Style>
 
     <Style Selector="TextBlock.Body">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
         <Setter Property="LineHeight" Value="22" />
     </Style>
 
     <Style Selector="TextBlock.BodyStrong">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="LineHeight" Value="22" />
     </Style>
 
     <Style Selector="TextBlock.BodyLarge">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBodyLarge}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}" />
         <Setter Property="LineHeight" Value="24" />
     </Style>
 
     <Style Selector="TextBlock.Title">
         <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightSemiBold}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="LineHeight" Value="28" />
     </Style>
 
     <Style Selector="TextBlock.Heading">
         <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="LineHeight" Value="32" />
     </Style>
 
     <Style Selector="TextBlock.Display">
         <Setter Property="FontSize" Value="{StaticResource FontSizeDisplay}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="LineHeight" Value="40" />
     </Style>
 
     <Style Selector="TextBlock.Hero">
         <Setter Property="FontSize" Value="{StaticResource FontSizeHero}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
     </Style>
 
     <!-- Numeric/Stats Typography -->
     <Style Selector="TextBlock.Stat">
         <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightLight}" />
-        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}" />
         <Setter Property="FontFamily" Value="Inter, Segoe UI Variable, Segoe UI" />
     </Style>
 
     <Style Selector="TextBlock.StatLabel">
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
-        <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextMuted}" />
     </Style>
 
 </Styles>

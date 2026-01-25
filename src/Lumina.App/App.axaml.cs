@@ -1,6 +1,7 @@
 namespace Lumina.App;
 
 using Lumina.App.Localization;
+using Lumina.Core.Models;
 
 /// <summary>
 /// Avalonia 应用程序对象，负责应用级初始化、依赖注入配置与主窗口创建。
@@ -35,11 +36,18 @@ public partial class App : Application
         Services = services.BuildServiceProvider();
 
         var localizationService = Services.GetRequiredService<ILocalizationService>();
+        var themeService = Services.GetRequiredService<IThemeService>();
         var settings = Services.GetRequiredService<IConfigurationStore>()
             .LoadSettingsAsync()
             .GetAwaiter()
             .GetResult();
         localizationService.SetCulture(settings.Language);
+        themeService.SetTheme(settings.Theme switch
+        {
+            ThemeMode.Light => Avalonia.Styling.ThemeVariant.Light,
+            ThemeMode.Dark => Avalonia.Styling.ThemeVariant.Dark,
+            _ => Avalonia.Styling.ThemeVariant.Default
+        });
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

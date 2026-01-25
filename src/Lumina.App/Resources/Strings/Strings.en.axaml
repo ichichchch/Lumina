@@ -14,6 +14,8 @@
   <x:String x:Key="Status_Error">Error</x:String>
 
   <x:String x:Key="Home_HeroTitle">Lumina VPN</x:String>
+  <x:String x:Key="Home_HeroTitleLight">Lumina VPN</x:String>
+  <x:String x:Key="Home_HeroTitleDark">Lumina — Private VPN</x:String>
   <x:String x:Key="Home_HeroSubtitle">Secure, fast, and private connection</x:String>
   <x:String x:Key="Home_CurrentServer">Current Server</x:String>
   <x:String x:Key="Home_ShortcutServers">Servers</x:String>
@@ -80,7 +82,7 @@
   <x:String x:Key="Language_ZhCn">Simplified Chinese</x:String>
   <x:String x:Key="Theme_Light">Light</x:String>
   <x:String x:Key="Theme_Dark">Dark</x:String>
-  <x:String x:Key="Theme_Auto">Auto</x:String>
+  <x:String x:Key="Theme_Auto">Follow system</x:String>
 
   <x:String x:Key="AddServer_Back">Back</x:String>
   <x:String x:Key="AddServer_Title">Add Server</x:String>
