@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageId>Lumina.Assets</PackageId>
+    <Version>0.1.3</Version>
+    <Authors>Lumina</Authors>
+    <Description>Native driver assets for Lumina (Windows).</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\win-x64\native\wireguard.dll"
+          Pack="true"
+          PackagePath="runtimes/win-x64/native/" />
+    <None Include="buildTransitive\Lumina.Assets.targets"
+          Pack="true"
+          PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+</Project>

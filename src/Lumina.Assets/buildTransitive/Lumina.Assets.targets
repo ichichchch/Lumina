@@ -1,0 +1,10 @@
+<Project>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\wireguard.dll"
+             Condition="Exists('$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\wireguard.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Visible>false</Visible>
+    </Content>
+  </ItemGroup>
+</Project>

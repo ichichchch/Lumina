@@ -14,6 +14,7 @@
     <PackageReference Include="System.Reactive" Version="6.0.1" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+    <PackageReference Include="Lumina.Assets" Version="0.1.3" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <!-- WireGuardNT Driver Files (embedded as resources) -->
@@ -21,6 +22,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Driver\wireguard.sys" Condition="Exists('Resources\Driver\wireguard.sys')" />
     <EmbeddedResource Include="Resources\Driver\wireguard.dll" Condition="Exists('Resources\Driver\wireguard.dll')" />
+    <EmbeddedResource Include="$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.dll" Condition="Exists('$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.dll') and !Exists('Resources\Driver\wireguard.dll')">
+      <LogicalName>Lumina.Core.Resources.Driver.wireguard.dll</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

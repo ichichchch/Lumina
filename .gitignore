@@ -4,6 +4,7 @@
 # Build results
 **/bin/
 **/obj/
+/artifacts/nuget/
 .qoder/repowiki/zh/content/测试策略.md
 .qoder/repowiki/zh/content/开发者指南.md
 .qoder/repowiki/zh/content/快速开始.md
