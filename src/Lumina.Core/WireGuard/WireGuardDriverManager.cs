@@ -1,8 +1,8 @@
 namespace Lumina.Core.WireGuard;
 
 /// <summary>
-/// Manages the WireGuardNT driver lifecycle including installation and uninstallation.
-/// Driver files can be embedded as resources or provided externally.
+/// 管理 WireGuardNT 驱动生命周期，包括安装与卸载。
+/// 驱动文件可通过嵌入资源提供，或在开发场景下通过外部路径提供。
 /// </summary>
 public sealed class WireGuardDriverManager : IDriverManager
 {
@@ -16,13 +16,13 @@ public sealed class WireGuardDriverManager : IDriverManager
     private readonly object _installLock = new();
 
     /// <summary>
-    /// Creates a new driver manager instance.
+    /// 创建新的驱动管理器实例。
     /// </summary>
     /// <param name="driverDirectory">
-    /// Directory to store/locate driver files. Defaults to %LOCALAPPDATA%\Lumina\Driver.
+    /// 存放/查找驱动文件的目录；默认为 %LOCALAPPDATA%\Lumina\Driver。
     /// </param>
     /// <param name="externalDriverPath">
-    /// Optional path to externally provided driver files (for development without embedding).
+    /// 外部驱动文件路径（可选；用于开发场景而无需嵌入资源）。
     /// </param>
     public WireGuardDriverManager(string? driverDirectory = null, string? externalDriverPath = null)
     {
@@ -35,7 +35,7 @@ public sealed class WireGuardDriverManager : IDriverManager
     }
 
     /// <summary>
-    /// Gets the full path to wireguard.dll for P/Invoke loading.
+    /// 获取用于 P/Invoke 加载的 wireguard.dll 的完整路径。
     /// </summary>
     public string GetWireGuardDllPath()
     {
@@ -115,6 +115,8 @@ public sealed class WireGuardDriverManager : IDriverManager
     /// <inheritdoc />
     public async Task<DriverInstallResult> EnsureDriverReadyAsync(CancellationToken cancellationToken = default)
     {
+        _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(GetWireGuardDllPath());
+
         var state = GetDriverState();
 
         switch (state)
@@ -123,11 +125,11 @@ public sealed class WireGuardDriverManager : IDriverManager
                 return DriverInstallResult.Succeeded(DriverInstallState.Running);
 
             case DriverInstallState.Stopped:
-                // Try to start the service
+                // 尝试启动服务
                 return await Task.Run(() => StartDriverService(), cancellationToken);
 
             case DriverInstallState.NotInstalled:
-                // Install and start
+                // 安装并启动
                 var installResult = await InstallDriverAsync(cancellationToken);
                 if (!installResult.Success)
                 {
@@ -165,28 +167,32 @@ public sealed class WireGuardDriverManager : IDriverManager
         }
         catch
         {
-            // Ignore version parse errors
+            // 忽略版本解析错误
         }
 
         return null;
     }
 
+    /// <summary>
+    /// 执行驱动安装的同步内部实现（带互斥锁保护）。
+    /// </summary>
+    /// <returns>安装结果。</returns>
     private DriverInstallResult InstallDriverInternal()
     {
         lock (_installLock)
         {
             try
             {
-                // Ensure directory exists
+                // 确保目录存在
                 if (!Directory.Exists(_driverDirectory))
                 {
                     Directory.CreateDirectory(_driverDirectory);
                 }
 
-                // Extract driver files from embedded resources
+                // 提取驱动文件
                 ExtractDriverFiles();
 
-                // Register the driver service
+                // 注册驱动服务
                 return RegisterDriverService();
             }
             catch (Exception ex)
@@ -196,18 +202,21 @@ public sealed class WireGuardDriverManager : IDriverManager
         }
     }
 
+    /// <summary>
+    /// 确保驱动文件（sys/dll）存在：优先从外部路径复制，其次从嵌入资源提取。
+    /// </summary>
     private void ExtractDriverFiles()
     {
         var sysTarget = Path.Combine(_driverDirectory, DriverFileName);
         var dllTarget = Path.Combine(_driverDirectory, DllFileName);
 
-        // Check if files already exist and are valid
+        // 若文件已存在则跳过
         if (File.Exists(sysTarget) && File.Exists(dllTarget))
         {
             return;
         }
 
-        // Try to copy from external path first (development scenario)
+        // 优先尝试从外部路径复制（开发场景）
         if (!string.IsNullOrEmpty(_externalDriverPath) && Directory.Exists(_externalDriverPath))
         {
             var externalSys = Path.Combine(_externalDriverPath, DriverFileName);
@@ -217,11 +226,12 @@ public sealed class WireGuardDriverManager : IDriverManager
             {
                 File.Copy(externalSys, sysTarget, overwrite: true);
                 File.Copy(externalDll, dllTarget, overwrite: true);
+                _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllTarget);
                 return;
             }
         }
 
-        // Try to extract from embedded resources
+        // 尝试从嵌入资源提取
         var assembly = Assembly.GetExecutingAssembly();
         var resourcePrefix = "Lumina.Core.Resources.Driver.";
 
@@ -236,8 +246,17 @@ public sealed class WireGuardDriverManager : IDriverManager
                 "or provide external driver path via configuration. " +
                 $"Expected location: {_driverDirectory}");
         }
+
+        _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllTarget);
     }
 
+    /// <summary>
+    /// 尝试从程序集资源中提取指定资源到目标路径。
+    /// </summary>
+    /// <param name="assembly">包含资源的程序集。</param>
+    /// <param name="resourceName">资源名称。</param>
+    /// <param name="targetPath">目标文件路径。</param>
+    /// <returns>提取成功则返回 true。</returns>
     private static bool TryExtractResource(Assembly assembly, string resourceName, string targetPath)
     {
         using var stream = assembly.GetManifestResourceStream(resourceName);
@@ -251,13 +270,19 @@ public sealed class WireGuardDriverManager : IDriverManager
         return true;
     }
 
+    /// <summary>
+    /// 从程序集资源中提取指定资源到目标路径；资源不存在则抛出异常。
+    /// </summary>
+    /// <param name="assembly">包含资源的程序集。</param>
+    /// <param name="resourceName">资源名称。</param>
+    /// <param name="targetPath">目标文件路径。</param>
+    /// <exception cref="FileNotFoundException">资源不存在时抛出。</exception>
     private static void ExtractResource(Assembly assembly, string resourceName, string targetPath)
     {
         using var stream = assembly.GetManifestResourceStream(resourceName);
         if (stream is null)
         {
-            // Resource not embedded - this is acceptable during development
-            // In production, the driver files should be embedded
+            // 开发阶段可接受资源未嵌入；生产环境应确保驱动文件被嵌入或可从目录获取
             throw new FileNotFoundException(
                 $"Driver resource '{resourceName}' not found. " +
                 "Ensure driver files are embedded as resources or placed in the driver directory.");
@@ -267,6 +292,10 @@ public sealed class WireGuardDriverManager : IDriverManager
         stream.CopyTo(fileStream);
     }
 
+    /// <summary>
+    /// 在系统服务控制管理器中注册内核驱动服务。
+    /// </summary>
+    /// <returns>注册结果。</returns>
     private DriverInstallResult RegisterDriverService()
     {
         var driverPath = Path.Combine(_driverDirectory, DriverFileName);
@@ -289,7 +318,7 @@ public sealed class WireGuardDriverManager : IDriverManager
 
         try
         {
-            // Check if service already exists
+            // 检查服务是否已存在
             var existingService = DriverInstallNative.OpenServiceW(
                 scManager, ServiceName, DriverInstallNative.SERVICE_ALL_ACCESS);
 
@@ -299,7 +328,7 @@ public sealed class WireGuardDriverManager : IDriverManager
                 return DriverInstallResult.Succeeded(DriverInstallState.Stopped);
             }
 
-            // Create the service
+            // 创建服务
             var service = DriverInstallNative.CreateServiceW(
                 scManager,
                 ServiceName,
@@ -337,6 +366,10 @@ public sealed class WireGuardDriverManager : IDriverManager
         }
     }
 
+    /// <summary>
+    /// 启动驱动服务并等待其进入运行状态。
+    /// </summary>
+    /// <returns>启动结果。</returns>
     private DriverInstallResult StartDriverService()
     {
         var scManager = DriverInstallNative.OpenSCManagerW(
@@ -362,7 +395,7 @@ public sealed class WireGuardDriverManager : IDriverManager
 
             try
             {
-                // Check current state
+                // 检查当前状态
                 if (DriverInstallNative.QueryServiceStatus(service, out var status))
                 {
                     if (status.dwCurrentState == DriverInstallNative.SERVICE_RUNNING)
@@ -371,7 +404,7 @@ public sealed class WireGuardDriverManager : IDriverManager
                     }
                 }
 
-                // Start the service
+                // 启动服务
                 if (!DriverInstallNative.StartServiceW(service, 0, nint.Zero))
                 {
                     var error = Marshal.GetLastWin32Error();
@@ -385,7 +418,7 @@ public sealed class WireGuardDriverManager : IDriverManager
                         error);
                 }
 
-                // Wait for service to start
+                // 等待服务启动
                 for (var i = 0; i < 30; i++)
                 {
                     Thread.Sleep(100);
@@ -411,6 +444,10 @@ public sealed class WireGuardDriverManager : IDriverManager
         }
     }
 
+    /// <summary>
+    /// 执行驱动卸载的同步内部实现（带互斥锁保护）。
+    /// </summary>
+    /// <returns>卸载结果。</returns>
     private DriverInstallResult UninstallDriverInternal()
     {
         lock (_installLock)
@@ -444,7 +481,7 @@ public sealed class WireGuardDriverManager : IDriverManager
 
                 try
                 {
-                    // Stop the service if running
+                    // 如果服务正在运行则先停止
                     if (DriverInstallNative.QueryServiceStatus(service, out var status))
                     {
                         if (status.dwCurrentState != DriverInstallNative.SERVICE_STOPPED)
@@ -454,7 +491,7 @@ public sealed class WireGuardDriverManager : IDriverManager
                                 DriverInstallNative.SERVICE_CONTROL_STOP,
                                 out _);
 
-                            // Wait for service to stop
+                            // 等待服务停止
                             for (var i = 0; i < 30; i++)
                             {
                                 Thread.Sleep(100);
@@ -469,7 +506,7 @@ public sealed class WireGuardDriverManager : IDriverManager
                         }
                     }
 
-                    // Delete the service
+                    // 删除服务
                     if (!DriverInstallNative.DeleteService(service))
                     {
                         var error = Marshal.GetLastWin32Error();

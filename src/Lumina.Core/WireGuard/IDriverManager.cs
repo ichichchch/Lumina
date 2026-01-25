@@ -1,42 +1,68 @@
 namespace Lumina.Core.WireGuard;
 
 /// <summary>
-/// Represents the installation state of the WireGuard driver.
+/// 表示 WireGuard 驱动的安装/运行状态。
 /// </summary>
 public enum DriverInstallState
 {
-    /// <summary>Driver is not installed.</summary>
+    /// <summary>驱动未安装。</summary>
     NotInstalled,
 
-    /// <summary>Driver is installed but not running.</summary>
+    /// <summary>驱动已安装但未运行。</summary>
     Stopped,
 
-    /// <summary>Driver is installed and running.</summary>
+    /// <summary>驱动已安装且正在运行。</summary>
     Running,
 
-    /// <summary>Driver is currently being installed.</summary>
+    /// <summary>驱动正在安装中。</summary>
     Installing,
 
-    /// <summary>Driver installation failed.</summary>
+    /// <summary>驱动安装失败。</summary>
     Error
 }
 
 /// <summary>
-/// Result of a driver installation operation.
+/// 驱动安装/卸载/就绪检查操作的结果。
 /// </summary>
 public sealed class DriverInstallResult
 {
+    /// <summary>
+    /// 获取操作是否成功。
+    /// </summary>
     public bool Success { get; init; }
+
+    /// <summary>
+    /// 获取错误消息（若失败）。
+    /// </summary>
     public string? ErrorMessage { get; init; }
+
+    /// <summary>
+    /// 获取错误码（若失败；具体含义依赖实现）。
+    /// </summary>
     public int ErrorCode { get; init; }
+
+    /// <summary>
+    /// 获取当前驱动状态。
+    /// </summary>
     public DriverInstallState State { get; init; }
 
+    /// <summary>
+    /// 创建表示成功的结果对象。
+    /// </summary>
+    /// <param name="state">成功时的驱动状态。</param>
+    /// <returns>成功结果。</returns>
     public static DriverInstallResult Succeeded(DriverInstallState state) => new()
     {
         Success = true,
         State = state
     };
 
+    /// <summary>
+    /// 创建表示失败的结果对象。
+    /// </summary>
+    /// <param name="message">错误消息。</param>
+    /// <param name="errorCode">错误码。</param>
+    /// <returns>失败结果。</returns>
     public static DriverInstallResult Failed(string message, int errorCode = 0) => new()
     {
         Success = false,
@@ -47,49 +73,48 @@ public sealed class DriverInstallResult
 }
 
 /// <summary>
-/// Manages the WireGuardNT driver lifecycle including installation, uninstallation, and status.
+/// 管理 WireGuardNT 驱动生命周期，包括安装、卸载与状态检查。
 /// </summary>
 public interface IDriverManager
 {
     /// <summary>
-    /// Gets the current installation state of the driver.
+    /// 获取驱动当前安装/运行状态。
     /// </summary>
     DriverInstallState GetDriverState();
 
     /// <summary>
-    /// Checks if the driver is installed and ready to use.
+    /// 检查驱动是否已安装并可用。
     /// </summary>
     bool IsDriverReady();
 
     /// <summary>
-    /// Installs the WireGuardNT driver from embedded resources.
+    /// 从嵌入资源安装 WireGuardNT 驱动。
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Result of the installation operation.</returns>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>安装操作结果。</returns>
     Task<DriverInstallResult> InstallDriverAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Uninstalls the WireGuardNT driver.
+    /// 卸载 WireGuardNT 驱动。
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Result of the uninstallation operation.</returns>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>卸载操作结果。</returns>
     Task<DriverInstallResult> UninstallDriverAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Ensures the driver is installed and running.
-    /// If not installed, attempts to install it.
+    /// 确保驱动已安装且正在运行；若未安装则尝试安装。
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Result of the operation.</returns>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>操作结果。</returns>
     Task<DriverInstallResult> EnsureDriverReadyAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the path where driver files are stored.
+    /// 获取驱动文件存放路径。
     /// </summary>
     string GetDriverPath();
 
     /// <summary>
-    /// Gets the version of the installed driver, if available.
+    /// 获取已安装驱动的版本（若可用）。
     /// </summary>
     Version? GetInstalledDriverVersion();
 }

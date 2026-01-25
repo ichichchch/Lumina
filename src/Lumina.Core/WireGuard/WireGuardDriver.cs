@@ -1,7 +1,7 @@
 namespace Lumina.Core.WireGuard;
 
 /// <summary>
-/// WireGuard driver wrapper implementation.
+/// WireGuard 驱动包装实现。
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class WireGuardDriver : IWireGuardDriver
@@ -10,9 +10,9 @@ public sealed class WireGuardDriver : IWireGuardDriver
     private const string TunnelType = "Lumina";
 
     /// <summary>
-    /// Creates a new WireGuard driver instance.
+    /// 创建一个新的 WireGuard 驱动包装实例。
     /// </summary>
-    /// <param name="logger">Optional logger.</param>
+    /// <param name="logger">可选日志记录器。</param>
     public WireGuardDriver(ILogger<WireGuardDriver>? logger = null)
     {
         _logger = logger;
@@ -110,7 +110,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
             throw new ArgumentException("Invalid adapter handle", nameof(handle));
         }
 
-        // Initial buffer size estimate
+        // 初始缓冲区大小估计
         uint bufferSize = 4096;
         var buffer = Marshal.AllocHGlobal((int)bufferSize);
 
@@ -120,7 +120,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
 
             if (success == 0)
             {
-                // If buffer was too small, reallocate
+                // 若缓冲区过小则重新分配
                 Marshal.FreeHGlobal(buffer);
                 buffer = Marshal.AllocHGlobal((int)bufferSize);
                 success = WireGuardNative.WireGuardGetConfiguration(handle, buffer, ref bufferSize);
@@ -210,6 +210,11 @@ public sealed class WireGuardDriver : IWireGuardDriver
         }
     }
 
+    /// <summary>
+    /// 计算将指定隧道配置写入 WireGuard 配置缓冲区所需的字节数。
+    /// </summary>
+    /// <param name="config">隧道配置。</param>
+    /// <returns>所需缓冲区大小（字节）。</returns>
     private static int GetConfigurationSize(TunnelConfiguration config)
     {
         var size = Marshal.SizeOf<WIREGUARD_INTERFACE>();
@@ -223,6 +228,11 @@ public sealed class WireGuardDriver : IWireGuardDriver
         return size;
     }
 
+    /// <summary>
+    /// 构建传递给 WireGuardNT 的配置缓冲区（包含接口、Peer 与 Allowed IP 列表）。
+    /// </summary>
+    /// <param name="config">隧道配置。</param>
+    /// <returns>非托管内存缓冲区指针；调用方需负责释放。</returns>
     private static nint BuildConfigurationBuffer(TunnelConfiguration config)
     {
         var size = GetConfigurationSize(config);
@@ -232,7 +242,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
         {
             var offset = 0;
 
-            // Build interface structure
+            // 构建接口结构
             var iface = new WIREGUARD_INTERFACE
             {
                 Flags = WireGuardInterfaceFlags.HasPrivateKey | WireGuardInterfaceFlags.ReplacePeers,
@@ -240,7 +250,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
                 PeersCount = (uint)config.Peers.Count,
             };
 
-            // Set private key
+            // 写入私钥
             if (!string.IsNullOrEmpty(config.PrivateKey))
             {
                 var privateKey = Convert.FromBase64String(config.PrivateKey);
@@ -256,14 +266,14 @@ public sealed class WireGuardDriver : IWireGuardDriver
             Marshal.StructureToPtr(iface, buffer + offset, false);
             offset += Marshal.SizeOf<WIREGUARD_INTERFACE>();
 
-            // Build peer structures
+            // 构建 Peer 结构
             foreach (var peerConfig in config.Peers)
             {
                 var peer = BuildPeerStructure(peerConfig);
                 Marshal.StructureToPtr(peer, buffer + offset, false);
                 offset += Marshal.SizeOf<WIREGUARD_PEER>();
 
-                // Build allowed IPs
+                // 构建 Allowed IP 列表
                 foreach (var allowedIp in peerConfig.AllowedIPs)
                 {
                     var allowedIpStruct = BuildAllowedIpStructure(allowedIp);
@@ -281,6 +291,11 @@ public sealed class WireGuardDriver : IWireGuardDriver
         }
     }
 
+    /// <summary>
+    /// 将 <see cref="PeerConfiguration"/> 转换为 WireGuardNT 所需的 <see cref="WIREGUARD_PEER"/> 结构。
+    /// </summary>
+    /// <param name="config">Peer 配置。</param>
+    /// <returns>填充后的 <see cref="WIREGUARD_PEER"/>。</returns>
     private static WIREGUARD_PEER BuildPeerStructure(PeerConfiguration config)
     {
         var peer = new WIREGUARD_PEER
@@ -290,7 +305,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
             AllowedIPsCount = (uint)config.AllowedIPs.Length,
         };
 
-        // Set public key
+        // 写入公钥
         var publicKey = Convert.FromBase64String(config.PublicKey);
         unsafe
         {
@@ -300,7 +315,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
             }
         }
 
-        // Set preshared key if present
+        // 如存在则写入预共享密钥
         if (!string.IsNullOrEmpty(config.PresharedKey))
         {
             peer.Flags |= WireGuardPeerFlags.HasPresharedKey;
@@ -314,7 +329,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
             }
         }
 
-        // Set endpoint
+        // 设置端点
         if (PeerConfiguration.TryParseEndpoint(config.Endpoint, out var address, out var port) && address is not null)
         {
             peer.Endpoint = CreateEndpoint(address, port);
@@ -328,6 +343,12 @@ public sealed class WireGuardDriver : IWireGuardDriver
         return peer;
     }
 
+    /// <summary>
+    /// 根据 IP 地址与端口构造 WireGuardNT 所需的端点结构。
+    /// </summary>
+    /// <param name="address">IPv4 或 IPv6 地址。</param>
+    /// <param name="port">端口。</param>
+    /// <returns>填充后的 <see cref="SOCKADDR_INET"/>。</returns>
     private static SOCKADDR_INET CreateEndpoint(IPAddress address, int port)
     {
         var result = new SOCKADDR_INET();
@@ -356,6 +377,11 @@ public sealed class WireGuardDriver : IWireGuardDriver
         return result;
     }
 
+    /// <summary>
+    /// 将 CIDR 字符串转换为 WireGuardNT 所需的 <see cref="WIREGUARD_ALLOWED_IP"/> 结构。
+    /// </summary>
+    /// <param name="cidr">CIDR 字符串。</param>
+    /// <returns>填充后的 <see cref="WIREGUARD_ALLOWED_IP"/>。</returns>
     private static WIREGUARD_ALLOWED_IP BuildAllowedIpStructure(string cidr)
     {
         var parts = cidr.Split('/');
@@ -389,6 +415,11 @@ public sealed class WireGuardDriver : IWireGuardDriver
         return allowedIp;
     }
 
+    /// <summary>
+    /// 从 WireGuardNT 返回的配置缓冲区中解析流量统计信息。
+    /// </summary>
+    /// <param name="buffer">配置缓冲区指针。</param>
+    /// <returns>解析得到的流量统计。</returns>
     private static TrafficStats ParseTrafficStats(nint buffer)
     {
         var iface = Marshal.PtrToStructure<WIREGUARD_INTERFACE>(buffer);

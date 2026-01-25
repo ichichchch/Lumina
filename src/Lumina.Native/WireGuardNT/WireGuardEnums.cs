@@ -1,7 +1,7 @@
 namespace Lumina.Native.WireGuardNT;
 
 /// <summary>
-/// Flags for WireGuard interface configuration.
+/// WireGuard 接口配置标志位。
 /// </summary>
 [Flags]
 public enum WireGuardInterfaceFlags : ushort
@@ -14,7 +14,7 @@ public enum WireGuardInterfaceFlags : ushort
 }
 
 /// <summary>
-/// Flags for WireGuard peer configuration.
+/// WireGuard Peer 配置标志位。
 /// </summary>
 [Flags]
 public enum WireGuardPeerFlags : uint
@@ -30,7 +30,7 @@ public enum WireGuardPeerFlags : uint
 }
 
 /// <summary>
-/// Flags for WireGuard allowed IP configuration.
+/// WireGuard Allowed IP 配置标志位。
 /// </summary>
 [Flags]
 public enum WireGuardAllowedIpFlags : uint
@@ -39,7 +39,7 @@ public enum WireGuardAllowedIpFlags : uint
 }
 
 /// <summary>
-/// Address family for network addresses.
+/// 网络地址的地址族。
 /// </summary>
 public enum AddressFamily : ushort
 {
@@ -49,7 +49,7 @@ public enum AddressFamily : ushort
 }
 
 /// <summary>
-/// WireGuard adapter state.
+/// WireGuard 适配器状态。
 /// </summary>
 public enum WireGuardAdapterState : uint
 {
@@ -58,7 +58,7 @@ public enum WireGuardAdapterState : uint
 }
 
 /// <summary>
-/// Log level for WireGuard adapter logging.
+/// WireGuard 适配器日志级别。
 /// </summary>
 public enum WireGuardAdapterLogLevel : uint
 {

@@ -1,43 +1,26 @@
-namespace Lumina.Native.Driver;
+namespace Lumina.Native.Service;
 
-/// <summary>
-/// Windows 服务控制管理器（SCM）与驱动安装相关的 P/Invoke 声明。
-/// </summary>
-public static partial class DriverInstallNative
+public static partial class ServiceControlNative
 {
-    // 服务控制管理器访问权限
     public const uint SC_MANAGER_ALL_ACCESS = 0xF003F;
-    public const uint SC_MANAGER_CREATE_SERVICE = 0x0002;
     public const uint SC_MANAGER_CONNECT = 0x0001;
 
-    // 服务访问权限
     public const uint SERVICE_ALL_ACCESS = 0xF01FF;
+    public const uint SERVICE_QUERY_STATUS = 0x0004;
     public const uint SERVICE_START = 0x0010;
     public const uint SERVICE_STOP = 0x0020;
-    public const uint SERVICE_QUERY_STATUS = 0x0004;
     public const uint DELETE = 0x00010000;
 
-    // 服务类型
-    public const uint SERVICE_KERNEL_DRIVER = 0x00000001;
+    public const uint SERVICE_WIN32_OWN_PROCESS = 0x00000010;
 
-    // 服务启动类型
-    public const uint SERVICE_DEMAND_START = 0x00000003;
     public const uint SERVICE_AUTO_START = 0x00000002;
-
-    // 服务错误控制
     public const uint SERVICE_ERROR_NORMAL = 0x00000001;
 
-    // 服务控制码
+    public const uint SERVICE_CONFIG_SID_INFO = 5;
+    public const uint SERVICE_SID_TYPE_UNRESTRICTED = 1;
+
     public const uint SERVICE_CONTROL_STOP = 0x00000001;
 
-    // 服务状态
-    public const uint SERVICE_STOPPED = 0x00000001;
-    public const uint SERVICE_START_PENDING = 0x00000002;
-    public const uint SERVICE_STOP_PENDING = 0x00000003;
-    public const uint SERVICE_RUNNING = 0x00000004;
-
-    // 错误码
-    public const int ERROR_SUCCESS = 0;
     public const int ERROR_SERVICE_ALREADY_RUNNING = 1056;
     public const int ERROR_SERVICE_EXISTS = 1073;
     public const int ERROR_SERVICE_DOES_NOT_EXIST = 1060;
@@ -52,6 +35,12 @@ public static partial class DriverInstallNative
         public uint dwServiceSpecificExitCode;
         public uint dwCheckPoint;
         public uint dwWaitHint;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SERVICE_SID_INFO
+    {
+        public uint dwServiceSidType;
     }
 
     [LibraryImport("advapi32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
@@ -76,7 +65,7 @@ public static partial class DriverInstallNative
         string lpBinaryPathName,
         string? lpLoadOrderGroup,
         nint lpdwTagId,
-        string? lpDependencies,
+        nint lpDependencies,
         string? lpServiceStartName,
         string? lpPassword);
 
@@ -109,4 +98,12 @@ public static partial class DriverInstallNative
     public static partial bool QueryServiceStatus(
         nint hService,
         out SERVICE_STATUS lpServiceStatus);
+
+    [LibraryImport("advapi32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool ChangeServiceConfig2W(
+        nint hService,
+        uint dwInfoLevel,
+        nint lpInfo);
 }
+

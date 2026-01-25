@@ -1,8 +1,8 @@
 namespace Lumina.Native.WireGuardNT;
 
 /// <summary>
-/// WireGuard interface configuration structure.
-/// Must be followed by WIREGUARD_PEER structures.
+/// WireGuard 接口配置结构。
+/// 其后必须紧跟 <see cref="WIREGUARD_PEER"/> 结构数组。
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 8)]
 public unsafe struct WIREGUARD_INTERFACE
@@ -15,8 +15,8 @@ public unsafe struct WIREGUARD_INTERFACE
 }
 
 /// <summary>
-/// WireGuard peer configuration structure.
-/// Must be followed by WIREGUARD_ALLOWED_IP structures.
+/// WireGuard Peer 配置结构。
+/// 其后必须紧跟 <see cref="WIREGUARD_ALLOWED_IP"/> 结构数组。
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 8)]
 public unsafe struct WIREGUARD_PEER
@@ -34,7 +34,7 @@ public unsafe struct WIREGUARD_PEER
 }
 
 /// <summary>
-/// WireGuard allowed IP configuration structure.
+/// WireGuard Allowed IP 配置结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential, Pack = 8)]
 public unsafe struct WIREGUARD_ALLOWED_IP
@@ -46,13 +46,20 @@ public unsafe struct WIREGUARD_ALLOWED_IP
 }
 
 /// <summary>
-/// IPv4 address structure.
+/// IPv4 地址结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct IN_ADDR
 {
     public fixed byte Bytes[4];
 
+    /// <summary>
+    /// 使用 4 个字节初始化 <see cref="IN_ADDR"/>。
+    /// </summary>
+    /// <param name="b0">第 1 个字节。</param>
+    /// <param name="b1">第 2 个字节。</param>
+    /// <param name="b2">第 3 个字节。</param>
+    /// <param name="b3">第 4 个字节。</param>
     public IN_ADDR(byte b0, byte b1, byte b2, byte b3)
     {
         Bytes[0] = b0;
@@ -61,6 +68,12 @@ public unsafe struct IN_ADDR
         Bytes[3] = b3;
     }
 
+    /// <summary>
+    /// 从点分十进制字符串解析 IPv4 地址。
+    /// </summary>
+    /// <param name="ipAddress">IPv4 地址字符串（例如 "192.168.1.1"）。</param>
+    /// <returns>解析得到的 <see cref="IN_ADDR"/>。</returns>
+    /// <exception cref="FormatException">格式不合法时抛出。</exception>
     public static IN_ADDR Parse(string ipAddress)
     {
         var parts = ipAddress.Split('.');
@@ -75,6 +88,10 @@ public unsafe struct IN_ADDR
         return addr;
     }
 
+    /// <summary>
+    /// 将地址格式化为点分十进制字符串。
+    /// </summary>
+    /// <returns>格式化后的 IPv4 地址字符串。</returns>
     public override readonly string ToString()
     {
         return $"{Bytes[0]}.{Bytes[1]}.{Bytes[2]}.{Bytes[3]}";
@@ -82,13 +99,17 @@ public unsafe struct IN_ADDR
 }
 
 /// <summary>
-/// IPv6 address structure.
+/// IPv6 地址结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public unsafe struct IN6_ADDR
 {
     public fixed byte Bytes[16];
 
+    /// <summary>
+    /// 将地址格式化为十六进制分段字符串。
+    /// </summary>
+    /// <returns>格式化后的 IPv6 地址字符串。</returns>
     public override readonly string ToString()
     {
         var parts = new string[8];
@@ -101,7 +122,7 @@ public unsafe struct IN6_ADDR
 }
 
 /// <summary>
-/// Socket address for IPv4.
+/// IPv4 Socket 地址结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct SOCKADDR_IN
@@ -113,7 +134,7 @@ public struct SOCKADDR_IN
 }
 
 /// <summary>
-/// Socket address for IPv6.
+/// IPv6 Socket 地址结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct SOCKADDR_IN6
@@ -126,7 +147,7 @@ public struct SOCKADDR_IN6
 }
 
 /// <summary>
-/// Union of IPv4 and IPv6 socket addresses.
+/// IPv4/IPv6 Socket 地址联合体结构。
 /// </summary>
 [StructLayout(LayoutKind.Explicit, Size = 28)]
 public struct SOCKADDR_INET

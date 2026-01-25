@@ -1,66 +1,66 @@
 namespace Lumina.Core.WireGuard;
 
 /// <summary>
-/// Interface for WireGuard driver operations.
+/// WireGuard 驱动操作接口。
 /// </summary>
 public interface IWireGuardDriver
 {
     /// <summary>
-    /// Creates a new WireGuard adapter.
+    /// 创建新的 WireGuard 适配器。
     /// </summary>
-    /// <param name="name">Adapter name (max 127 characters).</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Handle to the created adapter.</returns>
+    /// <param name="name">适配器名称（最大 127 个字符）。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>创建得到的适配器句柄。</returns>
     Task<WireGuardAdapterHandle> CreateAdapterAsync(string name, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Opens an existing WireGuard adapter.
+    /// 打开已存在的 WireGuard 适配器。
     /// </summary>
-    /// <param name="name">Adapter name.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Handle to the adapter, or null if not found.</returns>
+    /// <param name="name">适配器名称。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>适配器句柄；未找到则返回 null。</returns>
     Task<WireGuardAdapterHandle?> OpenAdapterAsync(string name, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Configures a WireGuard adapter with the specified tunnel configuration.
+    /// 使用指定隧道配置设置 WireGuard 适配器。
     /// </summary>
-    /// <param name="handle">Adapter handle.</param>
-    /// <param name="configuration">Tunnel configuration.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="handle">适配器句柄。</param>
+    /// <param name="configuration">隧道配置。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task SetConfigurationAsync(WireGuardAdapterHandle handle, TunnelConfiguration configuration, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets current traffic statistics from the adapter.
+    /// 从适配器获取当前流量统计信息。
     /// </summary>
-    /// <param name="handle">Adapter handle.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Current traffic statistics.</returns>
+    /// <param name="handle">适配器句柄。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>当前流量统计。</returns>
     Task<TrafficStats> GetStatsAsync(WireGuardAdapterHandle handle, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the LUID of the adapter.
+    /// 获取适配器的 LUID。
     /// </summary>
-    /// <param name="handle">Adapter handle.</param>
-    /// <returns>Adapter LUID.</returns>
+    /// <param name="handle">适配器句柄。</param>
+    /// <returns>适配器 LUID。</returns>
     ulong GetAdapterLuid(WireGuardAdapterHandle handle);
 
     /// <summary>
-    /// Sets the adapter state (up/down).
+    /// 设置适配器状态（up/down）。
     /// </summary>
-    /// <param name="handle">Adapter handle.</param>
-    /// <param name="up">True to bring up, false to bring down.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="handle">适配器句柄。</param>
+    /// <param name="up">true 表示启用；false 表示禁用。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task SetAdapterStateAsync(WireGuardAdapterHandle handle, bool up, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if the WireGuard driver is installed.
+    /// 检查 WireGuard 驱动是否已安装。
     /// </summary>
-    /// <returns>True if installed.</returns>
+    /// <returns>已安装则返回 true。</returns>
     bool IsDriverInstalled();
 
     /// <summary>
-    /// Gets the driver version.
+    /// 获取驱动版本。
     /// </summary>
-    /// <returns>Driver version, or null if not installed.</returns>
+    /// <returns>驱动版本；未安装则返回 null。</returns>
     Version? GetDriverVersion();
 }

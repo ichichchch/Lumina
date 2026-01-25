@@ -1,16 +1,16 @@
 namespace Lumina.Native.Common;
 
 /// <summary>
-/// Utility methods for Win32 error handling.
+/// Win32 错误处理相关的工具方法。
 /// </summary>
 public static class Win32Error
 {
     /// <summary>
-    /// Throws a Win32Exception if the error code indicates failure.
+    /// 当错误码表示失败时抛出 <see cref="Win32Exception"/>。
     /// </summary>
-    /// <param name="errorCode">The Win32 error code.</param>
-    /// <param name="operation">Description of the operation that failed.</param>
-    /// <exception cref="Win32Exception">Thrown when errorCode is non-zero.</exception>
+    /// <param name="errorCode">Win32 错误码。</param>
+    /// <param name="operation">失败操作的描述。</param>
+    /// <exception cref="Win32Exception">当 <paramref name="errorCode"/> 非 0 时抛出。</exception>
     public static void ThrowIfFailed(uint errorCode, string operation)
     {
         if (errorCode != 0)
@@ -20,11 +20,11 @@ public static class Win32Error
     }
 
     /// <summary>
-    /// Throws a Win32Exception for the last Win32 error if condition is true.
+    /// 当条件为 true 时，使用最后一次 Win32 错误码抛出 <see cref="Win32Exception"/>。
     /// </summary>
-    /// <param name="condition">If true, throws an exception.</param>
-    /// <param name="operation">Description of the operation that failed.</param>
-    /// <exception cref="Win32Exception">Thrown when condition is true.</exception>
+    /// <param name="condition">为 true 时抛出异常。</param>
+    /// <param name="operation">失败操作的描述。</param>
+    /// <exception cref="Win32Exception">当 <paramref name="condition"/> 为 true 时抛出。</exception>
     public static void ThrowLastErrorIf(bool condition, string operation)
     {
         if (condition)
@@ -35,10 +35,10 @@ public static class Win32Error
     }
 
     /// <summary>
-    /// Gets the message for a Win32 error code.
+    /// 获取指定 Win32 错误码对应的错误消息。
     /// </summary>
-    /// <param name="errorCode">The Win32 error code.</param>
-    /// <returns>The error message.</returns>
+    /// <param name="errorCode">Win32 错误码。</param>
+    /// <returns>错误消息。</returns>
     public static string GetMessage(uint errorCode)
     {
         return new Win32Exception((int)errorCode).Message;

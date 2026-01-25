@@ -4,41 +4,42 @@ using Xunit;
 
 namespace Lumina.Native.Tests;
 
+// WireGuardNT 互操作层的单元测试：主要验证结构体大小、枚举值与基础解析行为。
 public class WireGuardStructTests
 {
     [Fact]
     public void WIREGUARD_INTERFACE_HasCorrectSize()
     {
-        // WIREGUARD_INTERFACE should have:
-        // - Flags: 2 bytes (ushort)
-        // - ListenPort: 2 bytes (ushort)
-        // - PrivateKey: 32 bytes (fixed)
-        // - PublicKey: 32 bytes (fixed)
-        // - PeersCount: 4 bytes (uint)
-        // With Pack=8 alignment
+        // WIREGUARD_INTERFACE 结构预期包含：
+        // - Flags：2 字节（ushort）
+        // - ListenPort：2 字节（ushort）
+        // - PrivateKey：32 字节（fixed）
+        // - PublicKey：32 字节（fixed）
+        // - PeersCount：4 字节（uint）
+        // 并采用 Pack=8 对齐
         var size = Marshal.SizeOf<WIREGUARD_INTERFACE>();
 
-        // The struct should be 72 bytes minimum
+        // 该结构体应至少为 72 字节
         Assert.True(size >= 72, $"WIREGUARD_INTERFACE size is {size}, expected >= 72");
     }
 
     [Fact]
     public void WIREGUARD_PEER_HasCorrectSize()
     {
-        // WIREGUARD_PEER should have:
-        // - Flags: 4 bytes (uint)
-        // - Reserved: 4 bytes (uint)
-        // - PublicKey: 32 bytes
-        // - PresharedKey: 32 bytes
-        // - PersistentKeepalive: 2 bytes (ushort)
-        // - Endpoint: 28 bytes (SOCKADDR_INET)
-        // - TxBytes: 8 bytes (ulong)
-        // - RxBytes: 8 bytes (ulong)
-        // - LastHandshake: 8 bytes (ulong)
-        // - AllowedIPsCount: 4 bytes (uint)
+        // WIREGUARD_PEER 结构预期包含：
+        // - Flags：4 字节（uint）
+        // - Reserved：4 字节（uint）
+        // - PublicKey：32 字节
+        // - PresharedKey：32 字节
+        // - PersistentKeepalive：2 字节（ushort）
+        // - Endpoint：28 字节（SOCKADDR_INET）
+        // - TxBytes：8 字节（ulong）
+        // - RxBytes：8 字节（ulong）
+        // - LastHandshake：8 字节（ulong）
+        // - AllowedIPsCount：4 字节（uint）
         var size = Marshal.SizeOf<WIREGUARD_PEER>();
 
-        // The struct should be substantial
+        // 该结构体尺寸应足够大（下限用于防止布局明显错误）
         Assert.True(size >= 130, $"WIREGUARD_PEER size is {size}, expected >= 130");
     }
 
@@ -47,7 +48,7 @@ public class WireGuardStructTests
     {
         var size = Marshal.SizeOf<SOCKADDR_INET>();
 
-        // SOCKADDR_INET is 28 bytes
+        // SOCKADDR_INET 固定为 28 字节
         Assert.Equal(28, size);
     }
 
@@ -83,6 +84,7 @@ public class WireGuardStructTests
     }
 }
 
+// SafeHandle 相关单元测试：验证句柄无效/有效判定规则符合预期。
 public class SafeHandleTests
 {
     [Fact]
@@ -109,12 +111,13 @@ public class SafeHandleTests
     [Fact]
     public void WireGuardAdapterHandle_ValidPointerIsValid()
     {
-        // Use a non-zero, non-negative-one value
+        // 使用一个非 0 且非 -1 的值，模拟有效指针句柄
         using var handle = new WireGuardAdapterHandle(new nint(1234), false);
         Assert.False(handle.IsInvalid);
     }
 }
 
+// WireGuard 相关枚举单元测试：验证枚举值与原生定义保持一致。
 public class WireGuardEnumTests
 {
     [Fact]
