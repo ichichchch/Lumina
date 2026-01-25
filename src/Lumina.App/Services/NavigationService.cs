@@ -1,29 +1,29 @@
 namespace Lumina.App.Services;
 
 /// <summary>
-/// Navigation service interface for switching between views.
+/// 导航服务接口，用于在不同页面/视图之间切换。
 /// </summary>
 public interface INavigationService
 {
     /// <summary>
-    /// Current page name.
+    /// 当前页面标识。
     /// </summary>
     string CurrentPage { get; }
 
     /// <summary>
-    /// Event raised when navigation occurs.
+    /// 当发生导航时触发的事件。
     /// </summary>
     event EventHandler<string>? Navigated;
 
     /// <summary>
-    /// Navigates to the specified page.
+    /// 导航到指定页面。
     /// </summary>
-    /// <param name="pageName">Name of the page to navigate to.</param>
+    /// <param name="pageName">要导航到的页面标识。</param>
     void NavigateTo(string pageName);
 }
 
 /// <summary>
-/// Navigation service implementation.
+/// 导航服务实现。
 /// </summary>
 public sealed class NavigationService : INavigationService
 {

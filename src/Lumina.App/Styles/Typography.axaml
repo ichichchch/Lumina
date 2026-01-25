@@ -7,7 +7,7 @@
     <Style>
         <Style.Resources>
             <x:Double x:Key="FontSizeCaption">12</x:Double>
-            <x:Double x:Key="FontSizeBody">14</x:Double>
+            <x:Double x:Key="FontSizeBody">15</x:Double>
             <x:Double x:Key="FontSizeBodyLarge">16</x:Double>
             <x:Double x:Key="FontSizeTitle">20</x:Double>
             <x:Double x:Key="FontSizeHeading">24</x:Double>
@@ -28,42 +28,49 @@
         <Setter Property="FontSize" Value="{StaticResource FontSizeCaption}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
         <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="LineHeight" Value="18" />
     </Style>
 
     <Style Selector="TextBlock.Body">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="LineHeight" Value="22" />
     </Style>
 
     <Style Selector="TextBlock.BodyStrong">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="LineHeight" Value="22" />
     </Style>
 
     <Style Selector="TextBlock.BodyLarge">
         <Setter Property="FontSize" Value="{StaticResource FontSizeBodyLarge}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightRegular}" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="LineHeight" Value="24" />
     </Style>
 
     <Style Selector="TextBlock.Title">
         <Setter Property="FontSize" Value="{StaticResource FontSizeTitle}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightSemiBold}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="LineHeight" Value="28" />
     </Style>
 
     <Style Selector="TextBlock.Heading">
         <Setter Property="FontSize" Value="{StaticResource FontSizeHeading}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="LineHeight" Value="32" />
     </Style>
 
     <Style Selector="TextBlock.Display">
         <Setter Property="FontSize" Value="{StaticResource FontSizeDisplay}" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightBold}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="LineHeight" Value="40" />
     </Style>
 
     <Style Selector="TextBlock.Hero">

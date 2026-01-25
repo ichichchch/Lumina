@@ -54,14 +54,27 @@
     <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource AccentWarning}" />
     <SolidColorBrush x:Key="ErrorBrush" Color="{StaticResource AccentError}" />
 
+    <SolidColorBrush x:Key="StateDisconnectedBrush" Color="{StaticResource StateDisconnected}" />
+    <SolidColorBrush x:Key="StateConnectingBrush" Color="{StaticResource StateConnecting}" />
+    <SolidColorBrush x:Key="StateConnectedBrush" Color="{StaticResource StateConnected}" />
+    <SolidColorBrush x:Key="StateErrorBrush" Color="{StaticResource StateError}" />
+
     <!-- Gradient Brushes -->
     <LinearGradientBrush x:Key="BackgroundGradient" StartPoint="0%,0%" EndPoint="100%,100%">
         <GradientStop Color="{StaticResource Gray950}" Offset="0" />
+        <GradientStop Color="#0B1020" Offset="0.55" />
         <GradientStop Color="{StaticResource Gray900}" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="CardGradient" StartPoint="0%,0%" EndPoint="100%,100%">
-        <GradientStop Color="#1A1F2E" Offset="0" />
+        <GradientStop Color="#1B2340" Offset="0" />
+        <GradientStop Color="{StaticResource Gray800}" Offset="0.55" />
+        <GradientStop Color="{StaticResource Gray850}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="CardGradientHover" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#243055" Offset="0" />
+        <GradientStop Color="{StaticResource Gray700}" Offset="0.6" />
         <GradientStop Color="{StaticResource Gray800}" Offset="1" />
     </LinearGradientBrush>
 
@@ -70,14 +83,21 @@
         <GradientStop Color="#8B5CF6" Offset="1" />
     </LinearGradientBrush>
 
+    <RadialGradientBrush x:Key="AccentGlow" Center="70%,20%" GradientOrigin="70%,20%" RadiusX="90%" RadiusY="90%">
+        <GradientStop Color="#223B82F6" Offset="0" />
+        <GradientStop Color="#0013182A" Offset="0.7" />
+        <GradientStop Color="#000A0A0B" Offset="1" />
+    </RadialGradientBrush>
+
     <!-- Glass Effect (Acrylic simulation) -->
     <SolidColorBrush x:Key="GlassBackground" Color="#1A1E293B" />
     <SolidColorBrush x:Key="GlassBorder" Color="#33FFFFFF" />
 
     <!-- Shadows -->
-    <BoxShadows x:Key="ShadowSmall">0 2 4 #20000000</BoxShadows>
-    <BoxShadows x:Key="ShadowMedium">0 4 12 #30000000</BoxShadows>
-    <BoxShadows x:Key="ShadowLarge">0 8 24 #40000000</BoxShadows>
+    <BoxShadows x:Key="ShadowSmall">0 2 4 #24000000</BoxShadows>
+    <BoxShadows x:Key="ShadowMedium">0 10 24 #30000000</BoxShadows>
+    <BoxShadows x:Key="ShadowLarge">0 18 44 #3A000000</BoxShadows>
+    <BoxShadows x:Key="ShadowGlowAccent">0 18 44 #1C3B82F6</BoxShadows>
 
     <!-- Corner Radius -->
     <CornerRadius x:Key="RadiusSmall">4</CornerRadius>

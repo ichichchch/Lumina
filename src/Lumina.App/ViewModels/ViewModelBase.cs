@@ -1,7 +1,7 @@
 namespace Lumina.App.ViewModels;
 
 /// <summary>
-/// Base class for all ViewModels.
+/// 所有 ViewModel 的基类。
 /// </summary>
 public abstract class ViewModelBase : ObservableObject
 {

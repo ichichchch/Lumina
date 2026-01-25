@@ -6,7 +6,7 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="32" Margin="40">
+        <StackPanel Spacing="24" Margin="32" MaxWidth="760" HorizontalAlignment="Center">
 
             <!-- Header -->
             <Grid ColumnDefinitions="Auto,*,Auto">
@@ -17,13 +17,13 @@
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <PathIcon Data="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
                                   Width="16" Height="16" />
-                        <TextBlock Text="Back" />
+                        <TextBlock Text="{DynamicResource AddServer_Back}" />
                     </StackPanel>
                 </Button>
                 
                 <StackPanel Grid.Column="1" Spacing="8" Margin="24,0">
-                    <TextBlock Text="Add Server" Classes="Display" />
-                    <TextBlock Text="Configure a new VPN server connection" Classes="Body" />
+                    <TextBlock Text="{DynamicResource AddServer_Title}" Classes="Display" />
+                    <TextBlock Text="{DynamicResource AddServer_Subtitle}" Classes="Body" />
                 </StackPanel>
 
                 <Button Grid.Column="2" 
@@ -34,7 +34,7 @@
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <PathIcon Data="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
                                   Width="16" Height="16" />
-                        <TextBlock Text="Save" />
+                        <TextBlock Text="{DynamicResource AddServer_Save}" />
                     </StackPanel>
                 </Button>
             </Grid>
@@ -45,7 +45,7 @@
                     Background="#331E293B"
                     BorderBrush="{StaticResource ErrorBrush}">
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Please fix the following errors:" Classes="BodyStrong" 
+                    <TextBlock Text="{DynamicResource AddServer_ErrorsTitle}" Classes="BodyStrong" 
                                Foreground="{StaticResource ErrorBrush}" />
                     <ItemsControl ItemsSource="{Binding ValidationErrors}">
                         <ItemsControl.ItemTemplate>
@@ -60,20 +60,20 @@
             <!-- Basic Info -->
             <Border Classes="Card">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Basic Information" Classes="Title" />
+                    <TextBlock Text="{DynamicResource AddServer_BasicInfoTitle}" Classes="Title" />
                     
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Server Name *" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_ServerNameLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding Name}" 
-                                 Watermark="e.g., US West Server" />
+                                 Watermark="{DynamicResource AddServer_ServerNameWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Location" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_LocationLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding Location}" 
-                                 Watermark="e.g., Los Angeles, USA" />
+                                 Watermark="{DynamicResource AddServer_LocationWatermark}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -81,41 +81,41 @@
             <!-- Peer Configuration -->
             <Border Classes="Card">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Peer Configuration" Classes="Title" />
+                    <TextBlock Text="{DynamicResource AddServer_PeerConfigTitle}" Classes="Title" />
                     
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Endpoint *" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_EndpointLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding Endpoint}" 
-                                 Watermark="e.g., vpn.example.com:51820" />
+                                 Watermark="{DynamicResource AddServer_EndpointWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Public Key *" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_PublicKeyLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding PublicKey}" 
-                                 Watermark="Server's public key (Base64)" />
+                                 Watermark="{DynamicResource AddServer_PublicKeyWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Preshared Key (Optional)" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_PresharedKeyLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding PresharedKey}" 
-                                 Watermark="Optional preshared key (Base64)" />
+                                 Watermark="{DynamicResource AddServer_PresharedKeyWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Allowed IPs" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_AllowedIpsLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding AllowedIPs}" 
-                                 Watermark="e.g., 0.0.0.0/0, ::/0" />
+                                 Watermark="{DynamicResource AddServer_AllowedIpsWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Persistent Keepalive (seconds)" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_KeepaliveLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding PersistentKeepalive}" 
-                                 Watermark="e.g., 25" />
+                                 Watermark="{DynamicResource AddServer_KeepaliveWatermark}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -123,36 +123,36 @@
             <!-- Interface Configuration -->
             <Border Classes="Card">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Interface Configuration" Classes="Title" />
+                    <TextBlock Text="{DynamicResource AddServer_InterfaceConfigTitle}" Classes="Title" />
                     
                     <Grid ColumnDefinitions="*,Auto">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Private Key" Classes="Caption" />
+                            <TextBlock Text="{DynamicResource AddServer_PrivateKeyLabel}" Classes="Caption" />
                             <TextBox Classes="Lumina" 
                                      Text="{Binding PrivateKey}" 
-                                     Watermark="Your private key (Base64)" />
+                                     Watermark="{DynamicResource AddServer_PrivateKeyWatermark}" />
                         </StackPanel>
                         <Button Grid.Column="1" 
                                 Classes="Secondary"
                                 Command="{Binding GenerateKeyPairCommand}"
                                 VerticalAlignment="Bottom"
                                 Margin="12,0,0,0">
-                            <TextBlock Text="Generate" />
+                            <TextBlock Text="{DynamicResource AddServer_Generate}" />
                         </Button>
                     </Grid>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Interface Address" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_InterfaceAddressLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding InterfaceAddress}" 
-                                 Watermark="e.g., 10.0.0.2/32" />
+                                 Watermark="{DynamicResource AddServer_InterfaceAddressWatermark}" />
                     </StackPanel>
 
                     <StackPanel Spacing="8">
-                        <TextBlock Text="DNS Servers" Classes="Caption" />
+                        <TextBlock Text="{DynamicResource AddServer_DnsServersLabel}" Classes="Caption" />
                         <TextBox Classes="Lumina" 
                                  Text="{Binding DnsServers}" 
-                                 Watermark="e.g., 1.1.1.1, 1.0.0.1" />
+                                 Watermark="{DynamicResource AddServer_DnsServersWatermark}" />
                     </StackPanel>
                 </StackPanel>
             </Border>

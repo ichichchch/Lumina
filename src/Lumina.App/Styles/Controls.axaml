@@ -7,24 +7,35 @@
     <Style Selector="Button.Primary">
         <Setter Property="Background" Value="{StaticResource AccentBrush}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
         <Setter Property="Padding" Value="20,12" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
         <Setter Property="FontSize" Value="{StaticResource FontSizeBody}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(1)" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.15" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button.Primary:pointerover">
         <Setter Property="Background" Value="{StaticResource AccentHoverBrush}" />
+        <Setter Property="RenderTransform" Value="translate(0px,-1px) scale(1.01)" />
+    </Style>
+
+    <Style Selector="Button.Primary:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
     </Style>
 
     <Style Selector="Button.Primary:pressed">
-        <Setter Property="RenderTransform" Value="scale(0.98)" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(0.98)" />
     </Style>
 
     <!-- Secondary Button -->
@@ -37,30 +48,48 @@
         <Setter Property="Padding" Value="20,12" />
         <Setter Property="FontWeight" Value="{StaticResource FontWeightMedium}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(1)" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.15" />
                 <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button.Secondary:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundCardHover}" />
+        <Setter Property="Background" Value="{StaticResource CardGradientHover}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderHover}" />
+        <Setter Property="RenderTransform" Value="translate(0px,-1px) scale(1.01)" />
+    </Style>
+
+    <Style Selector="Button.Secondary:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
+    </Style>
+
+    <Style Selector="Button.Secondary:pressed">
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(0.98)" />
     </Style>
 
     <!-- Ghost Button -->
     <Style Selector="Button.Ghost">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
         <Setter Property="Padding" Value="12,8" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(1)" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.15" />
                 <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
             </Transitions>
         </Setter>
     </Style>
@@ -68,27 +97,42 @@
     <Style Selector="Button.Ghost:pointerover">
         <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefault}" />
+        <Setter Property="RenderTransform" Value="translate(0px,-1px) scale(1.01)" />
+    </Style>
+
+    <Style Selector="Button.Ghost:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
+    </Style>
+
+    <Style Selector="Button.Ghost:pressed">
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(0.98)" />
     </Style>
 
     <!-- Card Style -->
     <Style Selector="Border.Card">
-        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="Background" Value="{StaticResource CardGradient}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderDefault}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="{StaticResource RadiusLarge}" />
         <Setter Property="Padding" Value="20" />
+        <Setter Property="BoxShadow" Value="{StaticResource ShadowSmall}" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px) scale(1)" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.15" />
                 <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.22" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Border.Card:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundCardHover}" />
+        <Setter Property="Background" Value="{StaticResource CardGradientHover}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderHover}" />
-        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="BoxShadow" Value="{StaticResource ShadowLarge}" />
+        <Setter Property="RenderTransform" Value="translate(0px,-2px) scale(1.01)" />
     </Style>
 
     <!-- Glass Card -->
@@ -105,27 +149,78 @@
     <Style Selector="Button.NavItem">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{StaticResource TextMuted}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="Padding" Value="16,12" />
         <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
         <Setter Property="Transitions">
             <Transitions>
-                <BrushTransition Property="Background" Duration="0:0:0.15" />
-                <BrushTransition Property="Foreground" Duration="0:0:0.15" />
+                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                <BrushTransition Property="Foreground" Duration="0:0:0.2" />
+                <BrushTransition Property="BorderBrush" Duration="0:0:0.2" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Button.NavItem:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
-        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="Background" Value="{StaticResource CardGradientHover}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderHover}" />
+        <Setter Property="RenderTransform" Value="scale(1.02)" />
     </Style>
 
     <Style Selector="Button.NavItem.Active">
-        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="Background" Value="{StaticResource CardGradientHover}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+    </Style>
+
+    <Style Selector="Button.NavItem:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.NavItem:pressed">
+        <Setter Property="RenderTransform" Value="scale(0.98)" />
+    </Style>
+
+    <Style Selector="Button.NavItem PathIcon">
+        <Setter Property="Opacity" Value="0.9" />
+    </Style>
+
+    <Style Selector="Button.NavItem:pointerover PathIcon">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="Button.NavItem.Active PathIcon">
+        <Setter Property="Opacity" Value="1" />
+    </Style>
+
+    <Style Selector="Ellipse.StatusDot">
+        <Setter Property="Fill" Value="{StaticResource StateDisconnectedBrush}" />
+        <Setter Property="Transitions">
+            <Transitions>
+                <BrushTransition Property="Fill" Duration="0:0:0.2" />
+            </Transitions>
+        </Setter>
+    </Style>
+
+    <Style Selector="Ellipse.StatusDot.Connecting">
+        <Setter Property="Fill" Value="{StaticResource StateConnectingBrush}" />
+    </Style>
+
+    <Style Selector="Ellipse.StatusDot.Connected">
+        <Setter Property="Fill" Value="{StaticResource StateConnectedBrush}" />
+    </Style>
+
+    <Style Selector="Ellipse.StatusDot.Error">
+        <Setter Property="Fill" Value="{StaticResource StateErrorBrush}" />
     </Style>
 
     <!-- TextBox Style -->
@@ -144,6 +239,61 @@
         <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
     </Style>
 
+    <!-- ComboBox Style -->
+    <Style Selector="ComboBox.Lumina">
+        <Setter Property="Background" Value="{StaticResource BackgroundTertiary}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{StaticResource RadiusMedium}" />
+        <Setter Property="Padding" Value="12,10" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina:pointerover">
+        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderHover}" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina ComboBoxItem">
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="12,10" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina ComboBoxItem:pointerover">
+        <Setter Property="Background" Value="{StaticResource BackgroundCardHover}" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina ComboBoxItem:selected">
+        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+    </Style>
+
+    <Style Selector="ComboBox.Lumina /template/ Popup Border">
+        <Setter Property="Background" Value="{StaticResource BackgroundSecondary}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefault}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+    <!-- ToggleSwitch Style -->
+    <Style Selector="ToggleSwitch.Lumina">
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+        <Setter Property="OffContent" Value="{DynamicResource Common_Off}" />
+        <Setter Property="OnContent" Value="{DynamicResource Common_On}" />
+        <Setter Property="MinWidth" Value="72" />
+        <Setter Property="MinHeight" Value="32" />
+    </Style>
+
+    <Style Selector="ToggleSwitch.Lumina /template/ TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource TextSecondary}" />
+    </Style>
+
     <!-- Connection Button -->
     <Style Selector="Button.ConnectButton">
         <Setter Property="Width" Value="180" />
@@ -152,6 +302,8 @@
         <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
         <Setter Property="BorderBrush" Value="{StaticResource BorderDefault}" />
         <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="scale(1)" />
         <Setter Property="Cursor" Value="Hand" />
         <Setter Property="Transitions">
             <Transitions>
@@ -163,9 +315,9 @@
     </Style>
 
     <Style Selector="Button.ConnectButton:pointerover">
-        <Setter Property="Background" Value="{StaticResource BackgroundCardHover}" />
+        <Setter Property="Background" Value="{StaticResource CardGradientHover}" />
         <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
-        <Setter Property="RenderTransform" Value="scale(1.02)" />
+        <Setter Property="RenderTransform" Value="scale(1.03)" />
     </Style>
 
     <Style Selector="Button.ConnectButton:pressed">
@@ -180,6 +332,18 @@
         <Setter Property="BorderBrush" Value="{StaticResource WarningBrush}" />
     </Style>
 
+    <Style Selector="Button.ConnectButton:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource BorderFocus}" />
+    </Style>
+
+    <Style Selector="Button.ConnectButton.Connected:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource SuccessBrush}" />
+    </Style>
+
+    <Style Selector="Button.ConnectButton.Connecting:focus">
+        <Setter Property="BorderBrush" Value="{StaticResource WarningBrush}" />
+    </Style>
+
     <!-- Server List Item -->
     <Style Selector="Border.ServerItem">
         <Setter Property="Background" Value="Transparent" />
@@ -187,15 +351,19 @@
         <Setter Property="BorderThickness" Value="0,0,0,1" />
         <Setter Property="Padding" Value="16,12" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform" Value="translate(0px,0px)" />
         <Setter Property="Transitions">
             <Transitions>
                 <BrushTransition Property="Background" Duration="0:0:0.15" />
+                <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.18" />
             </Transitions>
         </Setter>
     </Style>
 
     <Style Selector="Border.ServerItem:pointerover">
         <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="RenderTransform" Value="translate(0px,-1px)" />
     </Style>
 
     <!-- Window Control Button -->
@@ -218,6 +386,11 @@
     </Style>
 
     <Style Selector="Button.WindowControlButton:pointerover">
+        <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
+    </Style>
+
+    <Style Selector="Button.WindowControlButton:focus">
         <Setter Property="Background" Value="{StaticResource BackgroundCard}" />
         <Setter Property="Foreground" Value="{StaticResource TextPrimary}" />
     </Style>

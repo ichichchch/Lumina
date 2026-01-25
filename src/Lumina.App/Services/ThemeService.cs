@@ -1,34 +1,34 @@
 namespace Lumina.App.Services;
 
 /// <summary>
-/// Theme service interface.
+/// 主题服务接口。
 /// </summary>
 public interface IThemeService
 {
     /// <summary>
-    /// Current theme variant.
+    /// 当前主题变体。
     /// </summary>
     ThemeVariant CurrentTheme { get; }
 
     /// <summary>
-    /// Event raised when theme changes.
+    /// 当主题发生变化时触发的事件。
     /// </summary>
     event EventHandler<ThemeVariant>? ThemeChanged;
 
     /// <summary>
-    /// Sets the theme.
+    /// 设置主题。
     /// </summary>
-    /// <param name="theme">Theme to set.</param>
+    /// <param name="theme">要设置的主题。</param>
     void SetTheme(ThemeVariant theme);
 
     /// <summary>
-    /// Toggles between light and dark themes.
+    /// 在浅色与深色主题之间切换。
     /// </summary>
     void ToggleTheme();
 }
 
 /// <summary>
-/// Theme service implementation.
+/// 主题服务实现。
 /// </summary>
 public sealed class ThemeService : IThemeService
 {

@@ -6,104 +6,128 @@
 
     <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                   VerticalScrollBarVisibility="Auto">
-        <StackPanel Spacing="32" Margin="40">
+        <StackPanel Spacing="24" Margin="32" MaxWidth="760" HorizontalAlignment="Center">
 
             <!-- Header -->
-            <StackPanel Spacing="8">
-                <TextBlock Text="Welcome to Lumina" Classes="Display" />
-                <TextBlock Text="Secure, fast, and private VPN connection" Classes="Body" />
-            </StackPanel>
+            <Border Classes="Card"
+                    Background="{StaticResource AccentGradient}"
+                    BorderBrush="{StaticResource GlassBorder}"
+                    BorderThickness="1"
+                    Padding="24">
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="{DynamicResource Home_HeroTitle}" Classes="Display" />
+                        <TextBlock Text="{DynamicResource Home_HeroSubtitle}" Classes="BodyLarge" />
+                    </StackPanel>
+                    <Border Grid.Column="1"
+                            Width="56" Height="56"
+                            CornerRadius="28"
+                            Background="#22FFFFFF"
+                            VerticalAlignment="Top">
+                        <PathIcon Data="M12 2l8 4v6c0 5-3.41 9.41-8 10-4.59-.59-8-5-8-10V6l8-4z"
+                                  Width="28" Height="28"
+                                  Foreground="{StaticResource TextPrimary}"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </Border>
 
             <!-- Connection Section -->
-            <Grid ColumnDefinitions="*,Auto,*" Margin="0,20">
-                <StackPanel Grid.Column="1" HorizontalAlignment="Center" Spacing="24">
-                    
-                    <!-- Big Connect Button -->
-                    <Button Classes="ConnectButton"
-                            Classes.Connected="{Binding IsConnected}"
-                            Command="{Binding ConnectCommand}"
-                            HorizontalAlignment="Center">
-                        <Panel>
-                            <!-- Power Icon -->
-                            <PathIcon Data="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"
-                                      Width="48" Height="48"
-                                      Foreground="{StaticResource TextPrimary}" />
-                        </Panel>
-                    </Button>
+            <Border Classes="Card" Padding="24">
+                <Grid ColumnDefinitions="Auto,*">
+                    <StackPanel Spacing="10" HorizontalAlignment="Center">
+                        <Button Classes="ConnectButton"
+                                Classes.Connected="{Binding IsConnected}"
+                                Classes.Connecting="{Binding IsConnecting}"
+                                IsEnabled="{Binding CanToggleConnection}"
+                                Command="{Binding ConnectCommand}"
+                                ToolTip.Tip="{Binding StatusText}"
+                                AutomationProperties.Name="Toggle connection"
+                                HorizontalAlignment="Center">
+                            <Panel>
+                                <PathIcon Data="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"
+                                          Width="48" Height="48"
+                                          Foreground="{StaticResource TextPrimary}" />
+                            </Panel>
+                        </Button>
+                        <Border Padding="10,6"
+                                CornerRadius="999"
+                                Background="{StaticResource BackgroundTertiary}"
+                                BorderBrush="{StaticResource BorderDefault}"
+                                BorderThickness="1">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Ellipse Width="8" Height="8"
+                                         Classes="StatusDot"
+                                         Classes.Connected="{Binding IsConnected}"
+                                         Classes.Connecting="{Binding IsConnecting}"
+                                         Classes.Error="{Binding IsError}" />
+                                <TextBlock Text="{Binding StatusText}" Classes="Caption" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
 
-                    <!-- Status Text -->
-                    <TextBlock Text="{Binding StatusText}"
-                               Classes="Title"
-                               HorizontalAlignment="Center" />
+                    <StackPanel Grid.Column="1" Spacing="14" VerticalAlignment="Center" Margin="24,0,0,0">
+                        <StackPanel Spacing="2">
+                            <TextBlock Text="{DynamicResource Home_CurrentServer}" Classes="Caption" />
+                            <TextBlock Text="{Binding SelectedServerNameText}"
+                                       Classes="Title" />
+                            <TextBlock Text="{Binding SelectedServerLocationText}"
+                                       Classes="Body" />
+                        </StackPanel>
 
-                </StackPanel>
-            </Grid>
-
-            <!-- Server Card -->
-            <Border Classes="Card" MaxWidth="500" HorizontalAlignment="Center">
-                <Grid ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto">
-                    
-                    <!-- Server Icon -->
-                    <Border Grid.Column="0" Grid.RowSpan="2"
-                            Width="48" Height="48"
-                            CornerRadius="24"
-                            Background="{StaticResource BackgroundTertiary}"
-                            Margin="0,0,16,0">
-                        <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
-                                  Width="24" Height="24"
-                                  Foreground="{StaticResource TextMuted}" />
-                    </Border>
-
-                    <!-- Server Name -->
-                    <TextBlock Grid.Column="1" Grid.Row="0"
-                               Text="{Binding SelectedConfiguration.Name, FallbackValue='No server selected'}"
-                               Classes="BodyStrong" />
-
-                    <!-- Server Location -->
-                    <TextBlock Grid.Column="1" Grid.Row="1"
-                               Text="{Binding SelectedConfiguration.Location, FallbackValue='Select a server to connect'}"
-                               Classes="Caption" />
-
-                    <!-- Change Button -->
-                    <Button Grid.Column="2" Grid.RowSpan="2"
-                            Classes="Ghost"
-                            Command="{Binding NavigateToCommand}"
-                            CommandParameter="Servers"
-                            VerticalAlignment="Center">
-                        <TextBlock Text="Change" />
-                    </Button>
-                    
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="Secondary"
+                                    Command="{Binding NavigateToCommand}"
+                                    CommandParameter="Servers">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                                              Width="16" Height="16" />
+                                    <TextBlock Text="{DynamicResource Home_ShortcutServers}" />
+                                </StackPanel>
+                            </Button>
+                            <Button Classes="Ghost"
+                                    Command="{Binding NavigateToCommand}"
+                                    CommandParameter="Settings">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <PathIcon Data="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"
+                                              Width="16" Height="16" />
+                                    <TextBlock Text="{DynamicResource Home_ShortcutSettings}" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
                 </Grid>
             </Border>
 
             <!-- Traffic Stats -->
-            <Grid ColumnDefinitions="*,*" MaxWidth="500" HorizontalAlignment="Center">
+            <Grid ColumnDefinitions="*,*">
                 
                 <!-- Upload -->
-                <Border Grid.Column="0" Classes="Card" Margin="0,0,8,0">
-                    <StackPanel Spacing="8" HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border Grid.Column="0" Classes="Card">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
                             <PathIcon Data="M4 12l1.41 1.41L11 7.83V20h2V7.83l5.58 5.59L20 12l-8-8-8 8z"
                                       Width="16" Height="16"
                                       Foreground="{StaticResource AccentBrush}" />
-                            <TextBlock Text="UPLOAD" Classes="StatLabel" />
+                            <TextBlock Text="{DynamicResource Home_Upload}" Classes="StatLabel" />
                         </StackPanel>
                         <TextBlock Text="{Binding UploadSpeed}" Classes="Stat" />
-                        <TextBlock Text="{Binding TotalUpload, StringFormat='Total: {0}'}" Classes="Caption" />
+                        <TextBlock Text="{Binding TotalUploadText}" Classes="Caption" />
                     </StackPanel>
                 </Border>
 
                 <!-- Download -->
-                <Border Grid.Column="1" Classes="Card" Margin="8,0,0,0">
-                    <StackPanel Spacing="8" HorizontalAlignment="Center">
-                        <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border Grid.Column="1" Classes="Card" Margin="16,0,0,0">
+                    <StackPanel Spacing="10">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
                             <PathIcon Data="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"
                                       Width="16" Height="16"
                                       Foreground="{StaticResource SuccessBrush}" />
-                            <TextBlock Text="DOWNLOAD" Classes="StatLabel" />
+                            <TextBlock Text="{DynamicResource Home_Download}" Classes="StatLabel" />
                         </StackPanel>
                         <TextBlock Text="{Binding DownloadSpeed}" Classes="Stat" />
-                        <TextBlock Text="{Binding TotalDownload, StringFormat='Total: {0}'}" Classes="Caption" />
+                        <TextBlock Text="{Binding TotalDownloadText}" Classes="Caption" />
                     </StackPanel>
                 </Border>
 
@@ -111,8 +135,6 @@
 
             <!-- Driver Initializing -->
             <Border Classes="Card" 
-                    MaxWidth="500" 
-                    HorizontalAlignment="Center"
                     IsVisible="{Binding IsInitializingDriver}"
                     Background="#331E293B"
                     BorderBrush="{StaticResource AccentBrush}">
@@ -121,9 +143,9 @@
                         <PathIcon Data="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8z"
                                   Width="20" Height="20"
                                   Foreground="{StaticResource AccentBrush}" />
-                        <TextBlock Text="Initializing Driver..." Classes="BodyStrong" />
+                        <TextBlock Text="{DynamicResource Home_InitializingDriverTitle}" Classes="BodyStrong" />
                     </StackPanel>
-                    <TextBlock Text="Setting up WireGuard driver, please wait."
+                    <TextBlock Text="{DynamicResource Home_InitializingDriverDesc}"
                                Classes="Body"
                                TextWrapping="Wrap" />
                 </StackPanel>
@@ -131,8 +153,6 @@
 
             <!-- Driver Error -->
             <Border Classes="Card" 
-                    MaxWidth="500" 
-                    HorizontalAlignment="Center"
                     IsVisible="{Binding DriverError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                     Background="#331E293B"
                     BorderBrush="{StaticResource ErrorBrush}">
@@ -141,7 +161,7 @@
                         <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
                                   Width="20" Height="20"
                                   Foreground="{StaticResource ErrorBrush}" />
-                        <TextBlock Text="Driver Initialization Failed" Classes="BodyStrong" />
+                        <TextBlock Text="{DynamicResource Home_DriverInitFailedTitle}" Classes="BodyStrong" />
                     </StackPanel>
                     <TextBlock Text="{Binding DriverError}"
                                Classes="Body"
@@ -150,7 +170,7 @@
                             HorizontalAlignment="Left"
                             Margin="0,8,0,0"
                             Command="{Binding EnsureDriverReadyCommand}">
-                        <TextBlock Text="Retry" />
+                        <TextBlock Text="{DynamicResource Home_Retry}" />
                     </Button>
                 </StackPanel>
             </Border>

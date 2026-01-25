@@ -1,0 +1,114 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:String x:Key="App_Name">Lumina</x:String>
+  <x:String x:Key="App_Subtitle">VPN Client</x:String>
+
+  <x:String x:Key="Nav_Home">Home</x:String>
+  <x:String x:Key="Nav_Servers">Servers</x:String>
+  <x:String x:Key="Nav_Settings">Settings</x:String>
+
+  <x:String x:Key="Status_Disconnected">Disconnected</x:String>
+  <x:String x:Key="Status_Connecting">Connecting...</x:String>
+  <x:String x:Key="Status_Connected">Connected</x:String>
+  <x:String x:Key="Status_Disconnecting">Disconnecting...</x:String>
+  <x:String x:Key="Status_Error">Error</x:String>
+
+  <x:String x:Key="Home_HeroTitle">Lumina VPN</x:String>
+  <x:String x:Key="Home_HeroSubtitle">Secure, fast, and private connection</x:String>
+  <x:String x:Key="Home_CurrentServer">Current Server</x:String>
+  <x:String x:Key="Home_ShortcutServers">Servers</x:String>
+  <x:String x:Key="Home_ShortcutSettings">Settings</x:String>
+
+  <x:String x:Key="Servers_Title">Servers</x:String>
+  <x:String x:Key="Servers_Subtitle">Select a server to connect</x:String>
+  <x:String x:Key="Servers_Add">Add Server</x:String>
+  <x:String x:Key="Servers_Search">Search servers...</x:String>
+
+  <x:String x:Key="Settings_Title">Settings</x:String>
+  <x:String x:Key="Settings_Subtitle">Configure your VPN experience</x:String>
+  <x:String x:Key="Settings_Language">Language</x:String>
+  <x:String x:Key="Settings_LanguageDesc">Choose your preferred display language</x:String>
+
+  <x:String x:Key="Common_Unknown">Unknown</x:String>
+  <x:String x:Key="Common_Installed">Installed</x:String>
+  <x:String x:Key="Common_On">On</x:String>
+  <x:String x:Key="Common_Off">Off</x:String>
+  <x:String x:Key="TitleBar_Minimize">Minimize</x:String>
+  <x:String x:Key="TitleBar_Maximize">Maximize</x:String>
+  <x:String x:Key="TitleBar_Close">Close</x:String>
+
+  <x:String x:Key="Home_Upload">UPLOAD</x:String>
+  <x:String x:Key="Home_Download">DOWNLOAD</x:String>
+  <x:String x:Key="Home_TotalFormat">Total: {0}</x:String>
+  <x:String x:Key="Home_InitializingDriverTitle">Initializing Driver...</x:String>
+  <x:String x:Key="Home_InitializingDriverDesc">Setting up WireGuard driver, please wait.</x:String>
+  <x:String x:Key="Home_DriverInitFailedTitle">Driver Initialization Failed</x:String>
+  <x:String x:Key="Home_Retry">Retry</x:String>
+  <x:String x:Key="Home_NoServerSelected">No server selected</x:String>
+  <x:String x:Key="Home_SelectServerHint">Select a server to connect</x:String>
+
+  <x:String x:Key="Servers_Favorites">FAVORITES</x:String>
+  <x:String x:Key="Servers_AllServers">ALL SERVERS</x:String>
+  <x:String x:Key="Servers_Connect">Connect</x:String>
+  <x:String x:Key="Servers_EmptyTitle">No servers configured</x:String>
+  <x:String x:Key="Servers_EmptySubtitle">Add a server to get started</x:String>
+
+  <x:String x:Key="Settings_SectionGeneral">GENERAL</x:String>
+  <x:String x:Key="Settings_AutoConnectTitle">Auto-connect on startup</x:String>
+  <x:String x:Key="Settings_AutoConnectDesc">Automatically connect when Lumina starts</x:String>
+  <x:String x:Key="Settings_StartWithWindowsTitle">Start with Windows</x:String>
+  <x:String x:Key="Settings_StartWithWindowsDesc">Launch Lumina when you sign in</x:String>
+  <x:String x:Key="Settings_StartMinimizedTitle">Start minimized</x:String>
+  <x:String x:Key="Settings_StartMinimizedDesc">Start in system tray</x:String>
+  <x:String x:Key="Settings_SectionSecurity">SECURITY</x:String>
+  <x:String x:Key="Settings_KillSwitchTitle">Kill Switch</x:String>
+  <x:String x:Key="Settings_KillSwitchDesc">Block all internet if VPN disconnects unexpectedly</x:String>
+  <x:String x:Key="Settings_SectionAppearance">APPEARANCE</x:String>
+  <x:String x:Key="Settings_ThemeTitle">Theme</x:String>
+  <x:String x:Key="Settings_ThemeDesc">Choose your preferred color scheme</x:String>
+  <x:String x:Key="Settings_SectionLanguage">LANGUAGE</x:String>
+  <x:String x:Key="Settings_SectionAdvanced">ADVANCED</x:String>
+  <x:String x:Key="Settings_ExportLogs">Export Logs</x:String>
+  <x:String x:Key="Settings_SectionAbout">ABOUT</x:String>
+  <x:String x:Key="Settings_LuminaVersion">Lumina Version</x:String>
+  <x:String x:Key="Settings_WireGuardDriver">WireGuard Driver</x:String>
+  <x:String x:Key="Settings_NotInstalled">Not installed</x:String>
+  <x:String x:Key="Settings_CheckForUpdates">Check for Updates</x:String>
+  <x:String x:Key="Settings_SaveChanges">Save Changes</x:String>
+  <x:String x:Key="Settings_LanguageAuto">Follow system</x:String>
+  <x:String x:Key="Language_English">English</x:String>
+  <x:String x:Key="Language_ZhCn">Simplified Chinese</x:String>
+  <x:String x:Key="Theme_Light">Light</x:String>
+  <x:String x:Key="Theme_Dark">Dark</x:String>
+  <x:String x:Key="Theme_Auto">Auto</x:String>
+
+  <x:String x:Key="AddServer_Back">Back</x:String>
+  <x:String x:Key="AddServer_Title">Add Server</x:String>
+  <x:String x:Key="AddServer_Subtitle">Configure a new VPN server connection</x:String>
+  <x:String x:Key="AddServer_Save">Save</x:String>
+  <x:String x:Key="AddServer_ErrorsTitle">Please fix the following errors:</x:String>
+  <x:String x:Key="AddServer_BasicInfoTitle">Basic Information</x:String>
+  <x:String x:Key="AddServer_ServerNameLabel">Server Name *</x:String>
+  <x:String x:Key="AddServer_ServerNameWatermark">e.g., US West Server</x:String>
+  <x:String x:Key="AddServer_LocationLabel">Location</x:String>
+  <x:String x:Key="AddServer_LocationWatermark">e.g., Los Angeles, USA</x:String>
+  <x:String x:Key="AddServer_PeerConfigTitle">Peer Configuration</x:String>
+  <x:String x:Key="AddServer_EndpointLabel">Endpoint *</x:String>
+  <x:String x:Key="AddServer_EndpointWatermark">e.g., vpn.example.com:51820</x:String>
+  <x:String x:Key="AddServer_PublicKeyLabel">Public Key *</x:String>
+  <x:String x:Key="AddServer_PublicKeyWatermark">Server's public key (Base64)</x:String>
+  <x:String x:Key="AddServer_PresharedKeyLabel">Preshared Key (Optional)</x:String>
+  <x:String x:Key="AddServer_PresharedKeyWatermark">Optional preshared key (Base64)</x:String>
+  <x:String x:Key="AddServer_AllowedIpsLabel">Allowed IPs</x:String>
+  <x:String x:Key="AddServer_AllowedIpsWatermark">e.g., 0.0.0.0/0, ::/0</x:String>
+  <x:String x:Key="AddServer_KeepaliveLabel">Persistent Keepalive (seconds)</x:String>
+  <x:String x:Key="AddServer_KeepaliveWatermark">e.g., 25</x:String>
+  <x:String x:Key="AddServer_InterfaceConfigTitle">Interface Configuration</x:String>
+  <x:String x:Key="AddServer_PrivateKeyLabel">Private Key</x:String>
+  <x:String x:Key="AddServer_PrivateKeyWatermark">Your private key (Base64)</x:String>
+  <x:String x:Key="AddServer_Generate">Generate</x:String>
+  <x:String x:Key="AddServer_InterfaceAddressLabel">Interface Address</x:String>
+  <x:String x:Key="AddServer_InterfaceAddressWatermark">e.g., 10.0.0.2/32</x:String>
+  <x:String x:Key="AddServer_DnsServersLabel">DNS Servers</x:String>
+  <x:String x:Key="AddServer_DnsServersWatermark">e.g., 1.1.1.1, 1.0.0.1</x:String>
+</ResourceDictionary>
