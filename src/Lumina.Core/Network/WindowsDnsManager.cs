@@ -1,7 +1,7 @@
 namespace Lumina.Core.Network;
 
 /// <summary>
-/// Windows DNS manager using netsh commands.
+/// Windows DNS 管理器：通过 netsh 命令设置/恢复接口 DNS。
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class WindowsDnsManager : IDnsManager, IDisposable
@@ -11,9 +11,9 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Creates a new Windows DNS manager.
+    /// 创建一个新的 Windows DNS 管理器实例。
     /// </summary>
-    /// <param name="logger">Optional logger.</param>
+    /// <param name="logger">可选日志记录器。</param>
     public WindowsDnsManager(ILogger<WindowsDnsManager>? logger = null)
     {
         _logger = logger;
@@ -45,13 +45,13 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
             return;
         }
 
-        // Set primary DNS server
+        // 设置主 DNS
         var primaryDns = dnsServers[0];
         await RunNetshCommandAsync(
             $"interface ipv4 set dnsservers name=\"{interfaceName}\" static {primaryDns} primary validate=no",
             cancellationToken);
 
-        // Add additional DNS servers
+        // 追加其它 DNS
         for (int i = 1; i < dnsServers.Length; i++)
         {
             await RunNetshCommandAsync(
@@ -82,7 +82,7 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
         {
             _logger?.LogDebug("Restoring DNS settings for interface {InterfaceName}", interfaceName);
 
-            // Reset to DHCP
+            // 重置为 DHCP
             await RunNetshCommandAsync(
                 $"interface ipv4 set dnsservers name=\"{interfaceName}\" source=dhcp",
                 cancellationToken);
@@ -94,7 +94,7 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
     }
 
     /// <summary>
-    /// Disposes the DNS manager and restores DNS settings.
+    /// 释放 DNS 管理器并尝试恢复 DNS 设置。
     /// </summary>
     public void Dispose()
     {
@@ -113,25 +113,30 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
         }
     }
 
+    /// <summary>
+    /// 根据接口 GUID 获取接口名称（适配器别名）。
+    /// </summary>
+    /// <param name="interfaceGuid">接口 GUID。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>接口名称；如果无法获取则返回 null。</returns>
     private static async Task<string?> GetInterfaceNameAsync(Guid interfaceGuid, CancellationToken cancellationToken)
     {
-        // Use netsh to list interfaces and find the one with matching GUID
-        // or use IP Helper API to get the alias directly
+        // 可通过 netsh 枚举接口并匹配 GUID，或直接使用 IP Helper API 获取别名
         try
         {
             var output = await RunNetshCommandAsync("interface show interface", cancellationToken);
 
-            // Parse the output to find the interface
-            // For simplicity, we'll try to find it by GUID string
-            // In production, use IP Helper API ConvertInterfaceGuidToLuid + ConvertInterfaceLuidToAlias
+            // 解析输出以定位接口
+            // 这里为简化实现：使用系统网络适配器列表按 GUID 匹配
+            // 生产环境建议使用 IP Helper API：ConvertInterfaceGuidToLuid + ConvertInterfaceLuidToAlias
 
-            // Fallback: use the adapter alias from the system
+            // 回退：从系统 NetworkInterface 列表中获取适配器别名
             var adapters = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces();
             var adapter = adapters.FirstOrDefault(a =>
             {
                 try
                 {
-                    // Compare based on adapter ID
+                    // 按适配器 ID 比较
                     return a.Id.Equals(interfaceGuid.ToString("B"), StringComparison.OrdinalIgnoreCase);
                 }
                 catch
@@ -148,6 +153,12 @@ public sealed class WindowsDnsManager : IDnsManager, IDisposable
         }
     }
 
+    /// <summary>
+    /// 执行 netsh 命令并返回标准输出。
+    /// </summary>
+    /// <param name="arguments">netsh 参数。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>标准输出内容。</returns>
     private static async Task<string> RunNetshCommandAsync(string arguments, CancellationToken cancellationToken)
     {
         using var process = new Process

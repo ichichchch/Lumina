@@ -1,39 +1,39 @@
 namespace Lumina.Core.Models;
 
 /// <summary>
-/// Represents a WireGuard peer configuration.
+/// 表示 WireGuard Peer 的配置。
 /// </summary>
 public sealed class PeerConfiguration
 {
     /// <summary>
-    /// Peer's public key (Base64 encoded, 44 characters).
+    /// Peer 的公钥（Base64 编码，通常为 44 个字符）。
     /// </summary>
     public required string PublicKey { get; set; }
 
     /// <summary>
-    /// Optional pre-shared key for additional security (Base64 encoded).
+    /// 可选的预共享密钥（Base64 编码），用于增强安全性。
     /// </summary>
     public string? PresharedKey { get; set; }
 
     /// <summary>
-    /// Peer's endpoint address (IP:Port).
+    /// Peer 的端点地址（IP:Port）。
     /// </summary>
     public required string Endpoint { get; set; }
 
     /// <summary>
-    /// Allowed IP ranges for this peer (CIDR notation).
+    /// 该 Peer 允许的 IP 段（CIDR 表示法）。
     /// </summary>
     public required string[] AllowedIPs { get; set; }
 
     /// <summary>
-    /// Persistent keepalive interval in seconds (0 = disabled).
+    /// 持久保活间隔（秒）；0 表示禁用。
     /// </summary>
     public ushort PersistentKeepalive { get; set; } = 25;
 
     /// <summary>
-    /// Validates the peer configuration.
+    /// 校验 Peer 配置的有效性。
     /// </summary>
-    /// <returns>List of validation errors, empty if valid.</returns>
+    /// <returns>校验错误列表；如果有效则为空。</returns>
     public List<string> Validate()
     {
         var errors = new List<string>();
@@ -79,6 +79,11 @@ public sealed class PeerConfiguration
         return errors;
     }
 
+    /// <summary>
+    /// 检查字符串是否为有效的 WireGuard Base64 密钥格式。
+    /// </summary>
+    /// <param name="key">Base64 密钥字符串。</param>
+    /// <returns>如果格式有效则返回 true。</returns>
     private static bool IsValidBase64Key(string key)
     {
         if (key.Length != 44)
@@ -96,8 +101,12 @@ public sealed class PeerConfiguration
     }
 
     /// <summary>
-    /// Parses an endpoint string into IP address and port.
+    /// 将端点字符串解析为 IP 地址与端口。
     /// </summary>
+    /// <param name="endpoint">端点字符串。</param>
+    /// <param name="address">解析得到的 IP 地址。</param>
+    /// <param name="port">解析得到的端口。</param>
+    /// <returns>如果解析成功则返回 true。</returns>
     public static bool TryParseEndpoint(string endpoint, out IPAddress? address, out int port)
     {
         address = null;
@@ -106,7 +115,7 @@ public sealed class PeerConfiguration
         if (string.IsNullOrWhiteSpace(endpoint))
             return false;
 
-        // Handle IPv6 format: [address]:port
+        // IPv6 格式：[address]:port
         if (endpoint.StartsWith('['))
         {
             var closeBracket = endpoint.IndexOf(']');
@@ -122,7 +131,7 @@ public sealed class PeerConfiguration
             return int.TryParse(portPart, out port) && port > 0 && port <= 65535;
         }
 
-        // Handle IPv4 format: address:port
+        // IPv4 格式：address:port
         var lastColon = endpoint.LastIndexOf(':');
         if (lastColon < 0)
             return false;
@@ -136,6 +145,11 @@ public sealed class PeerConfiguration
         return int.TryParse(portStr, out port) && port > 0 && port <= 65535;
     }
 
+    /// <summary>
+    /// 校验 CIDR 字符串的基本格式是否合法（IPv4/IPv6）。
+    /// </summary>
+    /// <param name="cidr">CIDR 字符串。</param>
+    /// <returns>如果格式合法则返回 true。</returns>
     private static bool IsValidCidr(string cidr)
     {
         if (string.IsNullOrWhiteSpace(cidr))

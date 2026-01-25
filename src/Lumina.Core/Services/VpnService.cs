@@ -1,8 +1,8 @@
 namespace Lumina.Core.Services;
 
 /// <summary>
-/// Core VPN service implementation.
-/// Orchestrates adapter creation, configuration, routing, and DNS.
+/// 核心 VPN 服务实现。
+/// 负责编排适配器创建、隧道配置、路由与 DNS 设置等流程。
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class VpnService : IVpnService, IDisposable
@@ -24,8 +24,13 @@ public sealed class VpnService : IVpnService, IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Creates a new VPN service instance.
+    /// 创建一个新的 VPN 服务实例。
     /// </summary>
+    /// <param name="driver">WireGuard 驱动抽象，用于创建适配器与配置隧道。</param>
+    /// <param name="driverManager">驱动管理器，用于确保驱动已安装且就绪。</param>
+    /// <param name="routeManager">路由管理器，用于添加/移除路由。</param>
+    /// <param name="dnsManager">DNS 管理器，用于设置/恢复 DNS。</param>
+    /// <param name="logger">可选日志记录器。</param>
     public VpnService(
         IWireGuardDriver driver,
         IDriverManager driverManager,
@@ -69,7 +74,7 @@ public sealed class VpnService : IVpnService, IDisposable
 
         _logger?.LogInformation("Connecting to {ConfigurationName}", configuration.Name);
 
-        // Validate configuration
+        // 校验配置
         var validationErrors = configuration.Validate();
         if (validationErrors.Count > 0)
         {
@@ -80,7 +85,7 @@ public sealed class VpnService : IVpnService, IDisposable
 
         try
         {
-            // Step 1: Ensure driver is installed and running
+            // 步骤 1：确保驱动已安装且就绪
             _logger?.LogDebug("Ensuring driver is ready");
             var driverResult = await _driverManager.EnsureDriverReadyAsync(cancellationToken);
             if (!driverResult.Success)
@@ -90,25 +95,25 @@ public sealed class VpnService : IVpnService, IDisposable
             }
             _logger?.LogInformation("Driver state: {State}", driverResult.State);
 
-            // Step 2: Create adapter
+            // 步骤 2：创建适配器
             _logger?.LogDebug("Creating adapter: {AdapterName}", configuration.InterfaceName);
             _adapterHandle = await _driver.CreateAdapterAsync(configuration.InterfaceName, cancellationToken);
 
-            // Step 3: Configure tunnel
+            // 步骤 3：配置隧道
             _logger?.LogDebug("Setting tunnel configuration");
             await _driver.SetConfigurationAsync(_adapterHandle, configuration, cancellationToken);
 
-            // Step 4: Get adapter LUID for routing
+            // 步骤 4：获取适配器 LUID（用于路由）
             var luid = _driver.GetAdapterLuid(_adapterHandle);
             _logger?.LogDebug("Adapter LUID: {Luid}", luid);
 
-            // Step 5: Set adapter state to up
+            // 步骤 5：将适配器置为启用
             await _driver.SetAdapterStateAsync(_adapterHandle, true, cancellationToken);
 
-            // Step 6: Add IP address to adapter
+            // 步骤 6：为适配器添加 IP 地址
             await AddInterfaceAddressesAsync(luid, configuration.Addresses, cancellationToken);
 
-            // Step 7: Add routes for allowed IPs
+            // 步骤 7：为 AllowedIPs 添加路由
             if (configuration.Peers.Count > 0)
             {
                 var allAllowedIps = configuration.Peers
@@ -120,12 +125,12 @@ public sealed class VpnService : IVpnService, IDisposable
                 await _routeManager.AddRoutesForAllowedIpsAsync(allAllowedIps, luid, cancellationToken);
             }
 
-            // Step 8: Configure DNS
+            // 步骤 8：配置 DNS
             if (configuration.DnsServers.Length > 0)
             {
                 _logger?.LogDebug("Setting DNS servers: {DnsServers}", string.Join(", ", configuration.DnsServers));
 
-                // Get adapter GUID from interface
+                // 获取适配器 GUID
                 _adapterGuid = await GetAdapterGuidAsync(configuration.InterfaceName, cancellationToken);
 
                 if (_adapterGuid.HasValue)
@@ -134,7 +139,7 @@ public sealed class VpnService : IVpnService, IDisposable
                 }
             }
 
-            // Step 9: Start stats polling
+            // 步骤 9：启动统计轮询
             StartStatsPolling();
 
             _currentConfiguration = configuration;
@@ -146,7 +151,7 @@ public sealed class VpnService : IVpnService, IDisposable
         {
             _logger?.LogError(ex, "Failed to connect: {Message}", ex.Message);
 
-            // Rollback on failure
+            // 失败回滚
             await RollbackAsync(cancellationToken);
 
             SetState(ConnectionState.Error);
@@ -175,19 +180,19 @@ public sealed class VpnService : IVpnService, IDisposable
 
         try
         {
-            // Stop stats polling
+            // 停止统计轮询
             StopStatsPolling();
 
-            // Restore DNS
+            // 恢复 DNS
             if (_dnsManager.HasModifiedDns)
             {
                 await _dnsManager.RestoreDnsAsync(cancellationToken);
             }
 
-            // Remove routes
+            // 移除路由
             await _routeManager.RemoveAllManagedRoutesAsync(cancellationToken);
 
-            // Close adapter (triggers SafeHandle disposal)
+            // 关闭适配器（触发 SafeHandle 释放）
             if (_adapterHandle is not null && !_adapterHandle.IsInvalid)
             {
                 _adapterHandle.Dispose();
@@ -216,7 +221,7 @@ public sealed class VpnService : IVpnService, IDisposable
     public Version? GetDriverVersion() => _driver.GetDriverVersion();
 
     /// <summary>
-    /// Disposes the VPN service.
+    /// 释放 VPN 服务并清理资源（最佳努力断开连接并释放订阅）。
     /// </summary>
     public void Dispose()
     {
@@ -240,12 +245,21 @@ public sealed class VpnService : IVpnService, IDisposable
         _trafficStatsSubject.Dispose();
     }
 
+    /// <summary>
+    /// 更新连接状态并向状态流推送最新值。
+    /// </summary>
+    /// <param name="state">新的连接状态。</param>
     private void SetState(ConnectionState state)
     {
         _logger?.LogDebug("State changed: {OldState} -> {NewState}", _connectionStateSubject.Value, state);
         _connectionStateSubject.OnNext(state);
     }
 
+    /// <summary>
+    /// 在连接流程失败时执行回滚：停止统计、恢复 DNS、移除路由并释放适配器。
+    /// </summary>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>表示异步回滚的任务。</returns>
     private async Task RollbackAsync(CancellationToken cancellationToken)
     {
         _logger?.LogDebug("Rolling back connection");
@@ -282,6 +296,9 @@ public sealed class VpnService : IVpnService, IDisposable
         _currentConfiguration = null;
     }
 
+    /// <summary>
+    /// 启动定时轮询统计信息，并将结果推送到 <see cref="TrafficStatsStream"/>。
+    /// </summary>
     private void StartStatsPolling()
     {
         StopStatsPolling();
@@ -308,12 +325,22 @@ public sealed class VpnService : IVpnService, IDisposable
             .Subscribe(_trafficStatsSubject);
     }
 
+    /// <summary>
+    /// 停止统计信息轮询并释放订阅。
+    /// </summary>
     private void StopStatsPolling()
     {
         _statsSubscription?.Dispose();
         _statsSubscription = null;
     }
 
+    /// <summary>
+    /// 为指定接口添加一组单播地址。
+    /// </summary>
+    /// <param name="interfaceLuid">接口 LUID。</param>
+    /// <param name="addresses">地址列表（CIDR 表示法）。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>表示异步添加地址的任务。</returns>
     private async Task AddInterfaceAddressesAsync(ulong interfaceLuid, string[] addresses, CancellationToken cancellationToken)
     {
         foreach (var address in addresses)
@@ -369,10 +396,16 @@ public sealed class VpnService : IVpnService, IDisposable
         }
     }
 
+    /// <summary>
+    /// 根据适配器名称尝试解析适配器 GUID。
+    /// </summary>
+    /// <param name="adapterName">适配器名称。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>适配器 GUID；如果未找到则返回 null。</returns>
     private static async Task<Guid?> GetAdapterGuidAsync(string adapterName, CancellationToken cancellationToken)
     {
-        // Try to find the adapter by name and get its GUID
-        await Task.Yield(); // Make async
+        // 通过名称查找适配器并返回其 GUID
+        await Task.Yield();
 
         try
         {
@@ -388,7 +421,7 @@ public sealed class VpnService : IVpnService, IDisposable
         }
         catch
         {
-            // Ignore errors
+            // 忽略错误
         }
 
         return null;

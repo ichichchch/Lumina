@@ -1,7 +1,7 @@
 namespace Lumina.Core.Network;
 
 /// <summary>
-/// Windows-specific route manager using IP Helper API.
+/// Windows 路由管理器：基于 IP Helper API 添加/删除路由。
 /// </summary>
 [SupportedOSPlatform("windows")]
 public sealed class WindowsRouteManager : IRouteManager, IDisposable
@@ -12,9 +12,9 @@ public sealed class WindowsRouteManager : IRouteManager, IDisposable
     private bool _disposed;
 
     /// <summary>
-    /// Creates a new Windows route manager.
+    /// 创建一个新的 Windows 路由管理器实例。
     /// </summary>
-    /// <param name="logger">Optional logger.</param>
+    /// <param name="logger">可选日志记录器。</param>
     public WindowsRouteManager(ILogger<WindowsRouteManager>? logger = null)
     {
         _logger = logger;
@@ -154,7 +154,7 @@ public sealed class WindowsRouteManager : IRouteManager, IDisposable
     }
 
     /// <summary>
-    /// Disposes the route manager and removes all managed routes.
+    /// 释放路由管理器并移除该实例管理的所有路由。
     /// </summary>
     public void Dispose()
     {
@@ -173,6 +173,12 @@ public sealed class WindowsRouteManager : IRouteManager, IDisposable
         }
     }
 
+    /// <summary>
+    /// 解析 CIDR 字符串，得到目标地址与前缀长度。
+    /// </summary>
+    /// <param name="cidr">CIDR 字符串。</param>
+    /// <returns>地址与前缀长度。</returns>
+    /// <exception cref="ArgumentException">CIDR 格式不合法时抛出。</exception>
     private static (IPAddress Address, byte PrefixLength) ParseCidr(string cidr)
     {
         var parts = cidr.Split('/');
@@ -188,6 +194,11 @@ public sealed class WindowsRouteManager : IRouteManager, IDisposable
         return (address, prefix);
     }
 
+    /// <summary>
+    /// 根据 <see cref="IPAddress"/> 构造对应的 <see cref="SOCKADDR_INET"/> 结构。
+    /// </summary>
+    /// <param name="address">IPv4 或 IPv6 地址。</param>
+    /// <returns>填充后的 <see cref="SOCKADDR_INET"/>。</returns>
     private static SOCKADDR_INET CreateSockaddrInet(IPAddress address)
     {
         var result = new SOCKADDR_INET();
@@ -214,5 +225,8 @@ public sealed class WindowsRouteManager : IRouteManager, IDisposable
         return result;
     }
 
+    /// <summary>
+    /// 表示由该实例添加并跟踪的路由记录。
+    /// </summary>
     private sealed record ManagedRoute(string Destination, ulong InterfaceLuid, MIB_IPFORWARD_ROW2 Row);
 }

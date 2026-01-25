@@ -1,7 +1,7 @@
 namespace Lumina.Native.IpHelper;
 
 /// <summary>
-/// Routing protocol type.
+/// 路由协议类型。
 /// </summary>
 public enum NL_ROUTE_PROTOCOL : uint
 {
@@ -30,7 +30,7 @@ public enum NL_ROUTE_PROTOCOL : uint
 }
 
 /// <summary>
-/// Route origin type.
+/// 路由来源类型。
 /// </summary>
 public enum NL_ROUTE_ORIGIN : uint
 {
@@ -42,7 +42,7 @@ public enum NL_ROUTE_ORIGIN : uint
 }
 
 /// <summary>
-/// Network prefix origin.
+/// 网络前缀来源。
 /// </summary>
 public enum NL_PREFIX_ORIGIN : uint
 {
@@ -54,7 +54,7 @@ public enum NL_PREFIX_ORIGIN : uint
 }
 
 /// <summary>
-/// Network suffix origin.
+/// 网络后缀来源。
 /// </summary>
 public enum NL_SUFFIX_ORIGIN : uint
 {
@@ -67,7 +67,7 @@ public enum NL_SUFFIX_ORIGIN : uint
 }
 
 /// <summary>
-/// DAD state for IP address.
+/// IP 地址的 DAD（重复地址检测）状态。
 /// </summary>
 public enum NL_DAD_STATE : uint
 {
@@ -79,7 +79,7 @@ public enum NL_DAD_STATE : uint
 }
 
 /// <summary>
-/// IP forward row for IPv4/IPv6 routing table.
+/// IPv4/IPv6 路由表项结构（MIB_IPFORWARD_ROW2）。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct MIB_IPFORWARD_ROW2
@@ -106,7 +106,7 @@ public struct MIB_IPFORWARD_ROW2
 }
 
 /// <summary>
-/// IP address prefix structure.
+/// IP 地址前缀结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct IP_ADDRESS_PREFIX
@@ -116,7 +116,7 @@ public struct IP_ADDRESS_PREFIX
 }
 
 /// <summary>
-/// Unicast IP address row.
+/// 单播 IP 地址行结构（MIB_UNICASTIPADDRESS_ROW）。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct MIB_UNICASTIPADDRESS_ROW
@@ -137,7 +137,7 @@ public struct MIB_UNICASTIPADDRESS_ROW
 }
 
 /// <summary>
-/// Network interface operational status.
+/// 网络接口运行状态。
 /// </summary>
 public enum IF_OPER_STATUS : uint
 {
@@ -151,7 +151,7 @@ public enum IF_OPER_STATUS : uint
 }
 
 /// <summary>
-/// Interface type.
+/// 网络接口类型。
 /// </summary>
 public enum IF_TYPE : uint
 {
@@ -167,7 +167,7 @@ public enum IF_TYPE : uint
 }
 
 /// <summary>
-/// Network interface row (MIB_IF_ROW2).
+/// 网络接口行结构（MIB_IF_ROW2）。
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
 public unsafe struct MIB_IF_ROW2
@@ -216,27 +216,27 @@ public unsafe struct MIB_IF_ROW2
 }
 
 /// <summary>
-/// Header for IP forward table.
+/// IP 路由表头结构（MIB_IPFORWARD_TABLE2）。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct MIB_IPFORWARD_TABLE2
 {
     public uint NumEntries;
-    // Followed by MIB_IPFORWARD_ROW2 array
+    // 后续紧跟 MIB_IPFORWARD_ROW2 数组
 }
 
 /// <summary>
-/// Header for unicast IP address table.
+/// 单播 IP 地址表头结构（MIB_UNICASTIPADDRESS_TABLE）。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct MIB_UNICASTIPADDRESS_TABLE
 {
     public uint NumEntries;
-    // Followed by MIB_UNICASTIPADDRESS_ROW array
+    // 后续紧跟 MIB_UNICASTIPADDRESS_ROW 数组
 }
 
 /// <summary>
-/// DNS settings structure for interface.
+/// 接口 DNS 设置结构。
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
 public struct DNS_INTERFACE_SETTINGS
@@ -254,7 +254,7 @@ public struct DNS_INTERFACE_SETTINGS
 }
 
 /// <summary>
-/// DNS interface settings flags.
+/// DNS 接口设置标志位。
 /// </summary>
 [Flags]
 public enum DNS_SETTING_FLAGS : ulong

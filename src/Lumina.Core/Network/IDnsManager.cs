@@ -1,26 +1,26 @@
 namespace Lumina.Core.Network;
 
 /// <summary>
-/// Interface for DNS management.
+/// DNS 管理接口。
 /// </summary>
 public interface IDnsManager
 {
     /// <summary>
-    /// Sets DNS servers for a network interface.
+    /// 为指定网络接口设置 DNS 服务器。
     /// </summary>
-    /// <param name="interfaceGuid">GUID of the interface.</param>
-    /// <param name="dnsServers">Array of DNS server addresses.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="interfaceGuid">网络接口的 GUID。</param>
+    /// <param name="dnsServers">DNS 服务器地址数组。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task SetDnsServersAsync(Guid interfaceGuid, string[] dnsServers, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Restores DNS settings to the state before SetDnsServersAsync was called.
+    /// 将 DNS 设置恢复到调用 <see cref="SetDnsServersAsync"/> 之前的状态。
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task RestoreDnsAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets whether DNS settings have been modified by this manager.
+    /// 获取 DNS 设置是否已被该管理器修改过。
     /// </summary>
     bool HasModifiedDns { get; }
 }

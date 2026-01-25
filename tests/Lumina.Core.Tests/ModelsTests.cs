@@ -1,5 +1,6 @@
 namespace Lumina.Core.Tests;
 
+// TunnelConfiguration 的单元测试：验证配置字段校验与便捷属性行为。
 public class TunnelConfigurationTests
 {
     [Fact]
@@ -87,7 +88,7 @@ public class TunnelConfigurationTests
 
     private static TunnelConfiguration CreateValidConfiguration()
     {
-        // Valid Base64 key (44 characters encoding 32 bytes)
+        // 合法的 Base64 密钥（44 个字符，解码后为 32 字节）
         var validKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
         return new TunnelConfiguration
@@ -108,6 +109,7 @@ public class TunnelConfigurationTests
     }
 }
 
+// PeerConfiguration 的单元测试：验证字段校验与端点解析逻辑。
 public class PeerConfigurationTests
 {
     [Fact]
@@ -185,6 +187,7 @@ public class PeerConfigurationTests
     }
 }
 
+// TrafficStats 的单元测试：验证格式化输出与速度计算逻辑。
 public class TrafficStatsTests
 {
     [Fact]
@@ -234,9 +237,9 @@ public class TrafficStatsTests
 
         var result = TrafficStats.CalculateSpeed(current, previous);
 
-        // Should be approximately 1024 bytes/sec for TX
+        // TX 速度应约等于 1024 bytes/sec
         Assert.True(result.TxBytesPerSecond > 900 && result.TxBytesPerSecond < 1200);
-        // Should be approximately 2048 bytes/sec for RX
+        // RX 速度应约等于 2048 bytes/sec
         Assert.True(result.RxBytesPerSecond > 1800 && result.RxBytesPerSecond < 2400);
     }
 
@@ -257,6 +260,7 @@ public class TrafficStatsTests
     }
 }
 
+// ConnectionState 的单元测试：验证枚举包含预期的状态值。
 public class ConnectionStateTests
 {
     [Fact]

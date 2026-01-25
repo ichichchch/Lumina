@@ -1,52 +1,52 @@
 namespace Lumina.Core.Services;
 
 /// <summary>
-/// Core VPN service interface.
+/// 核心 VPN 服务接口。
 /// </summary>
 public interface IVpnService
 {
     /// <summary>
-    /// Gets the current connection state.
+    /// 获取当前连接状态。
     /// </summary>
     ConnectionState CurrentState { get; }
 
     /// <summary>
-    /// Gets the current tunnel configuration (if connected).
+    /// 获取当前隧道配置（若已连接）。
     /// </summary>
     TunnelConfiguration? CurrentConfiguration { get; }
 
     /// <summary>
-    /// Observable stream of connection state changes.
+    /// 连接状态变化的可观察流。
     /// </summary>
     IObservable<ConnectionState> ConnectionStateStream { get; }
 
     /// <summary>
-    /// Observable stream of traffic statistics (emits while connected).
+    /// 流量统计的可观察流（连接期间持续发出）。
     /// </summary>
     IObservable<TrafficStats> TrafficStatsStream { get; }
 
     /// <summary>
-    /// Connects to the VPN using the specified configuration.
+    /// 使用指定配置连接到 VPN。
     /// </summary>
-    /// <param name="configuration">Tunnel configuration.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="configuration">隧道配置。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task ConnectAsync(TunnelConfiguration configuration, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Disconnects from the VPN.
+    /// 断开 VPN 连接。
     /// </summary>
-    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     Task DisconnectAsync(CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Checks if the WireGuard driver is installed.
+    /// 检查 WireGuard 驱动是否已安装。
     /// </summary>
-    /// <returns>True if installed.</returns>
+    /// <returns>已安装则返回 true。</returns>
     bool IsDriverInstalled();
 
     /// <summary>
-    /// Gets the WireGuard driver version.
+    /// 获取 WireGuard 驱动版本。
     /// </summary>
-    /// <returns>Driver version, or null if not installed.</returns>
+    /// <returns>驱动版本；未安装则返回 null。</returns>
     Version? GetDriverVersion();
 }

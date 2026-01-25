@@ -1,86 +1,86 @@
 namespace Lumina.Core.Models;
 
 /// <summary>
-/// Represents a complete WireGuard tunnel configuration.
+/// 表示完整的 WireGuard 隧道配置。
 /// </summary>
 public sealed class TunnelConfiguration
 {
     /// <summary>
-    /// Unique identifier for this configuration.
+    /// 该配置的唯一标识。
     /// </summary>
     public Guid Id { get; set; } = Guid.NewGuid();
 
     /// <summary>
-    /// Display name for this tunnel.
+    /// 隧道的显示名称。
     /// </summary>
     public required string Name { get; set; }
 
     /// <summary>
-    /// Network adapter name (max 127 characters).
+    /// 网络适配器名称（最大 127 个字符）。
     /// </summary>
     public string InterfaceName { get; set; } = "Lumina0";
 
     /// <summary>
-    /// Interface private key (Base64 encoded, 44 characters).
-    /// Stored encrypted, not serialized directly.
+    /// 接口私钥（Base64 编码，通常为 44 个字符）。
+    /// 该字段仅在运行时使用，不会直接序列化落盘；持久化时应通过加密存储引用实现。
     /// </summary>
     [JsonIgnore]
     public string? PrivateKey { get; set; }
 
     /// <summary>
-    /// Reference to the encrypted private key storage.
+    /// 指向加密私钥存储的引用标识。
     /// </summary>
     public string? PrivateKeyRef { get; set; }
 
     /// <summary>
-    /// Interface addresses (CIDR notation).
+    /// 接口地址列表（CIDR 表示法）。
     /// </summary>
     public required string[] Addresses { get; set; }
 
     /// <summary>
-    /// Listen port (0 = random).
+    /// 监听端口（0 表示随机）。
     /// </summary>
     public ushort ListenPort { get; set; }
 
     /// <summary>
-    /// DNS servers for this interface.
+    /// 该接口使用的 DNS 服务器列表。
     /// </summary>
     public string[] DnsServers { get; set; } = [];
 
     /// <summary>
-    /// Peer configurations.
+    /// Peer 配置列表。
     /// </summary>
     public required List<PeerConfiguration> Peers { get; set; }
 
     /// <summary>
-    /// Whether this is the default/favorite configuration.
+    /// 是否为默认/收藏配置。
     /// </summary>
     public bool IsFavorite { get; set; }
 
     /// <summary>
-    /// Server location display text.
+    /// 服务器位置显示文本。
     /// </summary>
     public string? Location { get; set; }
 
     /// <summary>
-    /// Last recorded latency in milliseconds.
+    /// 上次记录的延迟（毫秒）。
     /// </summary>
     public int? LatencyMs { get; set; }
 
     /// <summary>
-    /// When this configuration was created.
+    /// 配置创建时间。
     /// </summary>
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
-    /// When this configuration was last modified.
+    /// 配置最后修改时间。
     /// </summary>
     public DateTimeOffset ModifiedAt { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>
-    /// Validates the tunnel configuration.
+    /// 校验隧道配置的有效性。
     /// </summary>
-    /// <returns>List of validation errors, empty if valid.</returns>
+    /// <returns>校验错误列表；如果有效则为空。</returns>
     public List<string> Validate()
     {
         var errors = new List<string>();
@@ -143,11 +143,16 @@ public sealed class TunnelConfiguration
     }
 
     /// <summary>
-    /// Gets the primary endpoint from the first peer.
+    /// 从第一个 Peer 获取主端点（若不存在则为 null）。
     /// </summary>
     [JsonIgnore]
     public string? PrimaryEndpoint => Peers?.FirstOrDefault()?.Endpoint;
 
+    /// <summary>
+    /// 检查字符串是否为有效的 WireGuard Base64 密钥格式。
+    /// </summary>
+    /// <param name="key">Base64 密钥字符串。</param>
+    /// <returns>如果格式有效则返回 true。</returns>
     private static bool IsValidBase64Key(string key)
     {
         if (key.Length != 44)
@@ -164,6 +169,11 @@ public sealed class TunnelConfiguration
         }
     }
 
+    /// <summary>
+    /// 校验 CIDR 字符串的基本格式是否合法（IPv4/IPv6）。
+    /// </summary>
+    /// <param name="cidr">CIDR 字符串。</param>
+    /// <returns>如果格式合法则返回 true。</returns>
     private static bool IsValidCidr(string cidr)
     {
         if (string.IsNullOrWhiteSpace(cidr))

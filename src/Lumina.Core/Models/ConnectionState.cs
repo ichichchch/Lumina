@@ -1,32 +1,32 @@
 namespace Lumina.Core.Models;
 
 /// <summary>
-/// Represents the connection state of the VPN tunnel.
+/// 表示 VPN 隧道的连接状态。
 /// </summary>
 public enum ConnectionState
 {
     /// <summary>
-    /// No connection is active.
+    /// 未连接。
     /// </summary>
     Disconnected,
 
     /// <summary>
-    /// Connection is being established.
+    /// 正在建立连接。
     /// </summary>
     Connecting,
 
     /// <summary>
-    /// Tunnel is active and connected.
+    /// 已连接且隧道处于活动状态。
     /// </summary>
     Connected,
 
     /// <summary>
-    /// Connection is being terminated.
+    /// 正在断开连接。
     /// </summary>
     Disconnecting,
 
     /// <summary>
-    /// An error occurred.
+    /// 发生错误。
     /// </summary>
     Error,
 }
