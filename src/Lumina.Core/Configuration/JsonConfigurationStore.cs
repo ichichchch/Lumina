@@ -1,8 +1,8 @@
 namespace Lumina.Core.Configuration;
 
 /// <summary>
-/// JSON-based configuration storage with DPAPI encryption for sensitive data.
-/// Uses System.Text.Json source generators for AOT compatibility.
+/// 基于 JSON 的配置存储实现：使用 DPAPI 对敏感数据进行保护。
+/// 通过 System.Text.Json 源生成器提供 AOT 兼容的序列化支持。
 /// </summary>
 public sealed class JsonConfigurationStore : IConfigurationStore
 {
@@ -14,11 +14,11 @@ public sealed class JsonConfigurationStore : IConfigurationStore
     private const string SettingsFileName = "settings.json";
 
     /// <summary>
-    /// Creates a new JSON configuration store.
+    /// 创建一个新的 JSON 配置存储实例。
     /// </summary>
-    /// <param name="keyStorage">Key storage for private keys.</param>
+    /// <param name="keyStorage">私钥存储实现。</param>
     /// <param name="baseDirectory">
-    /// Base directory for config storage. Defaults to %LOCALAPPDATA%\Lumina.
+    /// 配置存储的基目录；默认为 %LOCALAPPDATA%\Lumina。
     /// </param>
     public JsonConfigurationStore(IKeyStorage keyStorage, string? baseDirectory = null)
     {
@@ -44,7 +44,7 @@ public sealed class JsonConfigurationStore : IConfigurationStore
 
         EnsureDirectoryExists();
 
-        // Store the private key separately using DPAPI
+        // 使用 DPAPI 将私钥单独存储（避免明文落盘）
         if (!string.IsNullOrWhiteSpace(configuration.PrivateKey))
         {
             var keyIdentifier = configuration.Id.ToString();
@@ -116,7 +116,7 @@ public sealed class JsonConfigurationStore : IConfigurationStore
             }
             catch (JsonException)
             {
-                // Skip corrupted config files
+                // 跳过损坏的配置文件
             }
         }
 
@@ -126,10 +126,10 @@ public sealed class JsonConfigurationStore : IConfigurationStore
     /// <inheritdoc />
     public async Task DeleteConfigurationAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        // Delete the private key
+        // 删除私钥
         await _keyStorage.DeletePrivateKeyAsync(id.ToString(), cancellationToken);
 
-        // Delete the config file
+        // 删除配置文件
         var filePath = GetConfigFilePath(id);
         if (File.Exists(filePath))
         {
@@ -161,7 +161,7 @@ public sealed class JsonConfigurationStore : IConfigurationStore
 
         try
         {
-            var json = await File.ReadAllTextAsync(filePath, cancellationToken);
+            var json = await File.ReadAllTextAsync(filePath, cancellationToken).ConfigureAwait(false);
             return JsonSerializer.Deserialize(json, LuminaJsonContext.Default.AppSettings) ?? new AppSettings();
         }
         catch (JsonException)
@@ -170,6 +170,12 @@ public sealed class JsonConfigurationStore : IConfigurationStore
         }
     }
 
+    /// <summary>
+    /// 如果配置包含私钥引用，则从 <see cref="IKeyStorage"/> 加载私钥并回填到配置对象。
+    /// </summary>
+    /// <param name="configuration">要回填私钥的配置对象。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>表示异步加载的任务。</returns>
     private async Task LoadPrivateKeyAsync(TunnelConfiguration configuration, CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(configuration.PrivateKeyRef))
@@ -182,16 +188,28 @@ public sealed class JsonConfigurationStore : IConfigurationStore
         }
     }
 
+    /// <summary>
+    /// 获取隧道配置文件存放目录路径。
+    /// </summary>
+    /// <returns>配置文件目录路径。</returns>
     private string GetConfigsDirectory()
     {
         return Path.Combine(_configDirectory, ConfigsSubdirectory);
     }
 
+    /// <summary>
+    /// 获取指定配置 ID 对应的配置文件路径。
+    /// </summary>
+    /// <param name="id">配置 ID。</param>
+    /// <returns>配置文件完整路径。</returns>
     private string GetConfigFilePath(Guid id)
     {
         return Path.Combine(GetConfigsDirectory(), $"{id}.json");
     }
 
+    /// <summary>
+    /// 确保存储目录存在；如果不存在则创建。
+    /// </summary>
     private void EnsureDirectoryExists()
     {
         var configsDir = GetConfigsDirectory();
@@ -203,7 +221,7 @@ public sealed class JsonConfigurationStore : IConfigurationStore
 }
 
 /// <summary>
-/// JSON serialization context for AOT compatibility.
+/// 用于 AOT 兼容的 JSON 序列化上下文。
 /// </summary>
 [JsonSerializable(typeof(TunnelConfiguration))]
 [JsonSerializable(typeof(List<TunnelConfiguration>))]
