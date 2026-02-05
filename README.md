@@ -9,6 +9,10 @@ A modern Windows VPN client powered by WireGuardNT kernel driver, .NET 10, and A
 - **Modern UI** - Premium Windows 11 visual experience with Avalonia
 - **Secure** - DPAPI key encryption, secure memory handling
 
+## Settings
+
+- **On closing main panel** - Choose whether the app minimizes to the system tray or exits. Default is minimize to tray.
+
 ## Tech Stack
 
 | Layer | Technology |
