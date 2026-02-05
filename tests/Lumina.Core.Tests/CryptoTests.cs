@@ -92,4 +92,31 @@ public class KeyGeneratorTests
 
         Assert.Equal(publicKey, derivedPublicBase64);
     }
+
+    [Fact]
+    public void GetPublicKey_MatchesRfc7748Vector()
+    {
+        var privateKey = HexToBytes("77076d0a7318a57d3c16c17251b26645df4c2f87ebc0992ab177fba51db92c2a");
+        var expectedPublicKey = HexToBytes("8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a");
+
+        var publicKey = _keyGenerator.GetPublicKey(privateKey);
+
+        Assert.True(publicKey.SequenceEqual(expectedPublicKey));
+    }
+
+    private static byte[] HexToBytes(string hex)
+    {
+        if (hex.Length % 2 != 0)
+        {
+            throw new ArgumentException("Hex string length must be even", nameof(hex));
+        }
+
+        var bytes = new byte[hex.Length / 2];
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+        }
+
+        return bytes;
+    }
 }

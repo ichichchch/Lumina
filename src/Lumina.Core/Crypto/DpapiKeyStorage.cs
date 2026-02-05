@@ -38,6 +38,7 @@ public sealed class DpapiKeyStorage : IKeyStorage
         EnsureDirectoryExists();
 
         var filePath = GetKeyFilePath(identifier);
+        EnsureWritablePath(filePath);
 
         // 使用 DPAPI（CurrentUser 作用域）加密
         var encryptedData = ProtectedData.Protect(
@@ -148,6 +149,36 @@ public sealed class DpapiKeyStorage : IKeyStorage
 
             // 将目录设置为隐藏
             dirInfo.Attributes |= FileAttributes.Hidden;
+        }
+    }
+
+    private void EnsureWritablePath(string filePath)
+    {
+        try
+        {
+            if (Directory.Exists(_storageDirectory))
+            {
+                var dirInfo = new DirectoryInfo(_storageDirectory);
+                var attributes = dirInfo.Attributes;
+                if (attributes.HasFlag(FileAttributes.ReadOnly))
+                {
+                    dirInfo.Attributes = attributes & ~FileAttributes.ReadOnly;
+                }
+            }
+        }
+        catch
+        {
+        }
+
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                File.SetAttributes(filePath, FileAttributes.Normal);
+            }
+        }
+        catch
+        {
         }
     }
 
