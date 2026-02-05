@@ -20,10 +20,9 @@ public sealed class AppSettings
     /// </summary>
     public bool StartOnBoot { get; set; }
 
-    /// <summary>
-    /// 是否以最小化方式启动（最小化到托盘）。
-    /// </summary>
-    public bool StartMinimized { get; set; }
+    public CloseAction CloseAction { get; set; } = CloseAction.MinimizeToTray;
+
+    public bool CloseConfirmSkip { get; set; }
 
     /// <summary>
     /// 是否启用 Kill Switch（当 VPN 异常断开时阻断所有流量）。
@@ -81,4 +80,10 @@ public enum LogLevel
     Information,
     Warning,
     Error,
+}
+
+public enum CloseAction
+{
+    MinimizeToTray,
+    Exit
 }

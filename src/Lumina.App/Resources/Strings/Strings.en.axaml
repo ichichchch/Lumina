@@ -30,14 +30,29 @@
   <x:String x:Key="Settings_Subtitle">Configure your VPN experience</x:String>
   <x:String x:Key="Settings_Language">Language</x:String>
   <x:String x:Key="Settings_LanguageDesc">Choose your preferred display language</x:String>
+  <x:String x:Key="Settings_CloseBehaviorTitle">On closing main panel</x:String>
+  <x:String x:Key="Settings_CloseBehaviorDesc">Choose what happens when you close the main panel</x:String>
+  <x:String x:Key="Settings_CloseBehaviorMinimize">Minimize to system tray</x:String>
+  <x:String x:Key="Settings_CloseBehaviorExit">Exit app</x:String>
+  <x:String x:Key="Settings_CloseConfirmTitle">Show close confirmation</x:String>
+  <x:String x:Key="Settings_CloseConfirmDesc">Ask whether to minimize or exit when closing</x:String>
 
   <x:String x:Key="Common_Unknown">Unknown</x:String>
   <x:String x:Key="Common_Installed">Installed</x:String>
   <x:String x:Key="Common_On">On</x:String>
   <x:String x:Key="Common_Off">Off</x:String>
+  <x:String x:Key="Common_Cancel">Cancel</x:String>
   <x:String x:Key="TitleBar_Minimize">Minimize</x:String>
   <x:String x:Key="TitleBar_Maximize">Maximize</x:String>
   <x:String x:Key="TitleBar_Close">Close</x:String>
+  <x:String x:Key="CloseConfirm_Title">Close Lumina?</x:String>
+  <x:String x:Key="CloseConfirm_Message">Would you like to minimize Lumina to the system tray instead of exiting?</x:String>
+  <x:String x:Key="CloseConfirm_Minimize">Minimize to Tray</x:String>
+  <x:String x:Key="CloseConfirm_Exit">Exit</x:String>
+  <x:String x:Key="CloseConfirm_DoNotAsk">Don't ask again</x:String>
+  <x:String x:Key="Tray_Tooltip">Lumina</x:String>
+  <x:String x:Key="Tray_Open">Open</x:String>
+  <x:String x:Key="Tray_Exit">Exit</x:String>
 
   <x:String x:Key="Home_Upload">UPLOAD</x:String>
   <x:String x:Key="Home_Download">DOWNLOAD</x:String>
@@ -52,6 +67,9 @@
   <x:String x:Key="Servers_Favorites">FAVORITES</x:String>
   <x:String x:Key="Servers_AllServers">ALL SERVERS</x:String>
   <x:String x:Key="Servers_Connect">Connect</x:String>
+  <x:String x:Key="Servers_Delete">Delete</x:String>
+  <x:String x:Key="Servers_DeleteConfirmTitle">Delete Server</x:String>
+  <x:String x:Key="Servers_DeleteConfirmMessage">Are you sure you want to delete “{0}”?</x:String>
   <x:String x:Key="Servers_EmptyTitle">No servers configured</x:String>
   <x:String x:Key="Servers_EmptySubtitle">Add a server to get started</x:String>
 
@@ -60,8 +78,6 @@
   <x:String x:Key="Settings_AutoConnectDesc">Automatically connect when Lumina starts</x:String>
   <x:String x:Key="Settings_StartWithWindowsTitle">Start with Windows</x:String>
   <x:String x:Key="Settings_StartWithWindowsDesc">Launch Lumina when you sign in</x:String>
-  <x:String x:Key="Settings_StartMinimizedTitle">Start minimized</x:String>
-  <x:String x:Key="Settings_StartMinimizedDesc">Start in system tray</x:String>
   <x:String x:Key="Settings_SectionSecurity">SECURITY</x:String>
   <x:String x:Key="Settings_KillSwitchTitle">Kill Switch</x:String>
   <x:String x:Key="Settings_KillSwitchDesc">Block all internet if VPN disconnects unexpectedly</x:String>
@@ -70,7 +86,11 @@
   <x:String x:Key="Settings_ThemeDesc">Choose your preferred color scheme</x:String>
   <x:String x:Key="Settings_SectionLanguage">LANGUAGE</x:String>
   <x:String x:Key="Settings_SectionAdvanced">ADVANCED</x:String>
-  <x:String x:Key="Settings_ExportLogs">Export Logs</x:String>
+  <x:String x:Key="Settings_ExportLogs">Export logs (select dates; multiple days = .zip, single day = .log)</x:String>
+  <x:String x:Key="Settings_ExportLogsRange">Export dates</x:String>
+  <x:String x:Key="Settings_ExportLogsFrom">From</x:String>
+  <x:String x:Key="Settings_ExportLogsTo">To</x:String>
+  <x:String x:Key="Settings_ExportLogsHint">Leave dates empty to export all logs</x:String>
   <x:String x:Key="Settings_SectionAbout">ABOUT</x:String>
   <x:String x:Key="Settings_LuminaVersion">Lumina Version</x:String>
   <x:String x:Key="Settings_WireGuardDriver">WireGuard Driver</x:String>
@@ -87,6 +107,8 @@
   <x:String x:Key="AddServer_Back">Back</x:String>
   <x:String x:Key="AddServer_Title">Add Server</x:String>
   <x:String x:Key="AddServer_Subtitle">Configure a new VPN server connection</x:String>
+  <x:String x:Key="EditServer_Title">Edit Server</x:String>
+  <x:String x:Key="EditServer_Subtitle">Update an existing VPN server configuration</x:String>
   <x:String x:Key="AddServer_Save">Save</x:String>
   <x:String x:Key="AddServer_ErrorsTitle">Please fix the following errors:</x:String>
   <x:String x:Key="AddServer_BasicInfoTitle">Basic Information</x:String>
@@ -108,9 +130,12 @@
   <x:String x:Key="AddServer_InterfaceConfigTitle">Interface Configuration</x:String>
   <x:String x:Key="AddServer_PrivateKeyLabel">Private Key</x:String>
   <x:String x:Key="AddServer_PrivateKeyWatermark">Your private key (Base64)</x:String>
+  <x:String x:Key="AddServer_DerivedPublicKeyLabel">Derived Public Key</x:String>
+  <x:String x:Key="AddServer_DerivedPublicKeyWatermark">Derived from private key (Base64)</x:String>
   <x:String x:Key="AddServer_Generate">Generate</x:String>
   <x:String x:Key="AddServer_InterfaceAddressLabel">Interface Address</x:String>
   <x:String x:Key="AddServer_InterfaceAddressWatermark">e.g., 10.0.0.2/32</x:String>
   <x:String x:Key="AddServer_DnsServersLabel">DNS Servers</x:String>
   <x:String x:Key="AddServer_DnsServersWatermark">e.g., 1.1.1.1, 1.0.0.1</x:String>
+  <x:String x:Key="Servers_Edit">Edit</x:String>
 </ResourceDictionary>

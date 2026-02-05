@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Lumina.App.ViewModels"
+             xmlns:converters="using:Lumina.App.Converters"
              x:Class="Lumina.App.Views.ServersPage"
              x:DataType="vm:ServersViewModel">
 
@@ -43,18 +44,34 @@
                 </TextBox>
             </Border>
 
-            <!-- Server Lists -->
+            <Border Classes="Card" 
+                    IsVisible="{Binding ConnectError, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}"
+                    Background="#331E293B"
+                    BorderBrush="{StaticResource ErrorBrush}">
+                <StackPanel Spacing="8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PathIcon Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
+                                  Width="20" Height="20"
+                                  Foreground="{StaticResource ErrorBrush}" />
+                        <TextBlock Text="{DynamicResource Home_DriverInitFailedTitle}" Classes="BodyStrong" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding ConnectError}"
+                               Classes="Body"
+                               TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
             <StackPanel Spacing="24">
 
                 <!-- Favorites -->
-                <StackPanel Spacing="12" IsVisible="{Binding FavoriteServers.Count}">
+                <StackPanel Spacing="12" IsVisible="{Binding HasFavoriteServers}">
                     <TextBlock Text="{DynamicResource Servers_Favorites}" Classes="StatLabel" />
                     <Border Classes="Card" Padding="0">
                         <ItemsControl ItemsSource="{Binding FavoriteServers}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="vm:ServerItemViewModel">
                                     <Border Classes="ServerItem">
-                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
                                             
                                             <!-- Star Icon -->
                                             <PathIcon Grid.Column="0"
@@ -76,11 +93,26 @@
                                                        VerticalAlignment="Center"
                                                        Margin="0,0,16,0" />
 
-                                            <!-- Connect Button -->
                                             <Button Grid.Column="3"
+                                                    Classes="Secondary"
+                                                    Padding="12,8"
+                                                    Command="{Binding DataContext.EditServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="{DynamicResource Servers_Edit}" />
+                                            </Button>
+
+                                            <Button Grid.Column="4"
+                                                    Classes="Secondary"
+                                                    Padding="12,8"
+                                                    Command="{Binding DataContext.DeleteServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="{DynamicResource Servers_Delete}" />
+                                            </Button>
+
+                                            <Button Grid.Column="5"
                                                     Classes="Primary"
                                                     Padding="16,8"
-                                                    Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ConnectToServerCommand}"
+                                                    Command="{Binding DataContext.ConnectToServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}">
                                                 <TextBlock Text="{DynamicResource Servers_Connect}" />
                                             </Button>
@@ -94,14 +126,14 @@
                 </StackPanel>
 
                 <!-- All Servers -->
-                <StackPanel Spacing="12">
+                <StackPanel Spacing="12" IsVisible="{Binding HasServers}">
                     <TextBlock Text="{DynamicResource Servers_AllServers}" Classes="StatLabel" />
                     <Border Classes="Card" Padding="0">
                         <ItemsControl ItemsSource="{Binding Servers}">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="vm:ServerItemViewModel">
                                     <Border Classes="ServerItem">
-                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                                        <Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto">
                                             
                                             <!-- Globe Icon -->
                                             <PathIcon Grid.Column="0"
@@ -123,11 +155,26 @@
                                                        VerticalAlignment="Center"
                                                        Margin="0,0,16,0" />
 
-                                            <!-- Connect Button -->
                                             <Button Grid.Column="3"
                                                     Classes="Secondary"
+                                                    Padding="12,8"
+                                                    Command="{Binding DataContext.EditServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="{DynamicResource Servers_Edit}" />
+                                            </Button>
+
+                                            <Button Grid.Column="4"
+                                                    Classes="Secondary"
+                                                    Padding="12,8"
+                                                    Command="{Binding DataContext.DeleteServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
+                                                <TextBlock Text="{DynamicResource Servers_Delete}" />
+                                            </Button>
+
+                                            <Button Grid.Column="5"
+                                                    Classes="Secondary"
                                                     Padding="16,8"
-                                                    Command="{Binding $parent[ItemsControl].((vm:ServersViewModel)DataContext).ConnectToServerCommand}"
+                                                    Command="{Binding DataContext.ConnectToServerCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}">
                                                 <TextBlock Text="{DynamicResource Servers_Connect}" />
                                             </Button>
@@ -142,7 +189,7 @@
 
                 <!-- Empty State -->
                 <Border Classes="Card" 
-                        IsVisible="{Binding !Servers.Count}"
+                        IsVisible="{Binding HasNoServers}"
                         HorizontalAlignment="Center"
                         Padding="40">
                     <StackPanel Spacing="16" HorizontalAlignment="Center">

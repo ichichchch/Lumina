@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:Lumina.App.ViewModels"
+             xmlns:converters="using:Lumina.App.Converters"
              x:Class="Lumina.App.Views.HomePage"
              x:DataType="vm:MainViewModel">
 
@@ -154,7 +155,7 @@
 
             <!-- Driver Error -->
             <Border Classes="Card" 
-                    IsVisible="{Binding DriverError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    IsVisible="{Binding DriverError, Converter={x:Static converters:StringConverters.IsNotNullOrEmpty}}"
                     Background="#331E293B"
                     BorderBrush="{StaticResource ErrorBrush}">
                 <StackPanel Spacing="8">

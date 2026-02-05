@@ -22,8 +22,8 @@
                 </Button>
                 
                 <StackPanel Grid.Column="1" Spacing="8" Margin="24,0">
-                    <TextBlock Text="{DynamicResource AddServer_Title}" Classes="Display" />
-                    <TextBlock Text="{DynamicResource AddServer_Subtitle}" Classes="Body" />
+                    <TextBlock Text="{Binding PageTitle}" Classes="Display" />
+                    <TextBlock Text="{Binding PageSubtitle}" Classes="Body" />
                 </StackPanel>
 
                 <Button Grid.Column="2" 
@@ -41,7 +41,7 @@
 
             <!-- Validation Errors -->
             <Border Classes="Card" 
-                    IsVisible="{Binding ValidationErrors.Count}"
+                    IsVisible="{Binding HasValidationErrors}"
                     Background="#331E293B"
                     BorderBrush="{StaticResource ErrorBrush}">
                 <StackPanel Spacing="8">
@@ -140,6 +140,14 @@
                             <TextBlock Text="{DynamicResource AddServer_Generate}" />
                         </Button>
                     </Grid>
+
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="{DynamicResource AddServer_DerivedPublicKeyLabel}" Classes="Caption" />
+                        <TextBox Classes="Lumina"
+                                 Text="{Binding DerivedPublicKey}"
+                                 IsReadOnly="True"
+                                 Watermark="{DynamicResource AddServer_DerivedPublicKeyWatermark}" />
+                    </StackPanel>
 
                     <StackPanel Spacing="8">
                         <TextBlock Text="{DynamicResource AddServer_InterfaceAddressLabel}" Classes="Caption" />

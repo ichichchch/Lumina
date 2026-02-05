@@ -296,13 +296,20 @@ public partial class MainViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private async Task LoadConfigurationsAsync()
     {
+        var selectedId = SelectedConfiguration?.Id;
         var configs = await _configStore.LoadAllConfigurationsAsync();
         Configurations = new ObservableCollection<TunnelConfiguration>(configs);
 
-        // 优先选中收藏配置，否则选中第一个
-        SelectedConfiguration = Configurations.FirstOrDefault(c => c.IsFavorite)
+        var matched = selectedId.HasValue
+            ? Configurations.FirstOrDefault(c => c.Id == selectedId.Value)
+            : null;
+
+        SelectedConfiguration = matched
+            ?? Configurations.FirstOrDefault(c => c.IsFavorite)
             ?? Configurations.FirstOrDefault();
     }
+
+    public Task RefreshConfigurationsAsync() => LoadConfigurationsAsync();
 
     /// <summary>
     /// 选中指定的隧道配置。

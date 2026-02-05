@@ -1,3 +1,7 @@
+using System.Collections.Specialized;
+using Avalonia.Layout;
+using Avalonia.Media;
+
 namespace Lumina.App.ViewModels;
 
 using Lumina.App.Localization;
@@ -10,6 +14,8 @@ public partial class ServersViewModel : ViewModelBase
     private readonly IConfigurationStore _configStore;
     private readonly IVpnService _vpnService;
     private readonly INavigationService _navigationService;
+    private readonly AddServerViewModel _addServerViewModel;
+    private readonly MainViewModel _mainViewModel;
 
     [ObservableProperty]
     private ObservableCollection<ServerItemViewModel> _servers = [];
@@ -23,6 +29,9 @@ public partial class ServersViewModel : ViewModelBase
     [ObservableProperty]
     private ServerItemViewModel? _selectedServer;
 
+    [ObservableProperty]
+    private string? _connectError;
+
     /// <summary>
     /// 初始化 <see cref="ServersViewModel"/>，并触发加载服务器列表。
     /// </summary>
@@ -32,11 +41,20 @@ public partial class ServersViewModel : ViewModelBase
     public ServersViewModel(
         IConfigurationStore configStore, 
         IVpnService vpnService,
-        INavigationService navigationService)
+        INavigationService navigationService,
+        AddServerViewModel addServerViewModel,
+        MainViewModel mainViewModel)
     {
         _configStore = configStore;
         _vpnService = vpnService;
         _navigationService = navigationService;
+        _addServerViewModel = addServerViewModel;
+        _mainViewModel = mainViewModel;
+
+        Servers.CollectionChanged += OnServersCollectionChanged;
+        FavoriteServers.CollectionChanged += OnFavoriteServersCollectionChanged;
+        _navigationService.Navigated += OnNavigated;
+        _addServerViewModel.SaveCompleted += OnSaveCompleted;
 
         _ = LoadServersAsync();
     }
@@ -63,8 +81,17 @@ public partial class ServersViewModel : ViewModelBase
             .Select(c => new ServerItemViewModel(c))
             .ToList();
 
-        Servers = new ObservableCollection<ServerItemViewModel>(allServers.Where(s => !s.IsFavorite));
-        FavoriteServers = new ObservableCollection<ServerItemViewModel>(allServers.Where(s => s.IsFavorite));
+        Servers.Clear();
+        foreach (var server in allServers.Where(s => !s.IsFavorite))
+        {
+            Servers.Add(server);
+        }
+
+        FavoriteServers.Clear();
+        foreach (var server in allServers.Where(s => s.IsFavorite))
+        {
+            FavoriteServers.Add(server);
+        }
     }
 
     /// <summary>
@@ -75,12 +102,21 @@ public partial class ServersViewModel : ViewModelBase
     [RelayCommand]
     private async Task ConnectToServerAsync(ServerItemViewModel server, CancellationToken cancellationToken)
     {
-        if (_vpnService.CurrentState == ConnectionState.Connected)
-        {
-            await _vpnService.DisconnectAsync(cancellationToken);
-        }
+        ConnectError = null;
 
-        await _vpnService.ConnectAsync(server.Configuration, cancellationToken);
+        try
+        {
+            if (_vpnService.CurrentState == ConnectionState.Connected)
+            {
+                await _vpnService.DisconnectAsync(cancellationToken);
+            }
+
+            await _vpnService.ConnectAsync(server.Configuration, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            ConnectError = ex.Message;
+        }
     }
 
     /// <summary>
@@ -106,8 +142,84 @@ public partial class ServersViewModel : ViewModelBase
     [RelayCommand]
     private async Task DeleteServerAsync(ServerItemViewModel server)
     {
+        if (!await ConfirmDeleteAsync(server))
+            return;
+
+        if (_vpnService.CurrentConfiguration?.Id == server.Configuration.Id &&
+            _vpnService.CurrentState != ConnectionState.Disconnected)
+        {
+            await _vpnService.DisconnectAsync();
+        }
+
         await _configStore.DeleteConfigurationAsync(server.Configuration.Id);
         await LoadServersAsync();
+        await _mainViewModel.RefreshConfigurationsAsync();
+    }
+
+    private async Task<bool> ConfirmDeleteAsync(ServerItemViewModel server)
+    {
+        var owner = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+        if (owner is null)
+            return false;
+
+        var localization = LocalizationService.Instance;
+        var title = localization["Servers_DeleteConfirmTitle"];
+        var message = string.Format(localization["Servers_DeleteConfirmMessage"], server.Name);
+
+        var dialog = new Window
+        {
+            Title = title,
+            SizeToContent = SizeToContent.WidthAndHeight,
+            CanResize = false,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            ShowInTaskbar = false
+        };
+
+        var cancelButton = new Button
+        {
+            Content = new TextBlock { Text = localization["Common_Cancel"] },
+            MinWidth = 96
+        };
+        cancelButton.Classes.Add("Secondary");
+        cancelButton.Click += (_, _) => dialog.Close(false);
+
+        var deleteButton = new Button
+        {
+            Content = new TextBlock { Text = localization["Servers_Delete"] },
+            MinWidth = 96
+        };
+        deleteButton.Classes.Add("Primary");
+        deleteButton.Click += (_, _) => dialog.Close(true);
+
+        dialog.Content = new StackPanel
+        {
+            Spacing = 16,
+            Margin = new Thickness(24),
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = title,
+                    Classes = { "Title" }
+                },
+                new TextBlock
+                {
+                    Text = message,
+                    TextWrapping = TextWrapping.Wrap,
+                    Classes = { "Body" },
+                    MaxWidth = 420
+                },
+                new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Right,
+                    Spacing = 12,
+                    Children = { cancelButton, deleteButton }
+                }
+            }
+        };
+
+        return await dialog.ShowDialog<bool>(owner);
     }
 
     /// <summary>
@@ -116,6 +228,14 @@ public partial class ServersViewModel : ViewModelBase
     [RelayCommand]
     private void AddServer()
     {
+        _addServerViewModel.StartNew();
+        _navigationService.NavigateTo("AddServer");
+    }
+
+    [RelayCommand]
+    private void EditServer(ServerItemViewModel server)
+    {
+        _addServerViewModel.StartEdit(server.Configuration);
         _navigationService.NavigateTo("AddServer");
     }
 
@@ -126,6 +246,38 @@ public partial class ServersViewModel : ViewModelBase
     {
         // 根据搜索词重新过滤
         // 这里为简化示例；生产环境建议使用过滤视图/集合视图
+    }
+
+    public bool HasServers => Servers.Count > 0;
+
+    public bool HasFavoriteServers => FavoriteServers.Count > 0;
+
+    public bool HasNoServers => Servers.Count == 0 && FavoriteServers.Count == 0;
+
+    private void OnServersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasServers));
+        OnPropertyChanged(nameof(HasNoServers));
+    }
+
+    private void OnFavoriteServersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        OnPropertyChanged(nameof(HasFavoriteServers));
+        OnPropertyChanged(nameof(HasNoServers));
+    }
+
+    private void OnNavigated(object? sender, string page)
+    {
+        if (page == "Servers")
+        {
+            _ = LoadServersAsync();
+        }
+    }
+
+    private void OnSaveCompleted(object? sender, EventArgs e)
+    {
+        _ = LoadServersAsync();
+        _ = _mainViewModel.RefreshConfigurationsAsync();
     }
 }
 

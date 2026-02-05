@@ -54,13 +54,33 @@
 
                         <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
                             <StackPanel>
-                                <TextBlock Text="{DynamicResource Settings_StartMinimizedTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="{DynamicResource Settings_StartMinimizedDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_CloseBehaviorTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_CloseBehaviorDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <ComboBox Grid.Column="2"
+                                      x:Name="CloseBehaviorComboBox"
+                                      Classes="Lumina"
+                                      SelectedIndex="{Binding SelectedCloseBehaviorIndex}"
+                                      MinWidth="160"
+                                      MaxWidth="240"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center">
+                                <ComboBoxItem Content="{DynamicResource Settings_CloseBehaviorMinimize}" />
+                                <ComboBoxItem Content="{DynamicResource Settings_CloseBehaviorExit}" />
+                            </ComboBox>
+                        </Grid>
+
+                        <Border Height="1" Background="{DynamicResource BorderDefault}" />
+
+                        <Grid ColumnDefinitions="*,12,Auto" HorizontalAlignment="Stretch" MinHeight="56">
+                            <StackPanel>
+                                <TextBlock Text="{DynamicResource Settings_CloseConfirmTitle}" Classes="BodyStrong" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{DynamicResource Settings_CloseConfirmDesc}" Classes="Caption" TextWrapping="Wrap" MaxLines="2" TextTrimming="CharacterEllipsis" />
                             </StackPanel>
                             <ToggleSwitch Grid.Column="2"
                                           Classes="Lumina"
-                                          IsChecked="{Binding StartMinimized}"
-                                          AutomationProperties.Name="{DynamicResource Settings_StartMinimizedTitle}"
+                                          IsChecked="{Binding CloseConfirmEnabled}"
+                                          AutomationProperties.Name="{DynamicResource Settings_CloseConfirmTitle}"
                                           HorizontalAlignment="Right"
                                           VerticalAlignment="Center" />
                         </Grid>
@@ -161,6 +181,21 @@
                             </StackPanel>
                         </Button>
 
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{DynamicResource Settings_ExportLogsRange}" Classes="BodyStrong" />
+                            <Grid ColumnDefinitions="*,12,*" HorizontalAlignment="Stretch">
+                                <StackPanel>
+                                    <TextBlock Text="{DynamicResource Settings_ExportLogsFrom}" Classes="Caption" />
+                                    <DatePicker SelectedDate="{Binding ExportStartDate}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{DynamicResource Settings_ExportLogsTo}" Classes="Caption" />
+                                    <DatePicker SelectedDate="{Binding ExportEndDate}" />
+                                </StackPanel>
+                            </Grid>
+                            <TextBlock Text="{DynamicResource Settings_ExportLogsHint}" Classes="Caption" TextWrapping="Wrap" />
+                        </StackPanel>
+
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -203,13 +238,6 @@
                     </StackPanel>
                 </Border>
             </StackPanel>
-
-            <!-- Save Button -->
-            <Button Classes="Primary" 
-                    HorizontalAlignment="Right"
-                    Command="{Binding SaveSettingsCommand}">
-                <TextBlock Text="{DynamicResource Settings_SaveChanges}" />
-            </Button>
 
         </StackPanel>
     </ScrollViewer>

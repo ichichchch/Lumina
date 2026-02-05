@@ -30,14 +30,29 @@
   <x:String x:Key="Settings_Subtitle">配置你的 VPN 使用体验</x:String>
   <x:String x:Key="Settings_Language">语言</x:String>
   <x:String x:Key="Settings_LanguageDesc">选择界面显示语言</x:String>
+  <x:String x:Key="Settings_CloseBehaviorTitle">关闭主面板</x:String>
+  <x:String x:Key="Settings_CloseBehaviorDesc">选择关闭主面板时的默认操作</x:String>
+  <x:String x:Key="Settings_CloseBehaviorMinimize">最小化到系统托盘</x:String>
+  <x:String x:Key="Settings_CloseBehaviorExit">直接退出</x:String>
+  <x:String x:Key="Settings_CloseConfirmTitle">显示关闭确认</x:String>
+  <x:String x:Key="Settings_CloseConfirmDesc">关闭时询问是最小化还是退出</x:String>
 
   <x:String x:Key="Common_Unknown">未知</x:String>
   <x:String x:Key="Common_Installed">已安装</x:String>
   <x:String x:Key="Common_On">开</x:String>
   <x:String x:Key="Common_Off">关</x:String>
+  <x:String x:Key="Common_Cancel">取消</x:String>
   <x:String x:Key="TitleBar_Minimize">最小化</x:String>
   <x:String x:Key="TitleBar_Maximize">最大化</x:String>
   <x:String x:Key="TitleBar_Close">关闭</x:String>
+  <x:String x:Key="CloseConfirm_Title">关闭 Lumina？</x:String>
+  <x:String x:Key="CloseConfirm_Message">要将 Lumina 最小化到系统托盘，而不是直接退出吗？</x:String>
+  <x:String x:Key="CloseConfirm_Minimize">最小化到托盘</x:String>
+  <x:String x:Key="CloseConfirm_Exit">直接退出</x:String>
+  <x:String x:Key="CloseConfirm_DoNotAsk">下次不再提示</x:String>
+  <x:String x:Key="Tray_Tooltip">Lumina</x:String>
+  <x:String x:Key="Tray_Open">打开</x:String>
+  <x:String x:Key="Tray_Exit">退出</x:String>
 
   <x:String x:Key="Home_Upload">上传</x:String>
   <x:String x:Key="Home_Download">下载</x:String>
@@ -52,6 +67,9 @@
   <x:String x:Key="Servers_Favorites">收藏</x:String>
   <x:String x:Key="Servers_AllServers">全部服务器</x:String>
   <x:String x:Key="Servers_Connect">连接</x:String>
+  <x:String x:Key="Servers_Delete">删除</x:String>
+  <x:String x:Key="Servers_DeleteConfirmTitle">删除服务器</x:String>
+  <x:String x:Key="Servers_DeleteConfirmMessage">确定删除“{0}”吗？</x:String>
   <x:String x:Key="Servers_EmptyTitle">还没有配置服务器</x:String>
   <x:String x:Key="Servers_EmptySubtitle">先添加一个服务器开始使用</x:String>
 
@@ -60,8 +78,6 @@
   <x:String x:Key="Settings_AutoConnectDesc">Lumina 启动后自动连接 VPN</x:String>
   <x:String x:Key="Settings_StartWithWindowsTitle">随 Windows 启动</x:String>
   <x:String x:Key="Settings_StartWithWindowsDesc">登录后自动启动 Lumina</x:String>
-  <x:String x:Key="Settings_StartMinimizedTitle">最小化启动</x:String>
-  <x:String x:Key="Settings_StartMinimizedDesc">启动后最小化到托盘</x:String>
   <x:String x:Key="Settings_SectionSecurity">安全</x:String>
   <x:String x:Key="Settings_KillSwitchTitle">断网保护（Kill Switch）</x:String>
   <x:String x:Key="Settings_KillSwitchDesc">VPN 异常断开时阻断所有网络流量</x:String>
@@ -70,7 +86,11 @@
   <x:String x:Key="Settings_ThemeDesc">选择你喜欢的配色方案</x:String>
   <x:String x:Key="Settings_SectionLanguage">语言</x:String>
   <x:String x:Key="Settings_SectionAdvanced">高级</x:String>
-  <x:String x:Key="Settings_ExportLogs">导出日志</x:String>
+  <x:String x:Key="Settings_ExportLogs">导出日志（可选日期，多日导出为 .zip，单日导出为 .log）</x:String>
+  <x:String x:Key="Settings_ExportLogsRange">导出日期</x:String>
+  <x:String x:Key="Settings_ExportLogsFrom">开始日期</x:String>
+  <x:String x:Key="Settings_ExportLogsTo">结束日期</x:String>
+  <x:String x:Key="Settings_ExportLogsHint">未选择日期时导出全部日志</x:String>
   <x:String x:Key="Settings_SectionAbout">关于</x:String>
   <x:String x:Key="Settings_LuminaVersion">Lumina 版本</x:String>
   <x:String x:Key="Settings_WireGuardDriver">WireGuard 驱动</x:String>
@@ -87,6 +107,8 @@
   <x:String x:Key="AddServer_Back">返回</x:String>
   <x:String x:Key="AddServer_Title">添加服务器</x:String>
   <x:String x:Key="AddServer_Subtitle">配置一个新的 VPN 服务器连接</x:String>
+  <x:String x:Key="EditServer_Title">编辑服务器</x:String>
+  <x:String x:Key="EditServer_Subtitle">更新现有的 VPN 服务器配置</x:String>
   <x:String x:Key="AddServer_Save">保存</x:String>
   <x:String x:Key="AddServer_ErrorsTitle">请先修复以下错误：</x:String>
   <x:String x:Key="AddServer_BasicInfoTitle">基础信息</x:String>
@@ -108,9 +130,12 @@
   <x:String x:Key="AddServer_InterfaceConfigTitle">接口配置</x:String>
   <x:String x:Key="AddServer_PrivateKeyLabel">私钥</x:String>
   <x:String x:Key="AddServer_PrivateKeyWatermark">你的私钥（Base64）</x:String>
+  <x:String x:Key="AddServer_DerivedPublicKeyLabel">派生公钥</x:String>
+  <x:String x:Key="AddServer_DerivedPublicKeyWatermark">由私钥自动计算（Base64）</x:String>
   <x:String x:Key="AddServer_Generate">生成</x:String>
   <x:String x:Key="AddServer_InterfaceAddressLabel">接口地址</x:String>
   <x:String x:Key="AddServer_InterfaceAddressWatermark">例如：10.0.0.2/32</x:String>
   <x:String x:Key="AddServer_DnsServersLabel">DNS 服务器</x:String>
   <x:String x:Key="AddServer_DnsServersWatermark">例如：1.1.1.1, 1.0.0.1</x:String>
+  <x:String x:Key="Servers_Edit">编辑</x:String>
 </ResourceDictionary>

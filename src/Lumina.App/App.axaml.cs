@@ -1,7 +1,10 @@
 namespace Lumina.App;
 
+using System.Diagnostics;
 using Lumina.App.Localization;
+using Lumina.App.Services;
 using Lumina.Core.Models;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Avalonia 应用程序对象，负责应用级初始化、依赖注入配置与主窗口创建。
@@ -35,12 +38,25 @@ public partial class App : Application
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
 
+        if (Services.GetService<ILogFileService>() is { } logFileService)
+        {
+            logFileService.EnsureLogFileExists();
+            Trace.AutoFlush = true;
+            Trace.Listeners.Add(new TextWriterTraceListener(logFileService.CurrentLogFilePath));
+        }
+
         var localizationService = Services.GetRequiredService<ILocalizationService>();
         var themeService = Services.GetRequiredService<IThemeService>();
         var settings = Services.GetRequiredService<IConfigurationStore>()
             .LoadSettingsAsync()
             .GetAwaiter()
             .GetResult();
+
+        if (Services.GetService<ILogFileService>() is { } logService)
+        {
+            logService.MinimumLevel = MapLogLevel(settings.LogLevel);
+        }
+
         localizationService.SetCulture(settings.Language);
         themeService.SetTheme(settings.Theme switch
         {
@@ -66,13 +82,20 @@ public partial class App : Application
     /// <param name="services">服务集合。</param>
     private static void ConfigureServices(IServiceCollection services)
     {
+        var logFileService = new LogFileService();
+
         // 核心服务
         services.AddSingleton<IKeyStorage, DpapiKeyStorage>();
         services.AddSingleton<IKeyGenerator, Curve25519KeyGenerator>();
         services.AddSingleton<IConfigurationStore, JsonConfigurationStore>();
         services.AddSingleton<IRouteManager, WindowsRouteManager>();
         services.AddSingleton<IDnsManager, WindowsDnsManager>();
-        services.AddSingleton<IDriverManager, WireGuardDriverManager>();
+        services.AddSingleton<IDriverManager>(_ =>
+        {
+            var driverDirectory = Environment.GetEnvironmentVariable("LUMINA_DRIVER_DIR");
+            var externalDriverPath = Environment.GetEnvironmentVariable("LUMINA_WIREGUARD_DRIVER_PATH");
+            return new WireGuardDriverManager(driverDirectory, externalDriverPath);
+        });
         services.AddSingleton<IWireGuardDriver, WireGuardDriver>();
         services.AddSingleton<IVpnService, VpnService>();
 
@@ -80,12 +103,27 @@ public partial class App : Application
         services.AddSingleton<INavigationService, NavigationService>();
         services.AddSingleton<IThemeService, ThemeService>();
         services.AddSingleton<ILocalizationService, LocalizationService>();
+        services.AddSingleton<ILogFileService>(logFileService);
+        services.AddSingleton(logFileService);
+        services.AddSingleton<ILogExportService, LogExportService>();
+        services.AddSingleton<ILoggerFactory>(_ =>
+            LoggerFactory.Create(builder => builder.AddProvider(new LogFileLoggerProvider(logFileService))));
+        services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
         // 视图模型
         services.AddSingleton<MainViewModel>();
         services.AddTransient<HomeViewModel>();
         services.AddTransient<ServersViewModel>();
         services.AddTransient<SettingsViewModel>();
-        services.AddTransient<AddServerViewModel>();
+        services.AddSingleton<AddServerViewModel>();
     }
+
+    private static Microsoft.Extensions.Logging.LogLevel MapLogLevel(Lumina.Core.Models.LogLevel level) =>
+        level switch
+        {
+            Lumina.Core.Models.LogLevel.Debug => Microsoft.Extensions.Logging.LogLevel.Debug,
+            Lumina.Core.Models.LogLevel.Warning => Microsoft.Extensions.Logging.LogLevel.Warning,
+            Lumina.Core.Models.LogLevel.Error => Microsoft.Extensions.Logging.LogLevel.Error,
+            _ => Microsoft.Extensions.Logging.LogLevel.Information
+        };
 }

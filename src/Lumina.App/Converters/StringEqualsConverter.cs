@@ -24,20 +24,34 @@ public sealed class StringEqualsConverter : IValueConverter
         {
             return string.Equals(stringValue, paramValue, StringComparison.OrdinalIgnoreCase);
         }
+
         return false;
+
     }
 
-    /// <summary>
-    /// 反向转换不受支持。
-    /// </summary>
-    /// <param name="value">绑定目标提供的值。</param>
-    /// <param name="targetType">目标类型。</param>
-    /// <param name="parameter">转换参数。</param>
-    /// <param name="culture">区域性信息。</param>
-    /// <returns>不会返回结果。</returns>
-    /// <exception cref="NotSupportedException">始终抛出。</exception>
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         throw new NotSupportedException();
     }
+
+}
+
+public sealed class StringNotNullOrEmptyConverter : IValueConverter
+{
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        return value is string text && !string.IsNullOrWhiteSpace(text);
+    }
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+    {
+        throw new NotSupportedException();
+    }
+
+}
+
+public static class StringConverters
+{
+    public static readonly IValueConverter IsNotNullOrEmpty = new StringNotNullOrEmptyConverter();
 }
