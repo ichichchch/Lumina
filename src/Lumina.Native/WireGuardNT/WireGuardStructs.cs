@@ -4,13 +4,25 @@ namespace Lumina.Native.WireGuardNT;
 /// WireGuard 接口配置结构。
 /// 其后必须紧跟 <see cref="WIREGUARD_PEER"/> 结构数组。
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 8)]
+[StructLayout(LayoutKind.Explicit, Size = 80)]
 public unsafe struct WIREGUARD_INTERFACE
 {
+    [FieldOffset(0)]
     public WireGuardInterfaceFlags Flags;
+
+    [FieldOffset(4)]
     public ushort ListenPort;
+
+    [FieldOffset(6)]
+    public ushort Reserved;
+
+    [FieldOffset(8)]
     public fixed byte PrivateKey[32];
+
+    [FieldOffset(40)]
     public fixed byte PublicKey[32];
+
+    [FieldOffset(72)]
     public uint PeersCount;
 }
 
@@ -18,31 +30,63 @@ public unsafe struct WIREGUARD_INTERFACE
 /// WireGuard Peer 配置结构。
 /// 其后必须紧跟 <see cref="WIREGUARD_ALLOWED_IP"/> 结构数组。
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 8)]
+[StructLayout(LayoutKind.Explicit, Size = 136)]
 public unsafe struct WIREGUARD_PEER
 {
+    [FieldOffset(0)]
     public WireGuardPeerFlags Flags;
+
+    [FieldOffset(4)]
     public uint Reserved;
+
+    [FieldOffset(8)]
     public fixed byte PublicKey[32];
+
+    [FieldOffset(40)]
     public fixed byte PresharedKey[32];
+
+    [FieldOffset(72)]
     public ushort PersistentKeepalive;
+
+    [FieldOffset(74)]
+    public ushort Reserved2;
+
+    [FieldOffset(76)]
     public SOCKADDR_INET Endpoint;
+
+    [FieldOffset(104)]
     public ulong TxBytes;
+
+    [FieldOffset(112)]
     public ulong RxBytes;
+
+    [FieldOffset(120)]
     public ulong LastHandshake;
+
+    [FieldOffset(128)]
     public uint AllowedIPsCount;
 }
 
 /// <summary>
 /// WireGuard Allowed IP 配置结构。
 /// </summary>
-[StructLayout(LayoutKind.Sequential, Pack = 8)]
+[StructLayout(LayoutKind.Explicit, Pack = 8, Size = 24)]
 public unsafe struct WIREGUARD_ALLOWED_IP
 {
+    [FieldOffset(0)]
     public IN_ADDR Address;
+
+    [FieldOffset(0)]
     public IN6_ADDR AddressV6;
+
+    [FieldOffset(16)]
     public AddressFamily AddressFamily;
+
+    [FieldOffset(18)]
     public byte Cidr;
+
+    [FieldOffset(19)]
+    public fixed byte Reserved[3];
 }
 
 /// <summary>

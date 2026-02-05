@@ -84,6 +84,10 @@ public static partial class WireGuardNative
     [UnmanagedCallConv(CallConvs = [typeof(CallConvStdcall)])]
     public static partial int WireGuardGetConfiguration(WireGuardAdapterHandle adapter, nint config, ref uint bytes);
 
+    [LibraryImport(LibraryName, EntryPoint = "WireGuardGeneratePublicKey")]
+    [UnmanagedCallConv(CallConvs = [typeof(CallConvStdcall)])]
+    public static partial void WireGuardGeneratePublicKey(Span<byte> publicKey, ReadOnlySpan<byte> privateKey);
+
     /// <summary>
     /// 设置适配器状态（up/down）。
     /// </summary>

@@ -30,6 +30,10 @@ public sealed class TrafficStats
     /// </summary>
     public ulong LastHandshakeTime { get; init; }
 
+    public int PeerCount { get; init; }
+
+    public string? PeerSummaries { get; init; }
+
     /// <summary>
     /// 采集该统计信息的时间戳。
     /// </summary>
@@ -74,6 +78,8 @@ public sealed class TrafficStats
             TxBytesPerSecond = txDelta / timeDelta,
             RxBytesPerSecond = rxDelta / timeDelta,
             LastHandshakeTime = current.LastHandshakeTime,
+            PeerCount = current.PeerCount,
+            PeerSummaries = current.PeerSummaries,
             Timestamp = current.Timestamp,
         };
     }

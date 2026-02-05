@@ -73,6 +73,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
         }
 
         _logger?.LogDebug("Setting configuration for adapter");
+        LogConfigurationSummary(configuration);
 
         var configBuffer = BuildConfigurationBuffer(configuration);
 
@@ -98,6 +99,38 @@ public sealed class WireGuardDriver : IWireGuardDriver
         }
 
         return Task.CompletedTask;
+    }
+
+    private void LogConfigurationSummary(TunnelConfiguration configuration)
+    {
+        var interfaceSize = Marshal.SizeOf<WIREGUARD_INTERFACE>();
+        var peerSize = Marshal.SizeOf<WIREGUARD_PEER>();
+        var allowedIpSize = Marshal.SizeOf<WIREGUARD_ALLOWED_IP>();
+        var totalAllowedIps = 0;
+        var peerDetails = new List<string>();
+
+        for (int i = 0; i < configuration.Peers.Count; i++)
+        {
+            var peer = configuration.Peers[i];
+            totalAllowedIps += peer.AllowedIPs.Length;
+            peerDetails.Add($"{i}:{peer.Endpoint},allowed={peer.AllowedIPs.Length}");
+        }
+
+        _logger?.LogInformation(
+            "WireGuard config summary: Interface={Interface}, Peers={PeerCount}, AllowedIPs={AllowedIpCount}, ListenPort={ListenPort}, HasPrivateKey={HasPrivateKey}, PrivateKeyLength={PrivateKeyLength}, Addresses={AddressCount}, Dns={DnsCount}, StructSizes={{Interface={InterfaceSize}, Peer={PeerSize}, AllowedIp={AllowedIpSize}}}, BufferSize={BufferSize}, PeerDetails={PeerDetails}",
+            configuration.InterfaceName,
+            configuration.Peers.Count,
+            totalAllowedIps,
+            configuration.ListenPort,
+            !string.IsNullOrWhiteSpace(configuration.PrivateKey),
+            configuration.PrivateKey?.Length ?? 0,
+            configuration.Addresses.Length,
+            configuration.DnsServers.Length,
+            interfaceSize,
+            peerSize,
+            allowedIpSize,
+            GetConfigurationSize(configuration),
+            string.Join(" | ", peerDetails));
     }
 
     /// <inheritdoc />
@@ -245,14 +278,19 @@ public sealed class WireGuardDriver : IWireGuardDriver
             // 构建接口结构
             var iface = new WIREGUARD_INTERFACE
             {
-                Flags = WireGuardInterfaceFlags.HasPrivateKey | WireGuardInterfaceFlags.ReplacePeers,
+                Flags = WireGuardInterfaceFlags.ReplacePeers,
                 ListenPort = config.ListenPort,
                 PeersCount = (uint)config.Peers.Count,
             };
+            if (config.ListenPort > 0)
+            {
+                iface.Flags |= WireGuardInterfaceFlags.HasListenPort;
+            }
 
             // 写入私钥
-            if (!string.IsNullOrEmpty(config.PrivateKey))
+            if (!string.IsNullOrWhiteSpace(config.PrivateKey))
             {
+                iface.Flags |= WireGuardInterfaceFlags.HasPrivateKey;
                 var privateKey = Convert.FromBase64String(config.PrivateKey);
                 unsafe
                 {
@@ -300,7 +338,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
     {
         var peer = new WIREGUARD_PEER
         {
-            Flags = WireGuardPeerFlags.HasPublicKey | WireGuardPeerFlags.HasEndpoint | WireGuardPeerFlags.ReplaceAllowedIps,
+            Flags = WireGuardPeerFlags.HasPublicKey | WireGuardPeerFlags.ReplaceAllowedIps,
             PersistentKeepalive = config.PersistentKeepalive,
             AllowedIPsCount = (uint)config.AllowedIPs.Length,
         };
@@ -332,7 +370,12 @@ public sealed class WireGuardDriver : IWireGuardDriver
         // 设置端点
         if (PeerConfiguration.TryParseEndpoint(config.Endpoint, out var address, out var port) && address is not null)
         {
+            peer.Flags |= WireGuardPeerFlags.HasEndpoint;
             peer.Endpoint = CreateEndpoint(address, port);
+        }
+        else
+        {
+            throw new InvalidConfigurationException($"Invalid endpoint: {config.Endpoint}");
         }
 
         if (config.PersistentKeepalive > 0)
@@ -415,6 +458,31 @@ public sealed class WireGuardDriver : IWireGuardDriver
         return allowedIp;
     }
 
+    private static string FormatEndpoint(SOCKADDR_INET endpoint)
+    {
+        return endpoint.Family switch
+        {
+            AddressFamily.IPv4 => $"{endpoint.Ipv4.Address}:{(ushort)IPAddress.NetworkToHostOrder((short)endpoint.Ipv4.Port)}",
+            AddressFamily.IPv6 => $"[{endpoint.Ipv6.Address}]:{(ushort)IPAddress.NetworkToHostOrder((short)endpoint.Ipv6.Port)}",
+            _ => "Unknown"
+        };
+    }
+
+    private static string GetPeerKeySuffix(WIREGUARD_PEER peer)
+    {
+        Span<byte> keyBytes = stackalloc byte[32];
+        unsafe
+        {
+            for (int i = 0; i < 32; i++)
+            {
+                keyBytes[i] = peer.PublicKey[i];
+            }
+        }
+
+        var base64 = Convert.ToBase64String(keyBytes);
+        return base64.Length > 8 ? base64[^8..] : base64;
+    }
+
     /// <summary>
     /// 从 WireGuardNT 返回的配置缓冲区中解析流量统计信息。
     /// </summary>
@@ -427,6 +495,7 @@ public sealed class WireGuardDriver : IWireGuardDriver
         ulong totalTx = 0;
         ulong totalRx = 0;
         ulong lastHandshake = 0;
+        var peerSummaries = new List<string>();
 
         var offset = Marshal.SizeOf<WIREGUARD_INTERFACE>();
 
@@ -441,6 +510,10 @@ public sealed class WireGuardDriver : IWireGuardDriver
                 lastHandshake = peer.LastHandshake;
             }
 
+            var endpoint = FormatEndpoint(peer.Endpoint);
+            var keySuffix = GetPeerKeySuffix(peer);
+            peerSummaries.Add($"peer{i}:key={keySuffix} endpoint={endpoint} tx={peer.TxBytes} rx={peer.RxBytes} last={peer.LastHandshake} keepalive={peer.PersistentKeepalive}");
+
             offset += Marshal.SizeOf<WIREGUARD_PEER>();
             offset += (int)peer.AllowedIPsCount * Marshal.SizeOf<WIREGUARD_ALLOWED_IP>();
         }
@@ -450,6 +523,8 @@ public sealed class WireGuardDriver : IWireGuardDriver
             TxBytes = totalTx,
             RxBytes = totalRx,
             LastHandshakeTime = lastHandshake,
+            PeerCount = (int)iface.PeersCount,
+            PeerSummaries = peerSummaries.Count == 0 ? null : string.Join(" | ", peerSummaries),
             Timestamp = DateTimeOffset.UtcNow,
         };
     }

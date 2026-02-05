@@ -259,6 +259,8 @@ public sealed class WireGuardDriverManager : IDriverManager
             }
         }
 
+        TryCopyFromSystemLocations(sysTarget, dllTarget, ref sysExists, ref dllExists);
+
         // 尝试从嵌入资源提取
         var assembly = Assembly.GetExecutingAssembly();
         var resourcePrefix = "Lumina.Core.Resources.Driver.";
@@ -287,6 +289,63 @@ public sealed class WireGuardDriverManager : IDriverManager
         }
 
         _ = Lumina.Native.WireGuardNT.WireGuardNtLibraryLoader.TryPreloadAndRegister(dllTarget);
+    }
+
+    private static void TryCopyFromSystemLocations(
+        string sysTarget,
+        string dllTarget,
+        ref bool sysExists,
+        ref bool dllExists)
+    {
+        var windowsDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        var programFilesX86 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+        var localPrograms = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "Programs",
+            "WireGuard");
+
+        var sysCandidates = new[]
+        {
+            Path.Combine(windowsDir, "System32", "drivers", DriverFileName),
+            Path.Combine(programFiles, "WireGuard", DriverFileName),
+            Path.Combine(programFilesX86, "WireGuard", DriverFileName),
+            Path.Combine(localPrograms, DriverFileName)
+        };
+
+        var dllCandidates = new[]
+        {
+            Path.Combine(programFiles, "WireGuard", DllFileName),
+            Path.Combine(programFilesX86, "WireGuard", DllFileName),
+            Path.Combine(localPrograms, DllFileName),
+            Path.Combine(windowsDir, "System32", DllFileName)
+        };
+
+        if (!sysExists)
+        {
+            foreach (var path in sysCandidates)
+            {
+                if (File.Exists(path))
+                {
+                    File.Copy(path, sysTarget, overwrite: false);
+                    sysExists = true;
+                    break;
+                }
+            }
+        }
+
+        if (!dllExists)
+        {
+            foreach (var path in dllCandidates)
+            {
+                if (File.Exists(path))
+                {
+                    File.Copy(path, dllTarget, overwrite: false);
+                    dllExists = true;
+                    break;
+                }
+            }
+        }
     }
 
     /// <summary>

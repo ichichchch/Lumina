@@ -6,5 +6,11 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <Visible>false</Visible>
     </Content>
+    <Content Include="$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\wireguard.sys"
+             Condition="Exists('$(MSBuildThisFileDirectory)..\runtimes\win-x64\native\wireguard.sys')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Visible>false</Visible>
+    </Content>
   </ItemGroup>
 </Project>

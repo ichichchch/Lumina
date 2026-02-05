@@ -22,6 +22,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Driver\wireguard.sys" Condition="Exists('Resources\Driver\wireguard.sys')" />
     <EmbeddedResource Include="Resources\Driver\wireguard.dll" Condition="Exists('Resources\Driver\wireguard.dll')" />
+    <EmbeddedResource Include="$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.sys" Condition="Exists('$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.sys') and !Exists('Resources\Driver\wireguard.sys')">
+      <LogicalName>Lumina.Core.Resources.Driver.wireguard.sys</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.dll" Condition="Exists('$(PkgLumina_Assets)\runtimes\win-x64\native\wireguard.dll') and !Exists('Resources\Driver\wireguard.dll')">
       <LogicalName>Lumina.Core.Resources.Driver.wireguard.dll</LogicalName>
     </EmbeddedResource>

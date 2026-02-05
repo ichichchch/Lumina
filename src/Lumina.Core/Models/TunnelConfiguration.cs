@@ -47,6 +47,8 @@ public sealed class TunnelConfiguration
     /// </summary>
     public string[] DnsServers { get; set; } = [];
 
+    public int? Mtu { get; set; }
+
     /// <summary>
     /// Peer 配置列表。
     /// </summary>
@@ -136,6 +138,14 @@ public sealed class TunnelConfiguration
                 {
                     errors.Add($"Peer[{i}]: {error}");
                 }
+            }
+        }
+
+        if (Mtu.HasValue)
+        {
+            if (Mtu.Value < 576 || Mtu.Value > 9000)
+            {
+                errors.Add("MTU must be between 576 and 9000");
             }
         }
 

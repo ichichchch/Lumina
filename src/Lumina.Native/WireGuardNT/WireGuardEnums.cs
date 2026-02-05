@@ -4,7 +4,7 @@ namespace Lumina.Native.WireGuardNT;
 /// WireGuard 接口配置标志位。
 /// </summary>
 [Flags]
-public enum WireGuardInterfaceFlags : ushort
+public enum WireGuardInterfaceFlags : uint
 {
     None = 0,
     HasPublicKey = 1 << 0,

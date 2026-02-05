@@ -15,6 +15,10 @@
     <None Include="runtimes\win-x64\native\wireguard.dll"
           Pack="true"
           PackagePath="runtimes/win-x64/native/" />
+    <None Include="runtimes\win-x64\native\wireguard.sys"
+          Pack="true"
+          Condition="Exists('runtimes\win-x64\native\wireguard.sys')"
+          PackagePath="runtimes/win-x64/native/" />
     <None Include="buildTransitive\Lumina.Assets.targets"
           Pack="true"
           PackagePath="buildTransitive/" />

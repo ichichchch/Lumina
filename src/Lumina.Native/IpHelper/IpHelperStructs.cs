@@ -80,60 +80,124 @@ public enum NL_DAD_STATE : uint
 
 /// <summary>
 /// IPv4/IPv6 路由表项结构（MIB_IPFORWARD_ROW2）。
+/// 在 64 位 Windows 上大小为 104 字节。
 /// </summary>
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Explicit, Size = 104)]
 public struct MIB_IPFORWARD_ROW2
 {
-    public ulong InterfaceLuid;
-    public uint InterfaceIndex;
-    public IP_ADDRESS_PREFIX DestinationPrefix;
-    public SOCKADDR_INET NextHop;
-    public byte SitePrefixLength;
-    public uint ValidLifetime;
-    public uint PreferredLifetime;
-    public uint Metric;
-    public NL_ROUTE_PROTOCOL Protocol;
+    [FieldOffset(0)]
+    public ulong InterfaceLuid;           // 8 bytes (0-7)
+
+    [FieldOffset(8)]
+    public uint InterfaceIndex;           // 4 bytes (8-11)
+
+    [FieldOffset(12)]
+    public IP_ADDRESS_PREFIX DestinationPrefix; // 32 bytes (12-43)
+
+    [FieldOffset(44)]
+    public SOCKADDR_INET NextHop;         // 28 bytes (44-71)
+
+    [FieldOffset(72)]
+    public byte SitePrefixLength;         // 1 byte
+
+    // 3 bytes padding (73-75)
+
+    [FieldOffset(76)]
+    public uint ValidLifetime;            // 4 bytes (76-79)
+
+    [FieldOffset(80)]
+    public uint PreferredLifetime;        // 4 bytes (80-83)
+
+    [FieldOffset(84)]
+    public uint Metric;                   // 4 bytes (84-87)
+
+    [FieldOffset(88)]
+    public NL_ROUTE_PROTOCOL Protocol;    // 4 bytes (88-91)
+
+    [FieldOffset(92)]
     [MarshalAs(UnmanagedType.U1)]
-    public bool Loopback;
+    public bool Loopback;                 // 1 byte
+
+    [FieldOffset(93)]
     [MarshalAs(UnmanagedType.U1)]
-    public bool AutoconfigureAddress;
+    public bool AutoconfigureAddress;     // 1 byte
+
+    [FieldOffset(94)]
     [MarshalAs(UnmanagedType.U1)]
-    public bool Publish;
+    public bool Publish;                  // 1 byte
+
+    [FieldOffset(95)]
     [MarshalAs(UnmanagedType.U1)]
-    public bool Immortal;
-    public uint Age;
-    public NL_ROUTE_ORIGIN Origin;
+    public bool Immortal;                 // 1 byte
+
+    [FieldOffset(96)]
+    public uint Age;                      // 4 bytes (96-99)
+
+    [FieldOffset(100)]
+    public NL_ROUTE_ORIGIN Origin;        // 4 bytes (100-103)
 }
 
 /// <summary>
 /// IP 地址前缀结构。
 /// </summary>
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Explicit, Size = 32)]
 public struct IP_ADDRESS_PREFIX
 {
-    public SOCKADDR_INET Prefix;
-    public byte PrefixLength;
+    [FieldOffset(0)]
+    public SOCKADDR_INET Prefix;          // 28 bytes (0-27)
+
+    [FieldOffset(28)]
+    public byte PrefixLength;             // 1 byte
+
+    // 3 bytes padding (29-31)
 }
 
 /// <summary>
 /// 单播 IP 地址行结构（MIB_UNICASTIPADDRESS_ROW）。
 /// </summary>
-[StructLayout(LayoutKind.Sequential)]
+[StructLayout(LayoutKind.Explicit, Size = 80)]
 public struct MIB_UNICASTIPADDRESS_ROW
 {
-    public SOCKADDR_INET Address;
-    public ulong InterfaceLuid;
-    public uint InterfaceIndex;
-    public NL_PREFIX_ORIGIN PrefixOrigin;
-    public NL_SUFFIX_ORIGIN SuffixOrigin;
-    public uint ValidLifetime;
-    public uint PreferredLifetime;
-    public byte OnLinkPrefixLength;
+    [FieldOffset(0)]
+    public SOCKADDR_INET Address;         // 28 bytes
+
+    // 4 bytes padding (28-31) for 8-byte alignment of InterfaceLuid
+
+    [FieldOffset(32)]
+    public ulong InterfaceLuid;           // 8 bytes
+
+    [FieldOffset(40)]
+    public uint InterfaceIndex;           // 4 bytes
+
+    [FieldOffset(44)]
+    public NL_PREFIX_ORIGIN PrefixOrigin; // 4 bytes
+
+    [FieldOffset(48)]
+    public NL_SUFFIX_ORIGIN SuffixOrigin; // 4 bytes
+
+    [FieldOffset(52)]
+    public uint ValidLifetime;            // 4 bytes
+
+    [FieldOffset(56)]
+    public uint PreferredLifetime;        // 4 bytes
+
+    [FieldOffset(60)]
+    public byte OnLinkPrefixLength;       // 1 byte
+
+    [FieldOffset(61)]
     [MarshalAs(UnmanagedType.U1)]
-    public bool SkipAsSource;
-    public NL_DAD_STATE DadState;
-    public uint ScopeId;
-    public long CreationTimeStamp;
+    public bool SkipAsSource;             // 1 byte
+
+    // 2 bytes padding (62-63)
+
+    [FieldOffset(64)]
+    public NL_DAD_STATE DadState;         // 4 bytes
+
+    [FieldOffset(68)]
+    public uint ScopeId;                  // 4 bytes
+
+    [FieldOffset(72)]
+    public long CreationTimeStamp;        // 8 bytes (72-79)
 }
 
 /// <summary>
@@ -222,6 +286,7 @@ public unsafe struct MIB_IF_ROW2
 public struct MIB_IPFORWARD_TABLE2
 {
     public uint NumEntries;
+    public uint Reserved; // 64 位系统上的对齐填充
     // 后续紧跟 MIB_IPFORWARD_ROW2 数组
 }
 
@@ -232,6 +297,7 @@ public struct MIB_IPFORWARD_TABLE2
 public struct MIB_UNICASTIPADDRESS_TABLE
 {
     public uint NumEntries;
+    public uint Reserved; // 64 位系统上的对齐填充
     // 后续紧跟 MIB_UNICASTIPADDRESS_ROW 数组
 }
 
